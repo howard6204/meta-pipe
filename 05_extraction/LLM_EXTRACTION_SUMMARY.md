@@ -10,6 +10,7 @@
 ## ✅ Completed Workflow
 
 ### 1. PDF Text Extraction
+
 ```bash
 uv run extract_pdf_text.py \
   --pdf-dir ../../04_fulltext/round-01/pdfs \
@@ -31,22 +32,23 @@ uv run llm_extract_cli.py \
 ```
 
 **Results**:
+
 - ✅ All 10 PDFs successfully extracted
 - ❌ 0 errors
 - 📊 Average 31.6 fields extracted per PDF
 
-| Study ID | Fields Extracted |
-|----------|------------------|
-| AgostiniM202478 | 51 |
-| AgrawalYN202536 | 43 |
-| CogliatiV2022222 | 18 |
-| DegenhardtT2023138 | 18 |
-| HoraniM202337860199 | 20 |
-| KettnerNM20252 | 42 |
-| OgataN202550 | 28 |
-| PalumboR2023179 | 35 |
-| PrestiD2019335 | 18 |
-| TokunagaE202539379782 | 43 |
+| Study ID              | Fields Extracted |
+| --------------------- | ---------------- |
+| AgostiniM202478       | 51               |
+| AgrawalYN202536       | 43               |
+| CogliatiV2022222      | 18               |
+| DegenhardtT2023138    | 18               |
+| HoraniM202337860199   | 20               |
+| KettnerNM20252        | 42               |
+| OgataN202550          | 28               |
+| PalumboR2023179       | 35               |
+| PrestiD2019335        | 18               |
+| TokunagaE202539379782 | 43               |
 
 ### 3. JSONL to CSV Conversion
 
@@ -68,6 +70,7 @@ uv run validate_extraction.py \
 ```
 
 **Results**:
+
 - ⚠️ 8 missing critical fields (mostly `n_total` and `n_cdk46_prior`)
 - ✅ No data type issues
 - ✅ No value range issues
@@ -78,18 +81,18 @@ uv run validate_extraction.py \
 
 ### Fields Filled Per Record
 
-| Study ID | Filled Fields | Completeness |
-|----------|---------------|--------------|
-| AgostiniM2024Cancers | 13 | 12.9% |
-| AgrawalYN202536 | 15 | 14.9% |
-| CogliatiV2022222 | 8 | 7.9% |
-| DegenhardtT2023338 | 13 | 12.9% |
-| HoraniM202337860199 | 7 | 6.9% |
-| KettnerNM20252 | 12 | 11.9% |
-| OgataN202550 | 10 | 9.9% |
-| PalumboR2023179 | 14 | 13.9% |
-| PrestiD2019335 | 8 | 7.9% |
-| TokunagaE202539379782 | 16 | 15.8% |
+| Study ID              | Filled Fields | Completeness |
+| --------------------- | ------------- | ------------ |
+| AgostiniM2024Cancers  | 13            | 12.9%        |
+| AgrawalYN202536       | 15            | 14.9%        |
+| CogliatiV2022222      | 8             | 7.9%         |
+| DegenhardtT2023338    | 13            | 12.9%        |
+| HoraniM202337860199   | 7             | 6.9%         |
+| KettnerNM20252        | 12            | 11.9%        |
+| OgataN202550          | 10            | 9.9%         |
+| PalumboR2023179       | 14            | 13.9%        |
+| PrestiD2019335        | 8             | 7.9%         |
+| TokunagaE202539379782 | 16            | 15.8%        |
 
 **Average**: 11.6 fields per record (11.5% completeness)
 
@@ -119,12 +122,14 @@ The following studies are missing critical sample size data:
 ### Option A: Accept LLM Extraction (Recommended)
 
 For studies with missing critical fields:
+
 1. **Review articles/protocols**: Exclude from meta-analysis (CogliatiV2022222, DegenhardtT2023138)
 2. **Incomplete extractions**: Manually fill missing fields for 3 remaining studies
 
 ### Option B: Re-run with Enhanced Prompts
 
 Improve extraction prompt to specifically ask for:
+
 - Total sample size (`n_total`)
 - Number of patients with prior CDK4/6i (`n_cdk46_prior`)
 - Extract from abstract if not in results section
@@ -150,11 +155,13 @@ Improve extraction prompt to specifically ask for:
 ### Challenges
 
 ⚠️ **Low completeness**: Only 11.5% of fields filled on average
+
 - Many fields are optional (not applicable to all studies)
 - Some PDFs may not contain all requested information
 - Review articles/protocols lack outcome data
 
 ⚠️ **Missing critical fields**: 8 instances across 5 studies
+
 - LLM may have missed data in tables or supplementary materials
 - Some PDFs may be protocols without results yet
 
@@ -207,12 +214,12 @@ Improve extraction prompt to specifically ask for:
 
 ## 🛠️ Scripts Created
 
-| Script | Purpose | Location |
-|--------|---------|----------|
-| `extract_pdf_text.py` | PDF text extraction | `/tooling/python/` |
-| `llm_extract_cli.py` | LLM data extraction via CLI | `/tooling/python/` |
-| `jsonl_to_extraction_csv.py` | Convert JSONL to CSV | `/tooling/python/` |
-| `validate_extraction.py` | Data quality validation | `/tooling/python/` |
+| Script                       | Purpose                     | Location           |
+| ---------------------------- | --------------------------- | ------------------ |
+| `extract_pdf_text.py`        | PDF text extraction         | `/tooling/python/` |
+| `llm_extract_cli.py`         | LLM data extraction via CLI | `/tooling/python/` |
+| `jsonl_to_extraction_csv.py` | Convert JSONL to CSV        | `/tooling/python/` |
+| `validate_extraction.py`     | Data quality validation     | `/tooling/python/` |
 
 All scripts are reusable for future systematic reviews!
 
