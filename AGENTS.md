@@ -214,6 +214,7 @@ uv run ../../ma-fulltext-management/scripts/download_oa_pdfs.py \
 ```
 
 **Expected results**:
+
 - 40-60% PDFs downloaded automatically (Gold/Green OA)
 - Remaining PDFs need manual retrieval via institutional access
 - See `unpaywall_summary.md` for retrieval statistics
@@ -257,6 +258,7 @@ uv run validate_extraction.py \
 ```
 
 **Expected results**:
+
 - 100% success rate (all PDFs processed)
 - 65-70% time savings vs manual extraction
 - Some missing fields will need manual review
