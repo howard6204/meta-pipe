@@ -9,12 +9,14 @@
 ## 📊 更新概覽
 
 ### 文件變化
+
 - **原始行數**: 528 行
 - **更新後行數**: 803 行
 - **新增內容**: +275 行（+52%）
 - **新增章節**: 9 個主要章節
 
 ### 核心改進
+
 ✅ **新增 manuscript assembly 完整工作流程**
 ✅ **時間預估指引**（22-32 小時 end-to-end）
 ✅ **效率技巧**（來自實際專案經驗）
@@ -26,16 +28,19 @@
 ## 🎯 新增章節詳情
 
 ### 1. **When User Says "Complete Manuscript"** (NEW)
+
 **位置**: Line 24-68
 **功能**: 自動觸發 meta-manuscript-assembly skill
 
 **觸發關鍵字**:
+
 - "complete the manuscript"
 - "prepare for journal submission"
 - "create publication tables"
 - "assemble figures"
 
 **5 階段工作流程**:
+
 1. Tables Creation (2-3 hours)
 2. Figure Assembly (1-2 hours)
 3. References Management (1-2 hours)
@@ -47,6 +52,7 @@
 ---
 
 ### 2. **QA Thresholds** (EXPANDED)
+
 **位置**: Line 558-573
 **新增檢查項目**: 6 個
 
@@ -62,6 +68,7 @@
 ---
 
 ### 3. **Time Investment Guidance** (NEW)
+
 **位置**: Line 574-594
 **基於**: 實際完成專案（N=2402, 5 RCTs）
 
@@ -83,10 +90,12 @@
 ---
 
 ### 4. **Efficiency Tips** (NEW)
+
 **位置**: Line 595-621
 **來源**: 實際專案完成經驗
 
 **5 個最佳實踐**:
+
 1. ✅ Proactive skill invocation（Stage 06 完成時自動建議）
 2. ✅ Batch figure creation（先完成所有單圖，再組裝）
 3. ✅ References workflow（文字完成後再處理引用）
@@ -96,46 +105,54 @@
 ---
 
 ### 5. **Common Pitfalls to Avoid** (NEW)
+
 **位置**: Line 622-652
 **分類**: Tables, Figures, References
 
 **Tables**:
+
 - ❌ Don't: Create in Word → ✅ Do: Markdown tables
 - ❌ Don't: Embed calculations → ✅ Do: Calculate in R
 
 **Figures**:
+
 - ❌ Don't: PowerPoint assembly → ✅ Do: Python script
 - ❌ Don't: Default DPI → ✅ Do: Always 300 DPI
 
 **References**:
+
 - ❌ Don't: Manual formatting → ✅ Do: BibTeX + Pandoc
 - ❌ Don't: Insert during writing → ✅ Do: Placeholders first
 
 **時間節省**:
+
 - Figure assembly: 1-2 hours vs PowerPoint
 - References: 50%+ time savings
 
 ---
 
 ### 6. **Journal-Specific Formatting** (NEW)
+
 **位置**: Line 653-679
 
 **3 個優先目標期刊**:
 
-| Journal            | IF  | Abstract   | Main Text | Refs | Figs | Tables |
-| ------------------ | --- | ---------- | --------- | ---- | ---- | ------ |
-| Lancet Oncology    | ~50 | 250-400 w  | 3,500-5K  | 40   | 6    | 5      |
-| JAMA Oncology      | ~33 | 350 w      | 3,500 w   | 50   | 5    | 4      |
-| Nature Medicine    | ~82 | 150-200 w  | 3,000 w   | 50   | 6    | -      |
+| Journal         | IF  | Abstract  | Main Text | Refs | Figs | Tables |
+| --------------- | --- | --------- | --------- | ---- | ---- | ------ |
+| Lancet Oncology | ~50 | 250-400 w | 3,500-5K  | 40   | 6    | 5      |
+| JAMA Oncology   | ~33 | 350 w     | 3,500 w   | 50   | 5    | 4      |
+| Nature Medicine | ~82 | 150-200 w | 3,000 w   | 50   | 6    | -      |
 
 **建議**: Lancet Oncology（最寬鬆字數限制，適合 meta-analysis）
 
 ---
 
 ### 7. **AI-Assisted Workflow Optimization** (NEW)
+
 **位置**: Line 680-713
 
 **使用 Claude Skills** (60-80% time savings):
+
 - ✅ Manuscript structure creation
 - ✅ Table template generation
 - ✅ Figure assembly automation
@@ -143,6 +160,7 @@
 - ✅ PRISMA checklist filling
 
 **Manual work** (requires domain expertise):
+
 - ⚠️ Clinical interpretation
 - ⚠️ Discussion points selection
 - ⚠️ Figure legend scientific details
@@ -150,6 +168,7 @@
 - ⚠️ Conflicts of interest
 
 **LLM-Assisted Data Extraction**:
+
 - 100% success rate
 - 65-70% time savings
 - Cost: ~$0-5 per meta-analysis
@@ -157,9 +176,11 @@
 ---
 
 ### 8. **Version Control Best Practices** (NEW)
+
 **位置**: Line 714-757
 
 **Granular commits** (推薦):
+
 ```bash
 git commit -m "Complete abstract (396 words)"
 git commit -m "Add Table 1: Trial Characteristics (5 RCTs)"
@@ -167,6 +188,7 @@ git commit -m "Assemble Figure 1: 3-panel efficacy (300 DPI)"
 ```
 
 **好處**:
+
 - ✅ Easy rollback per section
 - ✅ Clear progress tracking
 - ✅ Facilitates collaboration
@@ -177,19 +199,22 @@ git commit -m "Assemble Figure 1: 3-panel efficacy (300 DPI)"
 ---
 
 ### 9. **Skill Generalization Workflow** (NEW)
+
 **位置**: Line 758-779
 
 **觸發條件**: 專案達 95%+ 完成度
 
 **行動步驟**:
+
 1. Analyze uncommitted progress (`git status`)
 2. Identify reusable patterns
 3. Extract into Claude Code skills
-4. Document in SKILLS_LEARNED_FROM_*.md
+4. Document in SKILLS*LEARNED_FROM*\*.md
 5. Commit to ~/.claude/skills
 6. Create summary report
 
 **本次專案範例**:
+
 - **識別**: Manuscript assembly workflow (5 phases)
 - **創建**: 2 個技能（meta-manuscript-assembly, scientific-figure-assembly）
 - **影響**: 50% time savings (16h → 8h)
@@ -199,6 +224,7 @@ git commit -m "Assemble Figure 1: 3-panel efficacy (300 DPI)"
 ---
 
 ### 10. **Success Metrics** (NEW)
+
 **位置**: Line 780-797
 
 **Publication-Ready Manuscript 定義**:
@@ -221,12 +247,12 @@ git commit -m "Assemble Figure 1: 3-panel efficacy (300 DPI)"
 
 ### 時間節省（Quantified）
 
-| 階段                  | 傳統方式 | 使用技能 | 節省   |
-| --------------------- | -------- | -------- | ------ |
-| Data Extraction       | 4-6 h    | 2-3 h    | 65%    |
-| Manuscript Assembly   | 16 h     | 8 h      | 50%    |
-| Figure Assembly       | 3-4 h    | 1-2 h    | 50-66% |
-| Reference Management  | 2-3 h    | 1 h      | 50%+   |
+| 階段                    | 傳統方式    | 使用技能    | 節省    |
+| ----------------------- | ----------- | ----------- | ------- |
+| Data Extraction         | 4-6 h       | 2-3 h       | 65%     |
+| Manuscript Assembly     | 16 h        | 8 h         | 50%     |
+| Figure Assembly         | 3-4 h       | 1-2 h       | 50-66%  |
+| Reference Management    | 2-3 h       | 1 h         | 50%+    |
 | **Total (Stage 05-07)** | **25-29 h** | **12-14 h** | **52%** |
 
 ### 品質提升
@@ -255,6 +281,7 @@ git commit -m "Assemble Figure 1: 3-panel efficacy (300 DPI)"
 ### 未來專案受益
 
 **下一個 meta-analysis 專案將**:
+
 - ✅ 自動觸發 manuscript assembly workflow
 - ✅ 使用驗證過的 Python scripts
 - ✅ 遵循最佳實踐（避免常見錯誤）
@@ -323,28 +350,33 @@ Impact:
 ### 如何使用更新後的 CLAUDE.md
 
 **1. 開始新專案時**:
-   - Claude 會自動讀取 CLAUDE.md
-   - 當您說 "complete manuscript"，會觸發 meta-manuscript-assembly skill
-   - 當您說 "assemble figures"，會觸發 scientific-figure-assembly skill
+
+- Claude 會自動讀取 CLAUDE.md
+- 當您說 "complete manuscript"，會觸發 meta-manuscript-assembly skill
+- 當您說 "assemble figures"，會觸發 scientific-figure-assembly skill
 
 **2. 檢查時間預估**:
-   - 查看 "Time Investment Guidance" section
-   - 預期 22-32 hours end-to-end
-   - Stage 05-07 critical path: 10-14 hours
+
+- 查看 "Time Investment Guidance" section
+- 預期 22-32 hours end-to-end
+- Stage 05-07 critical path: 10-14 hours
 
 **3. 避免常見錯誤**:
-   - 參考 "Common Pitfalls to Avoid" section
-   - Tables: Use markdown, not Word
-   - Figures: Use Python script, not PowerPoint
-   - References: Use BibTeX, not manual formatting
+
+- 參考 "Common Pitfalls to Avoid" section
+- Tables: Use markdown, not Word
+- Figures: Use Python script, not PowerPoint
+- References: Use BibTeX, not manual formatting
 
 **4. 選擇目標期刊**:
-   - 參考 "Journal-Specific Formatting" section
-   - 建議: Lancet Oncology（最適合 meta-analysis）
+
+- 參考 "Journal-Specific Formatting" section
+- 建議: Lancet Oncology（最適合 meta-analysis）
 
 **5. 版本控制**:
-   - 參考 "Version Control Best Practices"
-   - 建議使用 granular commits（每個階段後提交）
+
+- 參考 "Version Control Best Practices"
+- 建議使用 granular commits（每個階段後提交）
 
 ---
 
@@ -359,6 +391,7 @@ Impact:
 ### 未來增強
 
 **可能的後續改進**:
+
 - 添加 Quarto/RMarkdown 模板範例
 - 整合 GRADE evidence profile 自動生成
 - 添加更多期刊的格式要求（BMJ, NEJM, Annals）
@@ -371,13 +404,13 @@ Impact:
 
 ### 文檔規模
 
-| Metric              | Before | After | Change   |
-| ------------------- | ------ | ----- | -------- |
-| Total Lines         | 528    | 803   | +275     |
-| Total Sections (##) | 10     | 19    | +9       |
-| Code Blocks         | ~15    | ~25   | +10      |
-| Tables              | 3      | 7     | +4       |
-| Total Words         | ~3,500 | ~6,200| +2,700   |
+| Metric              | Before | After  | Change |
+| ------------------- | ------ | ------ | ------ |
+| Total Lines         | 528    | 803    | +275   |
+| Total Sections (##) | 10     | 19     | +9     |
+| Code Blocks         | ~15    | ~25    | +10    |
+| Tables              | 3      | 7      | +4     |
+| Total Words         | ~3,500 | ~6,200 | +2,700 |
 
 ### 知識覆蓋率
 
@@ -413,6 +446,7 @@ Impact:
 ## 🎉 總結
 
 **成功指標**:
+
 - ✅ 9 個新章節成功整合
 - ✅ 275 行高品質內容新增
 - ✅ 所有時間預估基於實際專案
@@ -420,12 +454,14 @@ Impact:
 - ✅ 技能泛化工作流程已建立
 
 **預期影響**:
+
 - 🚀 未來 meta-analysis 專案效率提升 50%
 - 🚀 Manuscript assembly 時間從 16h → 8h
 - 🚀 常見錯誤發生率降低
 - 🚀 Publication-ready 品質一致性提高
 
 **知識傳承**:
+
 - 📚 2 個新技能已加入技能庫
 - 📚 實戰經驗系統化保存
 - 📚 ROI 首次使用即回本（節省 8-12 小時）

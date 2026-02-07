@@ -2,6 +2,16 @@
 
 AI-assisted meta-analysis pipeline. This file is auto-loaded by Claude Code.
 
+---
+
+## Quick Start
+
+**New project?** → Say "brainstorm" or "help me find a topic"
+**Have TOPIC.txt?** → Say "start" or "continue"
+**At Stage 06?** → Say "complete manuscript" or see [Manuscript Assembly](docs/MANUSCRIPT_ASSEMBLY.md)
+
+---
+
 ## When User Says "Brainstorm" or "Help me find a topic"
 
 Use the **brainstorm-topic** skill (`.claude/skills/brainstorm-topic.md`):
@@ -20,6 +30,23 @@ Example prompts that trigger this:
 - "I don't know what to study"
 - "help me refine my research question"
 - "/brainstorm"
+
+---
+
+## When User Says "Complete Manuscript" or "Prepare for Submission"
+
+**📖 See**: [Manuscript Assembly Guide](docs/MANUSCRIPT_ASSEMBLY.md)
+
+Use the **meta-manuscript-assembly** skill - it will guide you through:
+- Tables Creation (2-3h)
+- Figure Assembly (1-2h)
+- References Management (1-2h)
+- Figure Legends (30-60min)
+- Quality Assurance (30-60min)
+
+**Expected**: 6-8 hours to publication-ready manuscript
+
+---
 
 ## When User Says "Start" or "See TOPIC.txt"
 
@@ -43,6 +70,8 @@ Then proceed:
    ```
 5. **Execute pipeline stages** in order, validating at each step
 
+---
+
 ## Resume Behavior
 
 If user says "continue", "what's next", or "status":
@@ -51,6 +80,8 @@ If user says "continue", "what's next", or "status":
 2. Report current progress
 3. Suggest next action
 
+---
+
 ## Rules
 
 - **Python**: Always `uv run`, never `python3` directly
@@ -58,6 +89,8 @@ If user says "continue", "what's next", or "status":
 - **API keys**: Read from `.env` ([docs/API_SETUP.md](docs/API_SETUP.md))
 - **Rounds**: Keep all `round-XX` data, never overwrite
 - **Delete**: Use `rip` not `rm`
+
+---
 
 ## Pipeline Stages
 
@@ -73,6 +106,8 @@ If user says "continue", "what's next", or "status":
 | 08    | `08_reviews/`    | grade_summary.md          | GRADE filled        |
 | 09    | `09_qa/`         | final_qa_report.md        | All checks pass     |
 
+---
+
 ## Decision Points (Ask User)
 
 Only ask if information is missing from TOPIC.txt:
@@ -82,6 +117,8 @@ Only ask if information is missing from TOPIC.txt:
 - Risk-of-bias tool (RoB 2 vs ROBINS-I)
 - Effect measure (RR/OR/HR/SMD/MD)
 - Subgroup variables
+
+---
 
 ## Commands Reference
 
@@ -255,13 +292,6 @@ uv run ../../ma-fulltext-management/scripts/unpaywall_fetch_robust.py \
   --continue-on-error \
   --max-retries 3
 
-# Alternative: Original version (less robust, may fail on problematic DOIs)
-# uv run ../../ma-fulltext-management/scripts/unpaywall_fetch.py \
-#   --in-bib ../../04_fulltext/round-01/fulltext_subset.bib \
-#   --out-csv ../../04_fulltext/round-01/unpaywall_results.csv \
-#   --out-log ../../04_fulltext/round-01/unpaywall_fetch.log \
-#   --email "your@email.com"
-
 # Analyze Unpaywall results
 uv run ../../ma-fulltext-management/scripts/analyze_unpaywall.py \
   --in-csv ../../04_fulltext/round-01/unpaywall_results.csv \
@@ -347,17 +377,6 @@ uv run validate_extraction.py \
 - Some missing fields will need manual review
 - See `validation_report.md` for data quality issues
 
-**Alternative: API-based extraction** (if CLI not available)
-
-```bash
-uv run ../../ma-data-extraction/scripts/llm_extract.py \
-  --manifest ../../04_fulltext/manifest.csv \
-  --data-dictionary ../../05_extraction/data-dictionary.md \
-  --out-jsonl ../../05_extraction/llm_suggestions.jsonl
-```
-
-Requires `LLM_API_BASE`, `LLM_API_KEY`, `LLM_MODEL` in `.env`
-
 </details>
 
 <details>
@@ -387,6 +406,8 @@ Use `renv` for reproducibility. Copy R scripts from asset folders to `06_analysi
 <details>
 <summary><strong>Stage 07: Manuscript</strong></summary>
 
+**📖 See**: [Manuscript Assembly Guide](docs/MANUSCRIPT_ASSEMBLY.md) for detailed workflow
+
 ```bash
 # PRISMA flow
 uv run ../../ma-manuscript-quarto/scripts/prisma_flow.py \
@@ -402,15 +423,11 @@ uv run ../../ma-manuscript-quarto/scripts/build_evidence_map.py \
 # Result claims table
 uv run ../../ma-manuscript-quarto/scripts/init_result_claims.py \
   --root ../.. --out 07_manuscript/result_claims.csv
-Render will fail if any claim is missing `effect_estimate`, `ci`, `p_value`, or `citation_keys`.
-Fill `citation_keys` as comma-separated BibTeX keys (e.g., `smith2020,doe2019`).
 
 # Generate result paragraphs
 uv run ../../ma-manuscript-quarto/scripts/build_result_paragraphs.py \
   --claims 07_manuscript/result_claims.csv \
   --out 07_manuscript/result_paragraphs.md
-This also writes `07_manuscript/result_paragraphs.qmd` and `07_manuscript/result_summary_table.md`.
-Set `RESULTS_MIN_WORDS` in the environment to change minimum words per claim paragraph (default 25).
 
 # Study characteristics table
 uv run ../../ma-manuscript-quarto/scripts/build_study_characteristics.py \
@@ -423,7 +440,6 @@ uv run ../../ma-manuscript-quarto/scripts/build_study_characteristics.py \
 uv run ../../ma-manuscript-quarto/scripts/assemble_results.py \
   --results 07_manuscript/03_results.qmd \
   --paragraphs 07_manuscript/result_paragraphs.qmd
-This also inserts `result_summary_table.md` into `03_results.qmd`.
 
 # Submission checklist (journal-specific)
 uv run ../../ma-manuscript-quarto/scripts/init_submission_checklist.py \
@@ -435,12 +451,6 @@ uv run ../../ma-manuscript-quarto/scripts/results_consistency_report.py \
   --root ../.. \
   --out 09_qa/results_consistency_report.md \
   --strict
-
-# Insert traceability table into Methods
-uv run ../../ma-manuscript-quarto/scripts/insert_traceability_table.py \
-  --root ../.. --round round-01 \
-  --methods 07_manuscript/02_methods.qmd \
-  --out-table 07_manuscript/traceability_table.md
 
 # Render
 uv run ../../ma-manuscript-quarto/scripts/render_manuscript.py \
@@ -510,18 +520,36 @@ uv run ../../ma-end-to-end/scripts/checkpoint.py --restore --name pre-analysis -
 
 </details>
 
+---
+
 ## QA Thresholds
 
-| Check                   | Threshold | Action if Failed             |
-| ----------------------- | --------- | ---------------------------- |
-| Dual-review kappa       | ≥ 0.60    | Flag, require reconciliation |
-| Missing study_id        | 0         | Block extraction             |
-| Numeric fields          | ≥ 0       | Block analysis               |
-| PRISMA NA counts        | 0         | Reconcile before render      |
-| Result-to-table mapping | 100%      | Block manuscript             |
+| Check                       | Threshold | Action if Failed             |
+| --------------------------- | --------- | ---------------------------- |
+| Dual-review kappa           | ≥ 0.60    | Flag, require reconciliation |
+| Missing study_id            | 0         | Block extraction             |
+| Numeric fields              | ≥ 0       | Block analysis               |
+| PRISMA NA counts            | 0         | Reconcile before render      |
+| Result-to-table mapping     | 100%      | Block manuscript             |
+| Figure DPI                  | ≥ 300     | Re-export from R             |
+| Figure panel labels         | Required  | Add A, B, C labels           |
+| Reference DOI coverage      | ≥ 90%     | Manual DOI lookup            |
+| Citation mapping            | 100%      | Block manuscript render      |
+| Word count (target journal) | ±10%      | Edit for compliance          |
+| PRISMA checklist items      | 27/27     | Block submission             |
+
+---
 
 ## Documentation
 
-- **Step-by-step**: [GETTING_STARTED.md](GETTING_STARTED.md)
-- **API keys**: [docs/API_SETUP.md](docs/API_SETUP.md)
-- **Templates**: Each `ma-*/references/` folder
+**Essential**:
+- [Time Investment Guidance](docs/TIME_GUIDANCE.md) - Realistic timeline expectations (22-32 hours)
+- [Manuscript Assembly](docs/MANUSCRIPT_ASSEMBLY.md) - Stage 07 complete workflow (6-8 hours)
+- [Journal Formatting](docs/JOURNAL_FORMATTING.md) - Lancet/JAMA/Nature Medicine requirements
+
+**Reference**:
+- [Skill Generalization](docs/SKILL_GENERALIZATION.md) - Extract workflows at 95%+ completion
+- [API Setup](docs/API_SETUP.md) - Configure API keys for Scopus/Embase
+- [Getting Started](GETTING_STARTED.md) - Detailed step-by-step guide
+
+**Templates**: Each `ma-*/references/` folder contains protocol and analysis templates

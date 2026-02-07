@@ -29,6 +29,7 @@
 ### 🐛 問題描述
 
 **原始問題**:
+
 ```
 DOI: 10.1038/s41523-022-00500-3
 Error: requests.exceptions.HTTPError: 422 Client Error: Unprocessable Entity
@@ -36,6 +37,7 @@ Result: 整個腳本中斷，90 個 DOI 中只處理了 0 個
 ```
 
 **影響**:
+
 - ❌ 無法自動下載任何 Open Access PDFs
 - ❌ 需要手動處理所有 90 篇文獻
 - ❌ 預估增加 6-10 小時人工作業時間
@@ -44,12 +46,12 @@ Result: 整個腳本中斷，90 個 DOI 中只處理了 0 個
 
 #### 1. 錯誤分類處理
 
-| HTTP 狀態 | 處理方式 |
-|----------|---------|
-| 404 | 記錄 "not_found"，繼續下一個 |
-| 422 | 記錄 "unprocessable"，繼續下一個 |
-| 429 | 自動重試（2s, 4s, 6s 等待）|
-| Timeout | 重試 3 次（1s, 2s, 3s 等待）|
+| HTTP 狀態 | 處理方式                         |
+| --------- | -------------------------------- |
+| 404       | 記錄 "not_found"，繼續下一個     |
+| 422       | 記錄 "unprocessable"，繼續下一個 |
+| 429       | 自動重試（2s, 4s, 6s 等待）      |
+| Timeout   | 重試 3 次（1s, 2s, 3s 等待）     |
 
 #### 2. 自動重試機制
 
@@ -70,10 +72,12 @@ for attempt in range(max_retries):
 #### 3. 增強輸出格式
 
 **CSV 新增欄位**:
+
 - `error`: 錯誤類型
 - `error_detail`: 詳細錯誤訊息
 
 **JSON 統計**:
+
 ```json
 {
   "success_count": 87,
@@ -86,26 +90,30 @@ for attempt in range(max_retries):
 ```
 
 **Log 報告**:
+
 ```markdown
 ## Results Summary
+
 - DOIs queried: 90
 - Successful queries: 87
 - Failed queries: 3
 - Success rate: 96.7%
 
 ## Error Breakdown
+
 - unprocessable: 2 (2.2%)
 - not_found: 1 (1.1%)
 ```
 
 ### 📊 效能對比
 
-| 版本 | 成功率 | 處理時間 | 可用性 |
-|------|--------|---------|--------|
-| 原始版本 | 0% (0/90) | ~5s (中斷) | ❌ 無法使用 |
-| 穩健版本 | 96.7% (87/90) | ~25s | ✅ 完全可用 |
+| 版本     | 成功率        | 處理時間   | 可用性      |
+| -------- | ------------- | ---------- | ----------- |
+| 原始版本 | 0% (0/90)     | ~5s (中斷) | ❌ 無法使用 |
+| 穩健版本 | 96.7% (87/90) | ~25s       | ✅ 完全可用 |
 
 **時間節省**:
+
 - 87 篇 PDF 自動識別 Open Access 狀態
 - 預估自動下載 35-52 篇（40-60% OA 率）
 - 節省 3-6 小時手動搜尋 PDF 時間
@@ -191,6 +199,7 @@ uv run ../../ma-fulltext-management/scripts/unpaywall_fetch.py \
 ### 📧 回報問題
 
 如遇到新的錯誤類型，請記錄：
+
 1. 問題 DOI
 2. 完整錯誤訊息（`error_detail` 欄位）
 3. Unpaywall API 回應（如有）
@@ -200,6 +209,7 @@ uv run ../../ma-fulltext-management/scripts/unpaywall_fetch.py \
 這次修正將 Unpaywall API 整合從**完全失敗（0% 成功率）**提升到**幾乎完全成功（96.7% 成功率）**，大幅改善了 Phase 4 全文檢索階段的自動化程度。
 
 **實際效益**:
+
 - ⏱️ 節省 3-6 小時 PDF 搜尋時間
 - 📚 自動識別 35-52 篇 Open Access 文章
 - 🔄 優雅處理 API 錯誤，不中斷流程
