@@ -33,9 +33,11 @@ Use the **meta-manuscript-assembly** skill (`~/.claude/skills/meta-manuscript-as
    - Cross-reference: `@fig-pcr`, `@tbl-efficacy`
 
 3. **Figure Assembly** (1-2 hours)
-   - Use Python PIL/Pillow for multi-panel figures
+   - Use R for all plot generation (ggplot2, forest plots, etc.)
+   - Export from R using `ggsave()` with `dpi=300`
+   - Use R packages for multi-panel assembly (patchwork, cowplot)
    - Export to `07_manuscript/figures/` at 300 DPI
-   - Add professional panel labels (A, B, C)
+   - Add professional panel labels (A, B, C) in R
    - Reference in Quarto: `![Figure 1](figures/figure1.png){#fig-1}`
 
 4. **Tables Integration** (1-2 hours)
@@ -112,9 +114,9 @@ format:
     geometry: margin=1in
     keep-tex: true
   docx:
-    reference-doc: custom-reference.docx  # optional
+    reference-doc: custom-reference.docx # optional
 bibliography: references.bib
-csl: apa.csl  # or vancouver.csl, lancet.csl
+csl: apa.csl # or vancouver.csl, lancet.csl
 number-sections: true
 ---
 ```
@@ -122,6 +124,7 @@ number-sections: true
 ### Citation Examples
 
 **In-text citations**:
+
 ```markdown
 Previous studies [@smith2020; @jones2021] demonstrated...
 According to @brown2019, the effect was...
@@ -129,6 +132,7 @@ Multiple trials [@keynote522; @impassion031; @geparnuevo] showed...
 ```
 
 **Rendered as**:
+
 - Previous studies (Smith et al., 2020; Jones et al., 2021) demonstrated...
 - According to Brown (2019), the effect was...
 - Multiple trials (Schmid et al., 2020; Mittendorf et al., 2020; ...) showed...
@@ -136,6 +140,7 @@ Multiple trials [@keynote522; @impassion031; @geparnuevo] showed...
 ### Figure Integration
 
 **Quarto syntax**:
+
 ```markdown
 ![Pathologic complete response rates. Forest plot showing risk ratios with 95% confidence intervals for the primary outcome across 5 randomized controlled trials (N=2402 patients). I²=0%, p=0.0015.](figures/figure1_pcr.png){#fig-pcr width=100%}
 
@@ -143,6 +148,7 @@ As shown in @fig-pcr, the addition of ICI to chemotherapy...
 ```
 
 **Multi-panel figures**:
+
 ```markdown
 ![Efficacy outcomes. (A) Pathologic complete response; (B) Event-free survival; (C) Overall survival. All panels show forest plots with 95% CI.](figures/figure1_efficacy.png){#fig-efficacy}
 ```
@@ -150,11 +156,12 @@ As shown in @fig-pcr, the addition of ICI to chemotherapy...
 ### Table Integration
 
 **Option 1: Quarto native tables**:
+
 ```markdown
-| Trial | N | ICI Regimen | Control | pCR (ICI) | pCR (Control) |
-|-------|---|-------------|---------|-----------|---------------|
-| KEYNOTE-522 | 1174 | Pembrolizumab + chemo | Chemo | 64.8% | 51.2% |
-| IMpassion031 | 455 | Atezolizumab + chemo | Chemo | 57.6% | 41.1% |
+| Trial        | N    | ICI Regimen           | Control | pCR (ICI) | pCR (Control) |
+| ------------ | ---- | --------------------- | ------- | --------- | ------------- |
+| KEYNOTE-522  | 1174 | Pembrolizumab + chemo | Chemo   | 64.8%     | 51.2%         |
+| IMpassion031 | 455  | Atezolizumab + chemo  | Chemo   | 57.6%     | 41.1%         |
 
 : Trial Characteristics {#tbl-characteristics}
 
@@ -162,11 +169,13 @@ Reference in text: @tbl-characteristics shows...
 ```
 
 **Option 2: Include external markdown**:
+
 ```markdown
 {{< include tables/table1_characteristics.md >}}
 ```
 
 **Option 3: Dynamic tables from R**:
+
 ````markdown
 ```{r}
 #| label: tbl-efficacy
@@ -188,12 +197,14 @@ The safety profile (@tbl-safety) was acceptable...
 ### Rendering Commands
 
 **Render all formats**:
+
 ```bash
 cd 07_manuscript
 quarto render index.qmd
 ```
 
 **Render specific format**:
+
 ```bash
 quarto render index.qmd --to html
 quarto render index.qmd --to pdf
@@ -201,11 +212,13 @@ quarto render index.qmd --to docx
 ```
 
 **Preview while editing**:
+
 ```bash
 quarto preview index.qmd
 ```
 
 **Specify output directory**:
+
 ```bash
 quarto render index.qmd --output-dir output
 ```
@@ -253,14 +266,24 @@ Based on actual project experience:
 ### Figures
 
 ❌ **Don't**: Manually combine figures in PowerPoint
-✅ **Do**: Use Python script (`assemble_figures.py`)
+✅ **Do**: Use R packages (patchwork, cowplot) for multi-panel figures
 
 - Reason: Reproducible, maintains quality, saves 1-2 hours
 
 ❌ **Don't**: Export at default DPI
 ✅ **Do**: Always specify `dpi=300` in R ggsave
 
+```r
+# Example: Export high-resolution figure
+ggsave("figures/figure1.png", width=10, height=8, dpi=300)
+```
+
 - Reason: Journals reject <300 DPI figures
+
+❌ **Don't**: Use Python for plotting (legacy approach)
+✅ **Do**: Use R for all statistical plots and figure assembly
+
+- Reason: Better integration with meta-analysis workflow, publication-quality defaults
 
 ### References
 

@@ -382,22 +382,53 @@ uv run validate_extraction.py \
 <details>
 <summary><strong>Stage 06: Analysis (R)</strong></summary>
 
+**⚠️ IMPORTANT**: All statistical analysis and figure generation must be done in R.
+
+**📖 See**: [R Figure Generation Guide](docs/R_FIGURE_GUIDE.md) for package resources and examples
+
 Run in order from `06_analysis/`:
 
 **Core analysis (ma-meta-analysis/assets/r/):**
 
-```
-01_setup.R → 02_effect_sizes.R → 03_models.R → 04_subgroups_meta_regression.R
-→ 05_plots.R → 06_tables.R → 07_sensitivity.R → 08_bias.R → 09_validation.R
+```r
+# Execute R scripts in order
+01_setup.R                    # Load packages, set theme
+02_effect_sizes.R             # Calculate RR/OR/HR
+03_models.R                   # Random-effects meta-analysis
+04_subgroups_meta_regression.R # Subgroup analysis
+05_plots.R                    # Forest plots, funnel plots (300 DPI)
+06_tables.R                   # Summary tables
+07_sensitivity.R              # Sensitivity analysis
+08_bias.R                     # Publication bias assessment
+09_validation.R               # Leave-one-out analysis
 ```
 
 **Publication quality (ma-publication-quality/assets/r/):**
 
+```r
+10_hakn_prediction.R           # Hartung-Knapp prediction intervals
+11_influence_diagnostics.R     # Influence analysis
+12_sof_table.R                 # Summary of Findings table
 ```
-10_hakn_prediction.R    # Hartung-Knapp prediction intervals
-11_influence_diagnostics.R  # Leave-one-out influence analysis
-12_sof_table.R          # Summary of Findings table
+
+**Figure export**:
+
+```r
+# Always export at 300 DPI
+ggsave("figures/figure1.png", width=10, height=8, dpi=300)
+
+# For base R plots
+png("figures/figure1.png", width=10, height=8, units="in", res=300)
+forest(res)
+dev.off()
 ```
+
+**R Package Resources**:
+- **CRAN**: https://cran.r-project.org/ (official repository)
+- **Tidyverse**: https://www.tidyverse.org/ (ggplot2, dplyr)
+- **Bioconductor**: https://bioconductor.org/ (bioinformatics)
+- **rOpenSci**: https://ropensci.org/ (peer-reviewed tools)
+- **R-universe**: https://r-universe.dev/ (search all packages)
 
 Use `renv` for reproducibility. Copy R scripts from asset folders to `06_analysis/`.
 
@@ -545,6 +576,7 @@ uv run ../../ma-end-to-end/scripts/checkpoint.py --restore --name pre-analysis -
 **Essential**:
 - [Time Investment Guidance](docs/TIME_GUIDANCE.md) - Realistic timeline expectations (22-32 hours)
 - [Manuscript Assembly](docs/MANUSCRIPT_ASSEMBLY.md) - Stage 07 complete workflow (6-8 hours)
+- [R Figure Generation](docs/R_FIGURE_GUIDE.md) - Publication-quality figures with R (300 DPI)
 - [Journal Formatting](docs/JOURNAL_FORMATTING.md) - Lancet/JAMA/Nature Medicine requirements
 
 **Reference**:
