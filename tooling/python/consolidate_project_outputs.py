@@ -173,6 +173,7 @@ def consolidate_outputs(root_dir: Path, project_name: str, output_dir: Path = No
         "09_scripts": [
             "tooling/python/ai_screen_titles.py",
             "tooling/python/assemble_figures.py",
+            "tooling/scripts/cleanup_root_markdown.sh",
         ],
     }
 
