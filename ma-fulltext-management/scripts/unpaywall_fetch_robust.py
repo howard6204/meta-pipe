@@ -57,7 +57,11 @@ def read_bib_entries(path: Path) -> List[Dict[str, str]]:
 def iter_dois(entries: Iterable[Dict[str, str]]) -> Iterable[Dict[str, str]]:
     for entry in entries:
         doi = entry.get("doi", "").strip()
-        doi = doi.replace("https://doi.org/", "").replace("http://doi.org/", "").replace("doi:", "")
+        doi = (
+            doi.replace("https://doi.org/", "")
+            .replace("http://doi.org/", "")
+            .replace("doi:", "")
+        )
         doi = doi.strip()
         if not doi:
             continue
@@ -66,7 +70,9 @@ def iter_dois(entries: Iterable[Dict[str, str]]) -> Iterable[Dict[str, str]]:
         yield entry
 
 
-def fetch_unpaywall(api_base: str, doi: str, email: str, max_retries: int = 3) -> Dict[str, Any]:
+def fetch_unpaywall(
+    api_base: str, doi: str, email: str, max_retries: int = 3
+) -> Dict[str, Any]:
     """Fetch Unpaywall data with robust error handling.
 
     Args:
@@ -88,19 +94,26 @@ def fetch_unpaywall(api_base: str, doi: str, email: str, max_retries: int = 3) -
 
             # Handle specific status codes
             if resp.status_code == 404:
-                return {"doi": doi, "error": "not_found", "error_detail": "DOI not found in Unpaywall"}
+                return {
+                    "doi": doi,
+                    "error": "not_found",
+                    "error_detail": "DOI not found in Unpaywall",
+                }
 
             if resp.status_code == 422:
                 return {
                     "doi": doi,
                     "error": "unprocessable",
-                    "error_detail": f"Unpaywall cannot process this DOI (HTTP 422)"
+                    "error_detail": f"Unpaywall cannot process this DOI (HTTP 422)",
                 }
 
             if resp.status_code == 429:
                 # Rate limit - wait longer and retry
                 wait_time = (attempt + 1) * 2
-                print(f"  Rate limited for DOI {doi}, waiting {wait_time}s...", file=sys.stderr)
+                print(
+                    f"  Rate limited for DOI {doi}, waiting {wait_time}s...",
+                    file=sys.stderr,
+                )
                 time.sleep(wait_time)
                 continue
 
@@ -110,20 +123,30 @@ def fetch_unpaywall(api_base: str, doi: str, email: str, max_retries: int = 3) -
 
         except requests.exceptions.Timeout:
             if attempt < max_retries - 1:
-                print(f"  Timeout for DOI {doi}, retrying ({attempt+1}/{max_retries})...", file=sys.stderr)
+                print(
+                    f"  Timeout for DOI {doi}, retrying ({attempt + 1}/{max_retries})...",
+                    file=sys.stderr,
+                )
                 time.sleep((attempt + 1) * 1)
                 continue
-            return {"doi": doi, "error": "timeout", "error_detail": "Request timeout after retries"}
+            return {
+                "doi": doi,
+                "error": "timeout",
+                "error_detail": "Request timeout after retries",
+            }
 
         except requests.exceptions.RequestException as e:
             if attempt < max_retries - 1:
-                print(f"  Request error for DOI {doi}, retrying ({attempt+1}/{max_retries})...", file=sys.stderr)
+                print(
+                    f"  Request error for DOI {doi}, retrying ({attempt + 1}/{max_retries})...",
+                    file=sys.stderr,
+                )
                 time.sleep((attempt + 1) * 1)
                 continue
             return {
                 "doi": doi,
                 "error": "request_failed",
-                "error_detail": f"Request exception: {str(e)[:100]}"
+                "error_detail": f"Request exception: {str(e)[:100]}",
             }
 
     return {"doi": doi, "error": "max_retries", "error_detail": "Max retries exceeded"}
@@ -162,16 +185,32 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Fetch Unpaywall OA locations for DOI list (robust version)."
     )
-    parser.add_argument("--in-bib", required=True, help="Input BibTeX file (included studies)")
-    parser.add_argument("--email", default=None, help="Contact email (or UNPAYWALL_EMAIL env)")
-    parser.add_argument("--api-base", default="https://api.unpaywall.org", help="Unpaywall API base URL")
-    parser.add_argument("--sleep", type=float, default=0.2, help="Sleep seconds between requests")
-    parser.add_argument("--max-retries", type=int, default=3, help="Max retries for transient errors")
-    parser.add_argument("--max-records", type=int, default=None, help="Max DOIs to query")
+    parser.add_argument(
+        "--in-bib", required=True, help="Input BibTeX file (included studies)"
+    )
+    parser.add_argument(
+        "--email", default=None, help="Contact email (or UNPAYWALL_EMAIL env)"
+    )
+    parser.add_argument(
+        "--api-base", default="https://api.unpaywall.org", help="Unpaywall API base URL"
+    )
+    parser.add_argument(
+        "--sleep", type=float, default=0.2, help="Sleep seconds between requests"
+    )
+    parser.add_argument(
+        "--max-retries", type=int, default=3, help="Max retries for transient errors"
+    )
+    parser.add_argument(
+        "--max-records", type=int, default=None, help="Max DOIs to query"
+    )
     parser.add_argument("--out-csv", required=True, help="Output CSV path")
-    parser.add_argument("--out-json", default=None, help="Output JSON path (raw payloads)")
+    parser.add_argument(
+        "--out-json", default=None, help="Output JSON path (raw payloads)"
+    )
     parser.add_argument("--out-log", required=True, help="Output log path")
-    parser.add_argument("--continue-on-error", action="store_true", help="Continue processing on errors")
+    parser.add_argument(
+        "--continue-on-error", action="store_true", help="Continue processing on errors"
+    )
     args = parser.parse_args()
 
     email = args.email or os.getenv("UNPAYWALL_EMAIL")
@@ -195,9 +234,13 @@ def main() -> None:
     print(f"Processing {len(targets)} DOIs from {args.in_bib}...", file=sys.stderr)
 
     for idx, entry in enumerate(targets, start=1):
-        print(f"  [{idx}/{len(targets)}] {entry['doi'][:40]}...", end=" ", file=sys.stderr)
+        print(
+            f"  [{idx}/{len(targets)}] {entry['doi'][:40]}...", end=" ", file=sys.stderr
+        )
 
-        payload = fetch_unpaywall(args.api_base, entry["doi"], email, max_retries=args.max_retries)
+        payload = fetch_unpaywall(
+            args.api_base, entry["doi"], email, max_retries=args.max_retries
+        )
         payloads.append(payload)
         rows.append(extract_row(entry, payload))
 
@@ -276,7 +319,7 @@ def main() -> None:
         f"- DOIs queried: {len(targets)}",
         f"- Successful queries: {success_count}",
         f"- Failed queries: {error_count}",
-        f"- Success rate: {success_count/len(targets)*100:.1f}%",
+        f"- Success rate: {success_count / len(targets) * 100:.1f}%",
         f"",
         f"## Error Breakdown",
         f"",
@@ -284,16 +327,20 @@ def main() -> None:
 
     if error_types:
         for error_type, count in sorted(error_types.items(), key=lambda x: -x[1]):
-            log_lines.append(f"- `{error_type}`: {count} ({count/len(targets)*100:.1f}%)")
+            log_lines.append(
+                f"- `{error_type}`: {count} ({count / len(targets) * 100:.1f}%)"
+            )
     else:
         log_lines.append("- No errors ✅")
 
-    log_lines.extend([
-        f"",
-        f"## Output Files",
-        f"",
-        f"- CSV: `{out_csv}`",
-    ])
+    log_lines.extend(
+        [
+            f"",
+            f"## Output Files",
+            f"",
+            f"- CSV: `{out_csv}`",
+        ]
+    )
 
     if args.out_json:
         log_lines.append(f"- JSON: `{args.out_json}`")
@@ -302,7 +349,9 @@ def main() -> None:
 
     out_log.write_text("\n".join(log_lines) + "\n")
 
-    print(f"\n✅ Complete: {success_count} success, {error_count} errors", file=sys.stderr)
+    print(
+        f"\n✅ Complete: {success_count} success, {error_count} errors", file=sys.stderr
+    )
     print(f"📄 Output written to: {out_csv}", file=sys.stderr)
     print(f"📋 Log written to: {out_log}", file=sys.stderr)
 
