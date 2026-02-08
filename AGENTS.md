@@ -146,17 +146,17 @@ If user says "continue", "what's next", or "status":
 
 ## Pipeline Stages
 
-| Stage | Folder           | Key Output                | Validation          | Quickstart Guide |
-| ----- | ---------------- | ------------------------- | ------------------- | ---------------- |
-| 01    | `01_protocol/`   | pico.yaml, eligibility.md | PICO complete       | — |
-| 02    | `02_search/`     | dedupe.bib                | Records > 0         | — |
-| 03    | `03_screening/`  | decisions.csv             | Kappa ≥ 0.60        | ✅ [Template](ma-screening-quality/references/screening-quickstart-template.md) |
+| Stage | Folder           | Key Output                | Validation          | Quickstart Guide                                                                 |
+| ----- | ---------------- | ------------------------- | ------------------- | -------------------------------------------------------------------------------- |
+| 01    | `01_protocol/`   | pico.yaml, eligibility.md | PICO complete       | —                                                                                |
+| 02    | `02_search/`     | dedupe.bib                | Records > 0         | —                                                                                |
+| 03    | `03_screening/`  | decisions.csv             | Kappa ≥ 0.60        | ✅ [Template](ma-screening-quality/references/screening-quickstart-template.md)  |
 | 04    | `04_fulltext/`   | manifest.csv              | PDFs collected      | ✅ [Template](ma-fulltext-management/references/fulltext-quickstart-template.md) |
-| 05    | `05_extraction/` | extraction.csv            | No missing study_id | — |
-| 06    | `06_analysis/`   | figures/, tables/         | R scripts 01-12     | ✅ [Template](ma-meta-analysis/references/analysis-progress-template.md) |
+| 05    | `05_extraction/` | extraction.csv            | No missing study_id | —                                                                                |
+| 06    | `06_analysis/`   | figures/, tables/         | R scripts 01-12     | ✅ [Template](ma-meta-analysis/references/analysis-progress-template.md)         |
 | 07    | `07_manuscript/` | manuscript.pdf            | PRISMA complete     | ✅ [Template](ma-manuscript-quarto/references/manuscript-completion-template.md) |
-| 08    | `08_reviews/`    | grade_summary.md          | GRADE filled        | — |
-| 09    | `09_qa/`         | final_qa_report.md        | All checks pass     | — |
+| 08    | `08_reviews/`    | grade_summary.md          | GRADE filled        | —                                                                                |
+| 09    | `09_qa/`         | final_qa_report.md        | All checks pass     | —                                                                                |
 
 **Note**: Quickstart guide templates use `{{PLACEHOLDERS}}` that can be auto-filled from project data. See [Template Extraction Status](docs/TEMPLATE_EXTRACTION_STATUS.md) for automation roadmap.
 

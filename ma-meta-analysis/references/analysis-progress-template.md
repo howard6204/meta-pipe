@@ -13,12 +13,14 @@
 **Status**: {{STATUS_1}}
 
 **Key Results**:
+
 - **Pooled estimate**: {{POOLED_ESTIMATE_1}} (95% CI: {{CI_1}}, p={{PVALUE_1}})
 - **Heterogeneity**: I²={{I2_1}}%
 - **Absolute benefit**: {{ABSOLUTE_BENEFIT_1}}
 - **NNT**: {{NNT_1}} patients
 
 **Outputs**:
+
 - [ ] Forest plot: `figures/forest_plot_{{PRIMARY_OUTCOME}}.png`
 - [ ] Funnel plot: `figures/funnel_plot_{{PRIMARY_OUTCOME}}.png`
 - [ ] Results table: `tables/{{PRIMARY_OUTCOME}}_meta_analysis_results.csv`
@@ -34,6 +36,7 @@
 **Status**: {{STATUS_2}}
 
 **Key Results**:
+
 - **Subgroup 1**: {{ESTIMATE_SUBGROUP_1}} (95% CI: {{CI_SUBGROUP_1}}, p={{P_SUBGROUP_1}})
 - **Subgroup 2**: {{ESTIMATE_SUBGROUP_2}} (95% CI: {{CI_SUBGROUP_2}}, p={{P_SUBGROUP_2}})
 - **Interaction test**: p={{P_INTERACTION}}
@@ -42,6 +45,7 @@
 {{SUBGROUP_INTERPRETATION}}
 
 **Outputs**:
+
 - [ ] Forest plot: `figures/forest_plot_{{SUBGROUP_VARIABLE}}_subgroups.png`
 - [ ] Comparison table: `tables/{{SUBGROUP_VARIABLE}}_subgroup_comparison.csv`
 - [ ] Report: `{{SUBGROUP_VARIABLE}}_SUBGROUP_REPORT.md`
@@ -56,6 +60,7 @@
 **Status**: {{STATUS_3}}
 
 **Key Results**:
+
 - **Pooled estimate**: {{POOLED_ESTIMATE_3}} (95% CI: {{CI_3}}, p={{PVALUE_3}})
 - **Heterogeneity**: I²={{I2_3}}%
 - **Absolute benefit**: {{ABSOLUTE_BENEFIT_3}}
@@ -65,6 +70,7 @@
 {{SECONDARY_OUTCOME_INTERPRETATION}}
 
 **Outputs**:
+
 - [ ] Forest plot: `figures/forest_plot_{{SECONDARY_OUTCOME}}.png`
 - [ ] Leave-one-out: `figures/{{SECONDARY_OUTCOME}}_leave_one_out.png`
 - [ ] Funnel plot: `figures/funnel_plot_{{SECONDARY_OUTCOME}}.png`
@@ -79,12 +85,13 @@
 
 ### Concordance Across Endpoints
 
-| Outcome | Measure | Pooled Estimate | 95% CI | p-value | I² | Absolute Benefit | NNT |
-|---------|---------|-----------------|--------|---------|----|-----------------|----|
-| **{{PRIMARY_OUTCOME}}** | {{MEASURE_1}} | {{POOLED_ESTIMATE_1}} | {{CI_1}} | {{PVALUE_1}} | {{I2_1}}% | {{ABSOLUTE_BENEFIT_1}} | {{NNT_1}} |
+| Outcome                   | Measure       | Pooled Estimate       | 95% CI   | p-value      | I²        | Absolute Benefit       | NNT       |
+| ------------------------- | ------------- | --------------------- | -------- | ------------ | --------- | ---------------------- | --------- |
+| **{{PRIMARY_OUTCOME}}**   | {{MEASURE_1}} | {{POOLED_ESTIMATE_1}} | {{CI_1}} | {{PVALUE_1}} | {{I2_1}}% | {{ABSOLUTE_BENEFIT_1}} | {{NNT_1}} |
 | **{{SECONDARY_OUTCOME}}** | {{MEASURE_3}} | {{POOLED_ESTIMATE_3}} | {{CI_3}} | {{PVALUE_3}} | {{I2_3}}% | {{ABSOLUTE_BENEFIT_3}} | {{NNT_3}} |
 
 **Interpretation**:
+
 - {{CONCORDANCE_INTERPRETATION}}
 
 ---
@@ -116,11 +123,13 @@
 ### Patient Counseling
 
 **Benefits**:
+
 - {{BENEFIT_1}}
 - {{BENEFIT_2}}
 - {{BENEFIT_3}}
 
 **Risks**:
+
 - {{RISK_1}}
 - {{RISK_2}}
 - {{RISK_3}}
@@ -132,7 +141,8 @@
 **Phase 5**: {{EXTRACTION_METHOD}} (completed {{EXTRACTION_DATE}})
 
 | Trial | {{PRIMARY_OUTCOME}} Data | {{SECONDARY_OUTCOME}} Data | {{SAFETY_OUTCOME}} Data | {{SUBGROUP_VARIABLE}} Data | Notes |
-|-------|--------------------------|----------------------------|------------------------|---------------------------|-------|
+| ----- | ------------------------ | -------------------------- | ----------------------- | -------------------------- | ----- |
+
 {{TRIAL_DATA_TABLE}}
 
 **Total**: {{N_STUDIES}} studies, N={{TOTAL_N}} participants
@@ -312,20 +322,20 @@
 
 ## 📊 Progress Tracker
 
-| Phase | Task | Status | Completion Date |
-|-------|------|--------|-----------------|
-| 6.1 | Primary outcome meta-analysis | {{STATUS_6_1}} | {{DATE_6_1}} |
-| 6.2 | Subgroup analysis | {{STATUS_6_2}} | {{DATE_6_2}} |
-| 6.3 | Secondary outcome meta-analysis | {{STATUS_6_3}} | {{DATE_6_3}} |
-| 6.4 | Additional outcomes | {{STATUS_6_4}} | {{DATE_6_4}} |
-| 6.5 | Safety meta-analysis | {{STATUS_6_5}} | {{DATE_6_5}} |
-| 6.6 | Sensitivity analysis | {{STATUS_6_6}} | {{DATE_6_6}} |
-| 6.7 | Publication bias | {{STATUS_6_7}} | {{DATE_6_7}} |
-| 6.8 | Meta-regression | {{STATUS_6_8}} | {{DATE_6_8}} |
-| 6.9 | Influence diagnostics | {{STATUS_6_9}} | {{DATE_6_9}} |
-| 6.10 | Prediction intervals | {{STATUS_6_10}} | {{DATE_6_10}} |
-| 6.11 | GRADE assessment | {{STATUS_6_11}} | {{DATE_6_11}} |
-| 6.12 | Summary of findings | {{STATUS_6_12}} | {{DATE_6_12}} |
+| Phase | Task                            | Status          | Completion Date |
+| ----- | ------------------------------- | --------------- | --------------- |
+| 6.1   | Primary outcome meta-analysis   | {{STATUS_6_1}}  | {{DATE_6_1}}    |
+| 6.2   | Subgroup analysis               | {{STATUS_6_2}}  | {{DATE_6_2}}    |
+| 6.3   | Secondary outcome meta-analysis | {{STATUS_6_3}}  | {{DATE_6_3}}    |
+| 6.4   | Additional outcomes             | {{STATUS_6_4}}  | {{DATE_6_4}}    |
+| 6.5   | Safety meta-analysis            | {{STATUS_6_5}}  | {{DATE_6_5}}    |
+| 6.6   | Sensitivity analysis            | {{STATUS_6_6}}  | {{DATE_6_6}}    |
+| 6.7   | Publication bias                | {{STATUS_6_7}}  | {{DATE_6_7}}    |
+| 6.8   | Meta-regression                 | {{STATUS_6_8}}  | {{DATE_6_8}}    |
+| 6.9   | Influence diagnostics           | {{STATUS_6_9}}  | {{DATE_6_9}}    |
+| 6.10  | Prediction intervals            | {{STATUS_6_10}} | {{DATE_6_10}}   |
+| 6.11  | GRADE assessment                | {{STATUS_6_11}} | {{DATE_6_11}}   |
+| 6.12  | Summary of findings             | {{STATUS_6_12}} | {{DATE_6_12}}   |
 
 **Overall Progress**: {{OVERALL_PROGRESS}}% ({{COMPLETED_TASKS}}/{{TOTAL_TASKS}} tasks complete)
 

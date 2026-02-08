@@ -14,11 +14,13 @@ Successfully extracted valuable workflow guides from `projects/legacy/` into reu
 ## ✅ Completed Templates (4/4)
 
 ### 1. Screening Quickstart Template
+
 **Location**: `ma-screening-quality/references/screening-quickstart-template.md`
 **Source**: `projects/legacy/03_screening/SCREENING_QUICKSTART.md`
 **Size**: 395 lines
 
 **Features**:
+
 - Dual independent screening workflow (Rayyan)
 - CSV field descriptions
 - Inclusion/exclusion criteria quick reference
@@ -28,11 +30,13 @@ Successfully extracted valuable workflow guides from `projects/legacy/` into reu
 - Quality checks (Cohen's kappa ≥0.60)
 
 ### 2. Fulltext Quickstart Template
+
 **Location**: `ma-fulltext-management/references/fulltext-quickstart-template.md`
 **Source**: `projects/legacy/04_fulltext/PHASE4_QUICKSTART.md`
 **Size**: 467 lines
 
 **Features**:
+
 - PDF retrieval strategies (Unpaywall, institutional access, author contact)
 - Full-text review checklist
 - File organization guidelines
@@ -41,11 +45,13 @@ Successfully extracted valuable workflow guides from `projects/legacy/` into reu
 - Special case handling (multiple reports, duplicates)
 
 ### 3. Analysis Progress Template
+
 **Location**: `ma-meta-analysis/references/analysis-progress-template.md`
 **Source**: `projects/legacy/06_analysis/ANALYSIS_PROGRESS_SUMMARY.md`
 **Size**: 272 lines
 
 **Features**:
+
 - R script execution checklist (01-12)
 - Figure generation workflow
 - Table creation guidelines
@@ -55,11 +61,13 @@ Successfully extracted valuable workflow guides from `projects/legacy/` into reu
 - Data extraction summary
 
 ### 4. Manuscript Completion Template
+
 **Location**: `ma-manuscript-quarto/references/manuscript-completion-template.md`
 **Source**: `projects/legacy/07_manuscript/COMPLETION_SUMMARY.md`
 **Size**: 345 lines
 
 **Features**:
+
 - IMRaD section completion checklist
 - Table/figure assembly workflow
 - Reference management
@@ -75,6 +83,7 @@ Successfully extracted valuable workflow guides from `projects/legacy/` into reu
 **Location**: `tooling/python/generate_quickstart_guide.py`
 
 **Usage**:
+
 ```bash
 # Generate screening quickstart guide
 uv run tooling/python/generate_quickstart_guide.py \
@@ -98,6 +107,7 @@ uv run tooling/python/generate_quickstart_guide.py \
 ```
 
 **Features**:
+
 - Reads templates from framework
 - Replaces {{PLACEHOLDERS}} with project data
 - Auto-generates guides in project directories
@@ -110,11 +120,13 @@ uv run tooling/python/generate_quickstart_guide.py \
 ## 📝 Documentation Updates
 
 ### AGENTS.md
+
 **Updated**: Added "Quickstart Guide" column to Pipeline Stages table
 **Links**: Direct links to all 4 templates
 **Note**: Explains placeholder system and automation roadmap
 
 ### docs/TEMPLATE_EXTRACTION_STATUS.md
+
 **Status**: Tracks all template extraction work
 **Progress**: 67% complete (4/6 templates, 2 optional deferred)
 **Roadmap**: Full automation plan documented
@@ -124,6 +136,7 @@ uv run tooling/python/generate_quickstart_guide.py \
 ## 💡 Value Proposition
 
 ### Before (Legacy Only)
+
 - ❌ Valuable knowledge locked in `projects/legacy/`
 - ❌ Not reusable for new projects
 - ❌ Must manually recreate guides each time
@@ -131,6 +144,7 @@ uv run tooling/python/generate_quickstart_guide.py \
 - ❌ No workflow standardization
 
 ### After (Framework Templates)
+
 - ✅ Best practices embedded in framework
 - ✅ Auto-generated for each new project
 - ✅ Consistent quality and completeness
@@ -144,13 +158,13 @@ uv run tooling/python/generate_quickstart_guide.py \
 
 ### Time Savings Per Project
 
-| Stage | Manual Creation | Template Generation | Time Saved |
-|-------|-----------------|---------------------|------------|
-| Screening | 2-3 hours | 5 minutes | ~2.5 hours |
-| Fulltext | 2-3 hours | 5 minutes | ~2.5 hours |
-| Analysis | 1-2 hours | 5 minutes | ~1.5 hours |
-| Manuscript | 1-2 hours | 5 minutes | ~1.5 hours |
-| **Total** | **6-10 hours** | **20 minutes** | **~8 hours** |
+| Stage      | Manual Creation | Template Generation | Time Saved   |
+| ---------- | --------------- | ------------------- | ------------ |
+| Screening  | 2-3 hours       | 5 minutes           | ~2.5 hours   |
+| Fulltext   | 2-3 hours       | 5 minutes           | ~2.5 hours   |
+| Analysis   | 1-2 hours       | 5 minutes           | ~1.5 hours   |
+| Manuscript | 1-2 hours       | 5 minutes           | ~1.5 hours   |
+| **Total**  | **6-10 hours**  | **20 minutes**      | **~8 hours** |
 
 ### Quality Improvements
 
@@ -167,6 +181,7 @@ uv run tooling/python/generate_quickstart_guide.py \
 ### Phase 2: Smart Placeholder Replacement (Planned)
 
 Enhance `generate_quickstart_guide.py` to:
+
 - [ ] Parse `pico.yaml` for PICO elements
 - [ ] Count records from `dedupe.bib` and `decisions.csv`
 - [ ] Calculate expected timelines from start date
@@ -179,6 +194,7 @@ Enhance `generate_quickstart_guide.py` to:
 ### Phase 3: Integration with init_project.py (Planned)
 
 Auto-generate guides during project initialization:
+
 ```bash
 uv run init_project.py --name my-project --generate-guides
 ```
@@ -188,6 +204,7 @@ uv run init_project.py --name my-project --generate-guides
 ### Phase 4: Interactive Template Customization (Future)
 
 CLI wizard for customizing templates:
+
 ```bash
 uv run generate_quickstart_guide.py --project my-project --stage screening --interactive
 ```
@@ -239,11 +256,13 @@ All criteria met:
 ### For New Projects
 
 1. **Initialize project**:
+
    ```bash
    uv run tooling/python/init_project.py --name my-project
    ```
 
 2. **Generate stage-specific guides** (as needed):
+
    ```bash
    # When starting screening
    uv run tooling/python/generate_quickstart_guide.py --project my-project --stage screening
@@ -266,6 +285,7 @@ All criteria met:
 ### For Existing Projects
 
 1. **Generate guides retroactively**:
+
    ```bash
    uv run tooling/python/generate_quickstart_guide.py --project existing-project --stage analysis
    ```

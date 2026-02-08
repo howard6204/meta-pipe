@@ -94,7 +94,9 @@ def get_analysis_replacements(project_name: str, project_root: Path) -> dict[str
     }
 
 
-def get_manuscript_replacements(project_name: str, project_root: Path) -> dict[str, str]:
+def get_manuscript_replacements(
+    project_name: str, project_root: Path
+) -> dict[str, str]:
     """Get replacement values for manuscript completion guide."""
     return {
         "PROJECT_NAME": project_name,
