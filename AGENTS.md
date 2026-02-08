@@ -244,29 +244,6 @@ uv run ../../ma-screening-quality/scripts/dual_review_agreement.py \
 </details>
 
 <details>
-<summary><strong>Risk of Bias Assessment</strong></summary>
-
-```bash
-cd /Users/htlin/meta-pipe/tooling/python
-
-# RoB 2 for RCTs
-uv run ../../ma-peer-review/scripts/init_rob2_assessment.py \
-  --extraction ../../05_extraction/round-01/extraction.csv \
-  --out-csv ../../03_screening/round-01/quality_rob2.csv \
-  --out-md ../../03_screening/round-01/rob2_assessment.md
-
-# ROBINS-I for cohort/observational studies
-uv run ../../ma-peer-review/scripts/init_robins_i_assessment.py \
-  --extraction ../../05_extraction/round-01/extraction.csv \
-  --out-csv ../../03_screening/round-01/quality_robins_i.csv \
-  --out-md ../../03_screening/round-01/robins_i_assessment.md
-```
-
-Templates: `ma-peer-review/references/rob2-template.md`, `ma-peer-review/references/robins-i-template.md`
-
-</details>
-
-<details>
 <summary><strong>Stage 04: Fulltext</strong></summary>
 
 ```bash
@@ -437,6 +414,55 @@ uv run validate_extraction.py \
 - 65-70% time savings vs manual extraction
 - Some missing fields will need manual review
 - See `validation_report.md` for data quality issues
+
+</details>
+
+<details>
+<summary><strong>Risk of Bias Assessment</strong></summary>
+
+**⚠️ IMPORTANT**: Perform after extraction is complete (`extraction.csv` ready)
+
+**Choose assessment tool based on study design:**
+- **RoB 2** for randomized controlled trials (RCTs)
+- **ROBINS-I** for non-randomized studies (cohort, case-control)
+
+```bash
+cd /Users/htlin/meta-pipe/tooling/python
+
+# RoB 2 for RCTs
+uv run ../../ma-peer-review/scripts/init_rob2_assessment.py \
+  --extraction ../../05_extraction/round-01/extraction.csv \
+  --out-csv ../../05_extraction/round-01/quality_rob2.csv \
+  --out-md ../../05_extraction/round-01/rob2_assessment.md
+
+# ROBINS-I for cohort/observational studies
+uv run ../../ma-peer-review/scripts/init_robins_i_assessment.py \
+  --extraction ../../05_extraction/round-01/extraction.csv \
+  --out-csv ../../05_extraction/round-01/quality_robins_i.csv \
+  --out-md ../../05_extraction/round-01/robins_i_assessment.md
+```
+
+**Assessment domains:**
+
+**RoB 2** (5 domains):
+1. Randomization process
+2. Deviations from intended interventions
+3. Missing outcome data
+4. Measurement of the outcome
+5. Selection of the reported result
+
+**ROBINS-I** (7 domains):
+1. Confounding
+2. Selection of participants
+3. Classification of interventions
+4. Deviations from intended interventions
+5. Missing data
+6. Measurement of outcomes
+7. Selection of the reported result
+
+**Expected time**: 2-3 hours for 10-20 studies (dual review recommended)
+
+**Templates**: `ma-peer-review/references/rob2-template.md`, `ma-peer-review/references/robins-i-template.md`
 
 </details>
 
