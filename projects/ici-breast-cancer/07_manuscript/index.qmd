@@ -1,0 +1,80 @@
+---
+title: "Immune Checkpoint Inhibitors in Neoadjuvant Treatment of Triple-Negative Breast Cancer: A Systematic Review and Meta-Analysis"
+format:
+  pdf:
+    documentclass: article
+    papersize: letter
+    geometry:
+      - margin=1in
+    fontsize: 11pt
+    linestretch: 2
+    number-sections: true
+    toc: false
+    keep-tex: true
+  docx:
+    reference-doc: template.docx
+    number-sections: true
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+bibliography: references.bib
+csl: lancet.csl
+---
+
+{{< include 00_abstract.md >}}
+
+\newpage
+
+{{< include 01_introduction.md >}}
+
+\newpage
+
+{{< include 02_methods.md >}}
+
+\newpage
+
+{{< include 03_results.md >}}
+
+\newpage
+
+{{< include 04_discussion.md >}}
+
+\newpage
+
+# References {.unnumbered}
+
+::: {#refs}
+:::
+
+\newpage
+
+# Tables
+
+{{< include tables/Table1_Trial_Characteristics.md >}}
+
+\newpage
+
+{{< include tables/Table2_Efficacy_Summary.md >}}
+
+\newpage
+
+{{< include tables/Table3_Safety_Summary.md >}}
+
+\newpage
+
+# Supplementary Materials
+
+{{< include tables/SupplementaryTable1_RiskOfBias.md >}}
+
+\newpage
+
+{{< include tables/SupplementaryTable2_PDL1_Subgroup.md >}}
+
+\newpage
+
+{{< include tables/SupplementaryTable3_Individual_pCR_Results.md >}}
+
+\newpage
+
+{{< include tables/SupplementaryTable4_GRADE_Profile.md >}}
