@@ -35,8 +35,8 @@ cd /Users/htlin/meta-pipe
 - `CLAUDE.md` - Symlink to AGENTS.md
 - `README.md` - Project overview
 - `GETTING_STARTED.md` - Getting started guide
-- `FEASIBILITY_CHECKLIST.md` - Assessment template
-- `CHANGELOG_UNPAYWALL.md` - API changelog
+- `ma-topic-intake/references/feasibility-checklist.md` - Feasibility assessment template
+- `ma-fulltext-management/references/changelog-unpaywall.md` - Unpaywall API changelog
 
 **Use case**: Run after consolidating a project to keep root directory clean for future projects
 
@@ -106,6 +106,6 @@ See `tooling/python/` for Python utility scripts:
 
 ## 📚 Related Documentation
 
-- [Time Investment Guidance](../../docs/TIME_GUIDANCE.md) - Pipeline timeline
-- [Skill Generalization](../../docs/SKILL_GENERALIZATION.md) - Extract reusable workflows
+- [Time Investment Guidance](../../ma-end-to-end/references/time-guidance.md) - Pipeline timeline
+- [Skill Generalization](../../ma-end-to-end/references/skill-generalization.md) - Extract reusable workflows
 - [Getting Started](../../GETTING_STARTED.md) - Complete pipeline guide

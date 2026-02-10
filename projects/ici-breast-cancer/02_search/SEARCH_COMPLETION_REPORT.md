@@ -102,7 +102,7 @@ Once satisfied with search completeness:
 
 **1. Set up Rayyan** (30 minutes)
 
-- Follow `docs/RAYYAN_SETUP.md`
+- Follow `ma-screening-quality/references/rayyan-setup.md`
 - Import `03_screening/round-01/decisions.csv` (or BibTeX)
 - Invite co-reviewer
 
@@ -274,8 +274,8 @@ If any missing → revise search strategy and re-run.
 ### This Week
 
 1. **Contact librarian**: Request Embase search assistance (if available)
-2. **Set up Rayyan**: Follow `docs/RAYYAN_SETUP.md` (30 minutes)
-3. **Set up Zotero**: Follow `docs/ZOTERO_SETUP.md` (45 minutes)
+2. **Set up Rayyan**: Follow `ma-screening-quality/references/rayyan-setup.md` (30 minutes)
+3. **Set up Zotero**: Follow `ma-search-bibliography/references/zotero-setup.md` (45 minutes)
 
 ### Next Week
 
@@ -295,8 +295,8 @@ If any missing → revise search strategy and re-run.
 ## Support Files
 
 - Search strategy: `01_protocol/search_strategy.md`
-- Rayyan setup guide: `docs/RAYYAN_SETUP.md`
-- Zotero setup guide: `docs/ZOTERO_SETUP.md`
+- Rayyan setup guide: `ma-screening-quality/references/rayyan-setup.md`
+- Zotero setup guide: `ma-search-bibliography/references/zotero-setup.md`
 - Project plan: `PROJECT_START_PLAN.md`
 - Feasibility report: `FEASIBILITY_REPORT.md`
 

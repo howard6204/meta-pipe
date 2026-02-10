@@ -80,7 +80,7 @@ This is a **99% complete meta-analysis** on immune checkpoint inhibitors in trip
 ```
 meta-pipe/
 ├── ma-*/                    # Framework code modules
-├── docs/                    # Framework documentation
+├── docs/archive/            # Archived documentation
 ├── tooling/                 # Shared tools and scripts
 └── projects/                # All your meta-analysis projects
     ├── ici-breast-cancer/   # Example: complete meta-analysis
@@ -99,12 +99,12 @@ meta-pipe/
 
 ## Documentation
 
-| Doc                                      | Purpose                      |
-| ---------------------------------------- | ---------------------------- |
-| [GETTING_STARTED.md](GETTING_STARTED.md) | Manual step-by-step guide    |
-| [docs/API_SETUP.md](docs/API_SETUP.md)   | Database API keys            |
-| [CLAUDE.md](CLAUDE.md)                   | Agent behavior (auto-loaded) |
-| [tooling/scripts/](tooling/scripts/)     | Utility scripts              |
+| Doc                                                         | Purpose                      |
+| ----------------------------------------------------------- | ---------------------------- |
+| [GETTING_STARTED.md](GETTING_STARTED.md)                    | Manual step-by-step guide    |
+| [API Setup](ma-search-bibliography/references/api-setup.md) | Database API keys            |
+| [CLAUDE.md](CLAUDE.md)                                      | Agent behavior (auto-loaded) |
+| [tooling/scripts/](tooling/scripts/)                        | Utility scripts              |
 
 ## Requirements
 

@@ -15,7 +15,7 @@
    - 609 行程式碼
    - 完整錯誤處理與重試機制
 
-2. **`docs/UNPAYWALL_ROBUST.md`**
+2. **`ma-fulltext-management/references/unpaywall-robust.md`**
    - 完整技術文檔
    - 使用指南與最佳實踐
    - 錯誤類型說明表
@@ -148,7 +148,7 @@ uv run ../../ma-fulltext-management/scripts/unpaywall_fetch.py \
 
 ### 📖 相關文件
 
-- **技術文檔**: [`docs/UNPAYWALL_ROBUST.md`](docs/UNPAYWALL_ROBUST.md)
+- **技術文檔**: [`ma-fulltext-management/references/unpaywall-robust.md`](ma-fulltext-management/references/unpaywall-robust.md)
 - **工作流程**: [`AGENTS.md`](AGENTS.md) - Stage 04: Fulltext
 - **快速開始**: [`04_fulltext/PHASE4_QUICKSTART.md`](04_fulltext/PHASE4_QUICKSTART.md)
 

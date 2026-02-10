@@ -1,0 +1,5 @@
+study_type: RCT
+population: dat.bcg population
+intervention: BCG vaccine (if BCG dataset)
+comparator: Control/Placebo
+outcome: Primary outcome

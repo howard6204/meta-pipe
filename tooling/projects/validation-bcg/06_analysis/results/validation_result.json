@@ -1,0 +1,35 @@
+{
+  "project": "validation-bcg",
+  "passed": true,
+  "tolerance": 0.1,
+  "metrics": {
+    "RR": {
+      "passed": true,
+      "expected": 0.51,
+      "actual": 0.489624150463619,
+      "diff": 0.020375849536380997,
+      "rel_diff_pct": 3.9952646149766657
+    },
+    "CI_lower": {
+      "passed": true,
+      "expected": 0.34,
+      "actual": 0.344919135222476,
+      "diff": 0.004919135222476001,
+      "rel_diff_pct": 1.4468044771988238
+    },
+    "CI_upper": {
+      "passed": true,
+      "expected": 0.7,
+      "actual": 0.695037718225147,
+      "diff": 0.004962281774852917,
+      "rel_diff_pct": 0.7088973964075597
+    },
+    "I2": {
+      "passed": true,
+      "expected": 92.0,
+      "actual": 92.1173468545621,
+      "diff": 0.11734685456210059,
+      "rel_diff_pct": 0.12755092887184846
+    }
+  }
+}

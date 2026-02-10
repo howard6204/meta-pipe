@@ -83,7 +83,7 @@
 
 - R: `cowplot::plot_grid()` or `patchwork`
 - Python: `matplotlib.pyplot.subplot()` or Pillow
-- See: [R Figure Generation Guide](../docs/R_FIGURE_GUIDE.md)
+- See: [R Figure Generation Guide](../../ma-meta-analysis/references/r-figure-guide.md)
 
 ### Priority 2: References ({{TIME_REFERENCES}} hours)
 
@@ -124,7 +124,7 @@
 
 - Pandoc for format conversion
 - Quarto for rendering
-- See: [Journal Formatting Guide](../docs/JOURNAL_FORMATTING.md)
+- See: [Journal Formatting Guide](../../ma-publication-quality/references/journal-formatting.md)
 
 ---
 
@@ -209,7 +209,7 @@
 
 - Use R `cowplot` or Python `PIL`
 - Expected time: {{TIME_FIGURES}} hours
-- Command: See [Multi-Panel Figure Guide](../docs/r-guides/04-multi-panel.md)
+- Command: See [Multi-Panel Figure Guide](../../ma-meta-analysis/references/r-guides/04-multi-panel.md)
 
 **Option B**: Create references file
 

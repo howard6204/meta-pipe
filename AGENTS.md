@@ -8,8 +8,9 @@ AI-assisted meta-analysis pipeline. This file is auto-loaded by Claude Code.
 
 **New project?** → Say "brainstorm" or "help me find a topic"
 **Have TOPIC.txt?** → Say "start" or "continue"
-**At Stage 06?** → Say "complete manuscript" or see [Manuscript Assembly](docs/MANUSCRIPT_ASSEMBLY.md)
+**At Stage 06?** → Say "complete manuscript" or see [Manuscript Assembly](ma-manuscript-quarto/references/manuscript-assembly.md)
 **Want to see an example?** → Check `projects/ici-breast-cancer/` (99% complete meta-analysis)
+**Want to validate the workflow?** → See [metadat Validation](ma-end-to-end/references/metadat-validation.md) - test with benchmark datasets (5 min)
 
 ---
 
@@ -44,7 +45,7 @@ A **real, 99% complete meta-analysis** on immune checkpoint inhibitors in triple
 ```
 meta-pipe/
 ├── ma-*/                    # Framework code modules
-├── docs/                    # Framework documentation
+├── docs/archive/            # Archived documentation
 ├── tooling/                 # Shared tools and scripts
 └── projects/                # All your meta-analysis projects
     ├── legacy/              # Historical data (migrated 2026-02-08)
@@ -62,7 +63,7 @@ meta-pipe/
 
 ## When User Says "Brainstorm" or "Help me find a topic"
 
-Use the **brainstorm-topic** skill (`.claude/skills/brainstorm-topic.md`):
+Use the **brainstorm-topic** skill (`.claude/skills/brainstorm-topic/SKILL.md`):
 
 1. **Ask ONE question at a time** - don't overwhelm
 2. **Guide through PICO** iteratively:
@@ -83,7 +84,7 @@ Example prompts that trigger this:
 
 ## When User Says "Complete Manuscript" or "Prepare for Submission"
 
-**📖 See**: [Manuscript Assembly Guide](docs/MANUSCRIPT_ASSEMBLY.md)
+**📖 See**: [Manuscript Assembly Guide](ma-manuscript-quarto/references/manuscript-assembly.md)
 
 Use the **meta-manuscript-assembly** skill - it will guide you through:
 
@@ -99,7 +100,7 @@ Use the **meta-manuscript-assembly** skill - it will guide you through:
 
 ## When User Says "Start" or "See TOPIC.txt"
 
-⚠️ **MANDATORY FIRST STEP**: Run 4-hour feasibility assessment ([FEASIBILITY_CHECKLIST.md](FEASIBILITY_CHECKLIST.md)) before any data extraction or protocol writing.
+⚠️ **MANDATORY FIRST STEP**: Run 4-hour feasibility assessment ([Feasibility Checklist](ma-topic-intake/references/feasibility-checklist.md)) before any data extraction or protocol writing.
 
 **Why**: Prevents 10-40 hours of wasted work on unanswerable research questions.
 
@@ -138,7 +139,7 @@ If user says "continue", "what's next", or "status":
 
 - **Python**: Always `uv run`, never `python3` directly
 - **Dependencies**: `uv add <package>`
-- **API keys**: Read from `.env` ([docs/API_SETUP.md](docs/API_SETUP.md))
+- **API keys**: Read from `.env` ([ma-search-bibliography/references/api-setup.md](ma-search-bibliography/references/api-setup.md))
 - **Rounds**: Keep all `round-XX` data, never overwrite
 - **Delete**: Use `rip` not `rm`
 
@@ -158,7 +159,7 @@ If user says "continue", "what's next", or "status":
 | 08    | `08_reviews/`    | grade_summary.md          | GRADE filled        | —                                                                                |
 | 09    | `09_qa/`         | final_qa_report.md        | All checks pass     | —                                                                                |
 
-**Note**: Quickstart guide templates use `{{PLACEHOLDERS}}` that can be auto-filled from project data. See [Template Extraction Status](docs/TEMPLATE_EXTRACTION_STATUS.md) for automation roadmap.
+**Note**: Quickstart guide templates use `{{PLACEHOLDERS}}` that can be auto-filled from project data. See [Template Extraction Status](ma-end-to-end/references/template-extraction-status.md) for automation roadmap.
 
 ---
 
@@ -255,7 +256,7 @@ uv run ../../ma-search-bibliography/scripts/zotero_sync.py \
   --in-bib ../../projects/<project-name>/02_search/round-01/dedupe.bib --collection-key "<key>"
 ```
 
-**📖 See**: [Zotero Setup Guide](docs/ZOTERO_SETUP.md) for detailed Zotero configuration
+**📖 See**: [Zotero Setup Guide](ma-search-bibliography/references/zotero-setup.md) for detailed Zotero configuration
 
 </details>
 
@@ -275,7 +276,7 @@ This creates a CSV with columns: `record_id, entry_type, authors, year, title, j
 
 Fill in `decision_r1` and `decision_r2` columns during screening.
 
-**📖 See**: [Rayyan Setup Guide](docs/RAYYAN_SETUP.md) for web-based collaborative screening alternative
+**📖 See**: [Rayyan Setup Guide](ma-screening-quality/references/rayyan-setup.md) for web-based collaborative screening alternative
 
 </details>
 
@@ -349,8 +350,8 @@ uv run ../../ma-fulltext-management/scripts/download_oa_pdfs.py \
 
 **📖 See**:
 
-- [Unpaywall Robust Implementation](docs/UNPAYWALL_ROBUST.md) - Error handling details
-- [Unpaywall vs Alternatives](docs/UNPAYWALL_COMPARISON.md) - Compare with other PDF sources
+- [Unpaywall Robust Implementation](ma-fulltext-management/references/unpaywall-robust.md) - Error handling details
+- [Unpaywall vs Alternatives](ma-fulltext-management/references/unpaywall-comparison.md) - Compare with other PDF sources
 
 </details>
 
@@ -363,7 +364,7 @@ uv run ../../ma-fulltext-management/scripts/download_oa_pdfs.py \
 2. **PDF-Based Extraction** - Requires PDFs, 8-12 hours, 100% completeness
 3. **Hybrid Approach** (RECOMMENDED) - Best of both, 4-6 hours, 90-95% completeness
 
-**📖 See**: [Web-Based Extraction Guide](docs/WEB_EXTRACTION.md) for detailed comparison and workflow
+**📖 See**: [Web-Based Extraction Guide](ma-data-extraction/references/web-extraction.md) for detailed comparison and workflow
 
 ---
 
@@ -527,7 +528,7 @@ uv run ../../ma-peer-review/scripts/init_robins_i_assessment.py \
 
 **⚠️ IMPORTANT**: All statistical analysis and figure generation must be done in R.
 
-**📖 See**: [R Figure Generation Guide](docs/R_FIGURE_GUIDE.md) for package resources and examples
+**📖 See**: [R Figure Generation Guide](ma-meta-analysis/references/r-figure-guide.md) for package resources and examples
 
 Run in order from `06_analysis/`:
 
@@ -581,7 +582,7 @@ Use `renv` for reproducibility. Copy R scripts from asset folders to `06_analysi
 <details>
 <summary><strong>Stage 07: Manuscript</strong></summary>
 
-**📖 See**: [Manuscript Assembly Guide](docs/MANUSCRIPT_ASSEMBLY.md) for detailed workflow
+**📖 See**: [Manuscript Assembly Guide](ma-manuscript-quarto/references/manuscript-assembly.md) for detailed workflow
 
 ```bash
 # PRISMA flow
@@ -719,19 +720,19 @@ uv run ../../ma-end-to-end/scripts/checkpoint.py --restore --name pre-analysis -
 
 **Essential**:
 
-- [Time Investment Guidance](docs/TIME_GUIDANCE.md) - Realistic timeline expectations (22-32 hours)
-- [Manuscript Assembly](docs/MANUSCRIPT_ASSEMBLY.md) - Stage 07 complete workflow (6-8 hours)
-- [R Figure Generation](docs/R_FIGURE_GUIDE.md) - Task-based guides (Progressive Disclosure)
-  - [Forest Plots](docs/r-guides/01-forest-plots.md) - 15-30 min
-  - [Table 1](docs/r-guides/05-table1-gtsummary.md) - 30-60 min
-  - [Multi-Panel Figures](docs/r-guides/04-multi-panel.md) - 15-20 min
-- [Journal Formatting](docs/JOURNAL_FORMATTING.md) - Lancet/JAMA/Nature Medicine requirements
+- [Time Investment Guidance](ma-end-to-end/references/time-guidance.md) - Realistic timeline expectations (22-32 hours)
+- [Manuscript Assembly](ma-manuscript-quarto/references/manuscript-assembly.md) - Stage 07 complete workflow (6-8 hours)
+- [R Figure Generation](ma-meta-analysis/references/r-figure-guide.md) - Task-based guides (Progressive Disclosure)
+  - [Forest Plots](ma-meta-analysis/references/r-guides/01-forest-plots.md) - 15-30 min
+  - [Table 1](ma-meta-analysis/references/r-guides/05-table1-gtsummary.md) - 30-60 min
+  - [Multi-Panel Figures](ma-meta-analysis/references/r-guides/04-multi-panel.md) - 15-20 min
+- [Journal Formatting](ma-publication-quality/references/journal-formatting.md) - Lancet/JAMA/Nature Medicine requirements
 
 **Reference**:
 
-- [Web-Based Extraction](docs/WEB_EXTRACTION.md) - Alternative to PDF extraction (NEW)
-- [Skill Generalization](docs/SKILL_GENERALIZATION.md) - Extract workflows at 95%+ completion
-- [API Setup](docs/API_SETUP.md) - Configure API keys for Scopus/Embase
+- [Web-Based Extraction](ma-data-extraction/references/web-extraction.md) - Alternative to PDF extraction (NEW)
+- [Skill Generalization](ma-end-to-end/references/skill-generalization.md) - Extract workflows at 95%+ completion
+- [API Setup](ma-search-bibliography/references/api-setup.md) - Configure API keys for Scopus/Embase
 - [Getting Started](GETTING_STARTED.md) - Detailed step-by-step guide
 
 **Example Project**:

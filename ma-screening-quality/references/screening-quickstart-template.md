@@ -13,7 +13,7 @@
 
 - [ ] Screening file ready: `03_screening/round-01/decisions.csv` ({{RECORD_COUNT}} records)
 - [ ] Inclusion/exclusion criteria defined: `01_protocol/eligibility.md`
-- [ ] Rayyan setup guide reviewed: `docs/RAYYAN_SETUP.md`
+- [ ] Rayyan setup guide reviewed: `ma-screening-quality/references/rayyan-setup.md`
 - [ ] Known key studies verified in search results
 
 ### CSV Field Description
@@ -52,7 +52,7 @@ notes              # Additional notes (to be filled)
 
 **Steps**:
 
-1. Follow `docs/RAYYAN_SETUP.md` to set up Rayyan (30 min)
+1. Follow `ma-screening-quality/references/rayyan-setup.md` to set up Rayyan (30 min)
 2. Upload `dedupe.bib` or `decisions.csv`
 3. Invite co-reviewer
 4. Pilot screening (10 articles together, 1 hour)
@@ -391,13 +391,13 @@ After screening completion (expected 1-2 weeks), you will proceed to:
 **Option A**: Set up Rayyan (30 min)
 
 1. Visit https://www.rayyan.ai/
-2. Follow `docs/RAYYAN_SETUP.md`
+2. Follow `ma-screening-quality/references/rayyan-setup.md`
 3. Upload `02_search/round-01/dedupe.bib`
 
 **Option B**: Find co-reviewer (15 min)
 
 1. Confirm co-reviewer availability
-2. Send `docs/RAYYAN_SETUP.md` to them
+2. Send `ma-screening-quality/references/rayyan-setup.md` to them
 3. Schedule pilot screening session (1 hour)
 
 **Option C**: Practice with 10 articles (1 hour)

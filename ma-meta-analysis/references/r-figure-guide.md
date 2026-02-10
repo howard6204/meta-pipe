@@ -40,7 +40,10 @@ Each guide lists packages needed for that specific task. Here's the full list:
 
 ```r
 # Meta-analysis
-install.packages(c("meta", "metafor", "dmetar"))
+install.packages(c("metafor", "meta", "dmetar"))
+
+# Forest plots (REQUIRED - Medical journal standard)
+install.packages("forestplot")
 
 # Visualization
 install.packages(c("ggplot2", "patchwork", "cowplot"))
@@ -49,7 +52,7 @@ install.packages(c("ggplot2", "patchwork", "cowplot"))
 install.packages(c("gtsummary", "gt", "flextable"))
 
 # Themes & Colors
-install.packages(c("hrbrthemes", "ggsci", "viridis"))
+install.packages(c("ggsci", "viridis"))
 ```
 
 **Full setup guide**: [r-guides/00-setup.md](r-guides/00-setup.md)
@@ -72,10 +75,10 @@ install.packages(c("hrbrthemes", "ggsci", "viridis"))
 **Packages you'll need**:
 
 ```r
-library(meta)      # Forest plots, pooled estimates
-library(metafor)   # Advanced meta-analysis
-library(ggplot2)   # Custom plots
-library(ggsci)     # Journal colors
+library(forestplot) # ⭐ REQUIRED - Professional forest plots (medical journal standard)
+library(metafor)    # Meta-analysis calculations
+library(ggplot2)    # Custom plots
+library(grid)       # Graphics support (for forestplot)
 ```
 
 ### Stage 07: Manuscript

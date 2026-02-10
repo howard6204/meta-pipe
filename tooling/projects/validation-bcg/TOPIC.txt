@@ -1,0 +1,9 @@
+# Validation Test: dat.bcg
+
+**Source**: R metadat package
+**Dataset**: dat.bcg
+**N studies**: 13
+**Purpose**: Validate meta-pipe workflow with known benchmark data
+
+This is a validation project using publicly available meta-analysis data
+to test the accuracy and reliability of the meta-pipe automated workflow.

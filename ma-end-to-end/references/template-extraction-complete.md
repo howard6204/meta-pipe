@@ -125,7 +125,7 @@ uv run tooling/python/generate_quickstart_guide.py \
 **Links**: Direct links to all 4 templates
 **Note**: Explains placeholder system and automation roadmap
 
-### docs/TEMPLATE_EXTRACTION_STATUS.md
+### ma-end-to-end/references/template-extraction-status.md
 
 **Status**: Tracks all template extraction work
 **Progress**: 67% complete (4/6 templates, 2 optional deferred)
@@ -228,7 +228,7 @@ Asks questions to fill in placeholders interactively.
 ### Modified Files (2)
 
 1. `AGENTS.md` - Added quickstart guide column to pipeline stages table
-2. `docs/TEMPLATE_EXTRACTION_STATUS.md` - Updated progress tracking
+2. `ma-end-to-end/references/template-extraction-status.md` - Updated progress tracking
 
 ### Documentation Files (1)
 
@@ -299,10 +299,10 @@ All criteria met:
 
 ## 🔗 Related Documentation
 
-- [Template Extraction Status](docs/TEMPLATE_EXTRACTION_STATUS.md) - Full extraction roadmap
-- [Migration Report](MIGRATION_2026-02-08.md) - Project structure migration
+- [Template Extraction Status](ma-end-to-end/references/template-extraction-status.md) - Full extraction roadmap
+- [Migration Report](../../docs/archive/migration-2026-02-08.md) - Project structure migration
 - [Getting Started](GETTING_STARTED.md) - Manual workflow guide
-- [R Figure Generation](docs/R_FIGURE_GUIDE.md) - Figure creation guides
+- [R Figure Generation](ma-meta-analysis/references/r-figure-guide.md) - Figure creation guides
 
 ---
 

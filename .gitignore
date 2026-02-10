@@ -57,6 +57,9 @@ _site/
 _book/
 _freeze/
 
+# Synced skill mirrors (source of truth is ma-*/, synced via tooling/sync-skills.sh)
+.claude/skills/ma-*/
+
 # OS / IDE
 .DS_Store
 Thumbs.db
