@@ -17,6 +17,7 @@ Create a Quarto manuscript with standard IMRaD sections and render to PDF and HT
 
 ## Outputs
 
+- `07_manuscript/manuscript_outline.md` (Phase 1 — outline with checklist and discussion ideas)
 - `07_manuscript/00_abstract.qmd`
 - `07_manuscript/01_introduction.qmd`
 - `07_manuscript/02_methods.qmd`
@@ -48,23 +49,166 @@ Create a Quarto manuscript with standard IMRaD sections and render to PDF and HT
 
 ## Workflow
 
+**The workflow has two phases: Outline first, then Write. Never skip Phase 1.**
+
+### Phase 1: Outline & Checklist (MANDATORY before any writing)
+
+Before writing any prose, build a complete outline that serves as the blueprint.
+The outline template is at `assets/quarto/manuscript_outline.md` — it contains 10 sections
+that must ALL be filled in with project-specific data.
+
+#### Step 1.1: Initialize project structure
+
 1. Initialize a Quarto project in `07_manuscript/`.
 2. Copy Quarto templates from `assets/quarto/` and adapt to the project.
-3. Embed figures and tables with captions and cross-references.
-4. Include PRISMA-style reporting elements and a flow diagram when applicable.
-5. Generate the PRISMA flow summary with `scripts/prisma_flow.py` via `uv run`, optionally writing an SVG. Use `--strict` for final renders.
-6. Insert the search report and audit hashes into Methods with `scripts/insert_search_report.py`.
-7. Build a manuscript evidence map with `scripts/build_evidence_map.py` and review key results before writing.
-8. Initialize `result_claims.csv` with `scripts/init_result_claims.py` and draft Results from it.
-9. Generate Results paragraph stubs with `scripts/build_result_paragraphs.py`.
-10. Build study characteristics table with `scripts/build_study_characteristics.py`.
-11. Insert the traceability table into Methods with `scripts/insert_traceability_table.py`.
-12. Assemble Results into `03_results.qmd` with `scripts/assemble_results.py` (also inserts `result_summary_table.md`).
-13. Populate the bibliography and ensure citation keys match.
-14. Generate a results consistency report with `scripts/results_consistency_report.py`.
-15. Initialize the submission checklist with `scripts/init_submission_checklist.py`.
-16. Use Makefile `sync` target to copy figures and tables from `06_analysis/` (see Build & Sync below).
-17. Render to HTML, PDF, and DOCX with `make all` or individual targets.
+3. Copy `assets/quarto/manuscript_outline.md` to `07_manuscript/manuscript_outline.md`.
+
+#### Step 1.2: Gather evidence (read BEFORE filling outline)
+
+4. Build a manuscript evidence map with `scripts/build_evidence_map.py` — review all analysis outputs.
+   - **If the script fails**: manually read `06_analysis/` R outputs, CSVs, and figure files to build the map.
+   - **If `06_analysis/` is incomplete**: STOP. Return to `/ma-meta-analysis` to complete analysis first.
+5. Initialize `result_claims.csv` with `scripts/init_result_claims.py` — map every result to its source.
+   - **If the script fails**: manually create the CSV with columns: `claim_id, outcome, effect_measure, estimate, ci_lower, ci_upper, p_value, i2, figure_ref, table_ref, r_script, citation_keys`.
+6. Read ALL of the following before filling the outline:
+   - `06_analysis/` — every R script output, CSV table, figure PNG
+   - `05_extraction/` — extraction.csv for study characteristics
+   - `01_protocol/pico.yaml` — for PICO details
+   - `02_search/` — search dates, database counts
+   - `03_screening/` — screening decisions, agreement stats
+   - `08_reviews/` — GRADE summary if available
+   - Prior reviews (search PubMed for existing systematic reviews on the topic)
+
+#### Step 1.3: Fill in the outline (the core work of Phase 1)
+
+7. **Fill in every section of `manuscript_outline.md`**:
+
+   **Section 1 — Project Info**: Topic, journal, word limits, PROSPERO ID.
+
+   **Section 2 — Key Messages**: Define 3-5 take-home messages. These drive the entire manuscript.
+   Test: if a paragraph doesn't serve at least one key message, it shouldn't be in the paper.
+
+   **Section 3 — Narrative Arc**: Define the story in 6 sentences (hook → gap → approach → finding → significance → bottom line).
+   Test: read the 6 sentences aloud — they should tell a coherent story.
+
+   **Section 4 — Section Outlines**:
+   - Abstract: fill the data table with exact numbers from R outputs.
+   - Introduction: plan paragraph-by-paragraph with specific citations.
+   - Methods: fill PICO, databases, search dates, statistical details.
+   - Results: fill one outcome block per quantitative result with claim_id, estimate, CI, p-value, I², figure/table refs, R script source.
+   - Discussion: fill ALL subsections with minimum point counts:
+     - Principal findings: >= 3 points
+     - Topic-specific interpretation: >= 1 subsection with argument + evidence + implication
+     - Comparison with prior work: >= 2 named prior studies/reviews
+     - Limitations: >= 2 study-level + 2 review-level + 1 outcome-level + 1 statistical
+     - Implications: >= 3 clinical + 3 future research (with specific study designs)
+     - Conclusions: draft the 2-3 sentence conclusion
+
+   **Section 5 — Tables & Figures Plan**: List every table and figure with source file, panels, and draft legends.
+
+   **Section 6 — References Plan**: List ALL BibTeX keys that will appear in the manuscript.
+
+   **Section 7 — Word Count Targets**: Set per-section targets matching the target journal.
+
+   **Section 8 — Supplementary Materials**: Plan search strategies, PRISMA checklist, supplementary tables/figures.
+
+   **Section 9 — Pre-Writing Readiness Gate**: Check ALL hard requirements (data, figures, tables, references, outline completeness).
+
+#### Step 1.4: Validate and approve
+
+8. **Self-validate the outline**:
+   - Search for `{{` in the file — must return 0 hits (no unfilled placeholders).
+   - Verify Discussion has >= 3 points in each subsection.
+   - Verify every outcome block in Results has claim_id, estimate, CI, p-value, figure ref.
+   - Verify Section 9 (Readiness Gate) is fully checked.
+9. **Present the outline to the user for review**.
+   - Summarize: key messages, number of outcomes, number of tables/figures, word count targets.
+   - Ask: "Is this outline approved? Any changes needed?"
+10. **Do NOT proceed to Phase 2 until the user explicitly approves.**
+
+---
+
+### Phase 2: Write from Outline
+
+Once the outline is approved, write each section following it exactly.
+
+**Writing order** (this order is intentional — write data-driven sections first):
+1. Methods (most formulaic, establishes scope)
+2. Results (data-driven, references Methods)
+3. Discussion (interprets Results)
+4. Introduction (frames the story, written after you know the results)
+5. Abstract (summary of everything, written last)
+
+#### Step 2.1: Generate structural components
+
+11. Generate the PRISMA flow summary with `scripts/prisma_flow.py` via `uv run`, optionally writing an SVG. Use `--strict` for final renders.
+    - **If the script fails**: manually create PRISMA flow from screening/fulltext data.
+12. Insert the search report and audit hashes into Methods with `scripts/insert_search_report.py`.
+    - **If the script fails**: manually copy search report content into the Methods information sources section.
+13. Generate Results paragraph stubs with `scripts/build_result_paragraphs.py`.
+    - **If the script fails**: manually write paragraph stubs from `result_claims.csv`.
+14. Build study characteristics table with `scripts/build_study_characteristics.py`.
+    - **If the script fails**: manually extract from `extraction.csv`.
+15. Insert the traceability table into Methods with `scripts/insert_traceability_table.py`.
+    - **If the script fails**: manually create: protocol registered → N databases searched → N records → N screened → N included.
+
+#### Step 2.2: Write sections (follow outline exactly)
+
+16. **Write Methods** (`02_methods.qmd`):
+    - Follow outline Section 4.3 point by point.
+    - Include all statistical analysis sub-items.
+    - Reference traceability table and PRISMA flow.
+    - **Checkpoint**: verify every Methods paragraph maps to an outline checkbox.
+
+17. **Write Results** (`03_results.qmd`):
+    - Follow outline Section 4.4 in the specified writing order.
+    - For each outcome: copy claim_id, estimate, CI, p-value, I² from the outline.
+    - Every quantitative claim MUST include: effect estimate + 95% CI + p-value.
+    - Reference the specific figure and table for each outcome.
+    - Use `[@key]` citations from the outline's BibTeX key lists.
+    - **Checkpoint**: run `scripts/results_consistency_report.py` — must have 0 missing items.
+
+18. **Write Discussion** (`04_discussion.qmd`):
+    - Follow outline Section 4.5 subsection by subsection.
+    - Write ONLY the points listed in the outline. Do NOT improvise new arguments.
+    - Each subsection must have the minimum word count specified.
+    - **Checkpoint**: verify every Discussion claim traces to a Result.
+
+19. **Write Introduction** (`01_introduction.qmd`):
+    - Follow outline Section 4.2 paragraph by paragraph.
+    - Ensure objectives match Methods and Results reporting order.
+    - **Checkpoint**: verify objectives list matches Results section structure.
+
+20. **Write Abstract** (`00_abstract.qmd`):
+    - Follow outline Section 4.1 and the data table.
+    - Every number MUST match the Results section exactly.
+    - **Checkpoint**: cross-check every number in Abstract against Results.
+
+#### Step 2.3: Assemble, validate, render
+
+21. Assemble Results into `03_results.qmd` with `scripts/assemble_results.py` (also inserts `result_summary_table.md`).
+22. Populate the bibliography and ensure all `[@key]` citations in all QMD files have matching entries in `references.bib`.
+23. Generate a results consistency report with `scripts/results_consistency_report.py`.
+    - **If any missing items**: fix before proceeding.
+24. Initialize the submission checklist with `scripts/init_submission_checklist.py`.
+25. Run `scripts/lint_qmd.py --dir 07_manuscript/` — must pass with exit code 0 (no errors).
+    - **If errors**: fix with `--fix` flag, then re-run to confirm.
+26. Use Makefile `sync` target to copy figures and tables from `06_analysis/`.
+27. Render to HTML, PDF, and DOCX with `make all` or individual targets.
+    - **If render fails**: check Quarto error output, fix broken references/includes, re-render.
+
+#### Step 2.4: Post-writing validation
+
+28. **Run cross-section consistency checks** (outline Section 10):
+    - Abstract numbers match Results numbers exactly.
+    - Introduction objectives match Methods match Results reporting order.
+    - Every figure/table referenced in text exists.
+    - Every Discussion claim traces to a Result.
+    - Conclusions contain no new findings.
+    - Word counts within journal targets.
+    - All citation keys resolve.
+29. **Update the outline**: mark all checklist items as done, fill in actual word counts in Section 7.
+30. **Report to user**: section word counts, any issues found, rendered output files.
 
 ## Build & Sync Workflow
 
@@ -210,10 +354,54 @@ format:
 
 ## Discussion Guidance
 
-- Interpret the main effect estimates and clinical or practical significance.
-- Discuss heterogeneity, sensitivity analyses, and publication bias.
-- Compare findings to prior reviews and explain divergences.
-- State limitations, generalizability, and future research needs.
+**Discussion is the hardest section to write well. The outline (Phase 1) does the thinking; Phase 2 does the writing.**
+
+### Why outline Discussion first?
+
+Without pre-planned ideas, agents tend to produce generic Discussions that:
+- Repeat Results as prose (adds no value)
+- Use vague limitations ("this study has limitations")
+- Omit topic-specific insights that make the paper publishable
+- Miss comparisons with prior work
+
+The outline's Discussion section forces the agent to brainstorm SPECIFIC ideas before writing.
+
+### What makes a good Discussion?
+
+**Structure** (from the outline template):
+1. **Principal findings** (~200-300 words): Clinical significance, not statistics. "NNT=7 means 1 in 7 patients benefits" > "RR was 1.26".
+2. **Topic-specific interpretation** (~200-400 words): This is YOUR unique contribution. What insight does pooling these studies reveal that individual trials couldn't show? Examples:
+   - Surrogate endpoint validation (pCR predicts OS)
+   - Biomarker reinterpretation (PD-L1 is prognostic, not predictive)
+   - Dose-response patterns across studies
+   - Subgroup findings that resolve clinical controversies
+3. **Comparison with prior work** (~200-400 words): NAME specific reviews. State their finding, your finding, and explain WHY they agree or differ. "Smith et al. (2023) found X; we found Y, likely because our analysis includes Z."
+4. **Limitations** (~200-400 words): Organize by level (study / review / outcome / statistical). Be HONEST — reviewers will find these anyway. Better to address them proactively.
+5. **Implications and future research** (~200-300 words): Clinical recommendations must be supported by GRADE certainty. Future research must be SPECIFIC: "A Phase III RCT comparing X vs Y in Z population with W outcome and >= N months follow-up."
+6. **Conclusions** (~50-100 words): Main finding + certainty + clinical bottom line. Must reinforce key messages.
+
+### Minimum requirements for Discussion outline
+
+| Subsection | Minimum points | Minimum named references |
+|------------|---------------|-------------------------|
+| Principal findings | 3 | 0 (your own results) |
+| Topic-specific interpretation | 1 subsection (3 points) | 2 |
+| Comparison with prior work | 2 named reviews/studies | 2 |
+| Limitations (study-level) | 2 | 0 |
+| Limitations (review-level) | 2 | 0 |
+| Limitations (outcome-level) | 1 | 0 |
+| Limitations (statistical) | 1 | 0 |
+| Clinical implications | 3 | 1 (guideline) |
+| Future research directions | 3 (with study design) | 0 |
+
+### Phase 2 writing rules
+
+When writing Discussion from the outline:
+- Follow the planned points IN ORDER. Do not rearrange.
+- Do NOT add new arguments that were not in the approved outline.
+- If you discover a missing argument while writing, flag it to the user rather than adding it silently.
+- Every factual claim must have a citation (`[@key]`).
+- Avoid the phrase "further research is needed" without specifying WHAT research.
 
 ## Quarto Syntax Reference
 
@@ -256,6 +444,7 @@ uv run ma-manuscript-quarto/scripts/lint_qmd.py \
 
 ## Resources
 
+- `assets/quarto/manuscript_outline.md` — **Outline & checklist template** (Phase 1). Copy to `07_manuscript/` and fill in before writing.
 - `assets/quarto/` provides an IMRaD Quarto scaffold.
 - `references/quarto-syntax-guide.md` — Quarto syntax reference for meta-analysis manuscripts.
 - `scripts/lint_qmd.py` validates and auto-fixes QMD/MD files against Quarto best practices.
@@ -274,10 +463,38 @@ uv run ma-manuscript-quarto/scripts/lint_qmd.py \
 
 ## Validation
 
+### Phase 1 gate (before writing)
+
+| Check | How to verify | Pass criteria | Fail action |
+|-------|---------------|---------------|-------------|
+| No placeholders | `grep -c '{{' manuscript_outline.md` | 0 hits | Fill remaining placeholders |
+| Key messages defined | Section 2 of outline | 3-5 messages, no blanks | Brainstorm with user |
+| Narrative arc coherent | Section 3 of outline | All 6 fields filled | Revise story structure |
+| Discussion fully planned | Section 4.5 of outline | All minimums met (see table in Discussion Guidance) | Add more points |
+| Evidence map reviewed | `evidence_map.md` exists | All outputs listed | Run `build_evidence_map.py` |
+| Result claims mapped | `result_claims.csv` exists | All results have claim_id | Run `init_result_claims.py` |
+| Figures exist | `ls 06_analysis/figures/*.png` | All outline figures present | Return to analysis stage |
+| Tables exist | `ls 06_analysis/tables/*.png` | All outline tables present | Run R export script |
+| References ready | `references.bib` exists | Keys match outline Section 6 | Build BibTeX file |
+| User approved | Asked user | Explicit "yes" | Address feedback |
+
+**Hard stop**: Do NOT proceed to Phase 2 if any check fails.
+
+### Phase 2 checkpoints (during writing)
+
+| After writing... | Run checkpoint | Pass criteria |
+|------------------|----------------|---------------|
+| Methods | Outline Section 4.3 all checked | Every Methods item covered |
+| Results | `scripts/results_consistency_report.py` | 0 missing items |
+| Discussion | Verify each claim traces to Results | No orphan claims |
+| Introduction | Objectives match Results structure | Same number and order |
+| Abstract | Cross-check numbers vs Results | Exact match |
+
+### Final validation (after all writing)
+
 - Run `scripts/lint_qmd.py --dir 07_manuscript/` — must pass with exit code 0 (no errors).
-- Ensure all figures are 300 dpi and tables are reproducible.
+- Ensure all figures are 300 DPI and tables are reproducible.
 - Cross-check that every result in the text appears in the analysis outputs.
-- Review `07_manuscript/evidence_map.md` before drafting Results.
 - Ensure each results paragraph maps to `07_manuscript/result_claims.csv`.
 - Verify `07_manuscript/traceability_table.md` is inserted into `02_methods.qmd`.
 - Ensure each claim includes effect estimate, confidence interval, and p-value.
@@ -288,6 +505,13 @@ uv run ma-manuscript-quarto/scripts/lint_qmd.py \
 - Note: set `RESULTS_MIN_WORDS` to control minimum words per claim paragraph (default 25).
 - Ensure the study characteristics table is inserted into `03_results.qmd`.
 - Ensure `submission_checklist.md` is tailored to the target journal.
+- Run cross-section consistency checks (outline Section 10):
+  - Abstract numbers match Results exactly.
+  - Introduction objectives match Results reporting order.
+  - Every figure/table referenced in text exists in the manuscript.
+  - Conclusions contain no new findings not in Results.
+  - Word counts within journal targets.
+  - All `[@key]` citations resolve in `references.bib`.
 
 ## Pipeline Navigation
 
