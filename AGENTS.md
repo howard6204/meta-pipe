@@ -86,7 +86,9 @@ Example prompts that trigger this:
 
 **📖 See**: [Manuscript Assembly Guide](ma-manuscript-quarto/references/manuscript-assembly.md)
 
-Use the **meta-manuscript-assembly** skill - it will guide you through:
+**Phase 1 (MANDATORY)**: Fill `manuscript_outline.md` and get user approval before writing any sections. Copy the template from `ma-manuscript-quarto/assets/quarto/manuscript_outline.md` to `07_manuscript/manuscript_outline.md`, fill in all placeholders, brainstorm Discussion ideas, and present the outline for review. Do NOT write prose until the outline is approved.
+
+**Phase 2**: Use the **meta-manuscript-assembly** skill to write from the approved outline:
 
 - Tables Creation (2-3h)
 - Figure Assembly (1-2h)
@@ -155,7 +157,7 @@ If user says "continue", "what's next", or "status":
 | 04    | `04_fulltext/`   | manifest.csv              | PDFs collected      | ✅ [Template](ma-fulltext-management/references/fulltext-quickstart-template.md) |
 | 05    | `05_extraction/` | extraction.csv            | No missing study_id | —                                                                                |
 | 06    | `06_analysis/`   | figures/, tables/         | R scripts 01-12     | ✅ [Template](ma-meta-analysis/references/analysis-progress-template.md)         |
-| 07    | `07_manuscript/` | index.docx/pdf/html       | PRISMA complete     | ✅ [Template](ma-manuscript-quarto/references/manuscript-completion-template.md) |
+| 07    | `07_manuscript/` | index.docx/pdf/html       | Outline approved + PRISMA complete | ✅ [Template](ma-manuscript-quarto/references/manuscript-completion-template.md) — **Outline required**: fill `manuscript_outline.md` first |
 | 08    | `08_reviews/`    | grade_summary.md          | GRADE filled        | —                                                                                |
 | 09    | `09_qa/`         | final_qa_report.md        | All checks pass     | —                                                                                |
 
