@@ -71,6 +71,14 @@ Thumbs.db
 # Temp files
 *.tmp
 *.bak
+*.log
+
+# Development logs (archive only)
+docs/archive/dev-logs/
+docs/archive/test-reports/
+
+# R environment files (should be in projects, not root)
+/renv.lock
 
 # Data science conventional dirs (raw/intermediate outputs)
 # Note: plain-text artifacts are tracked; rely on the binary-extension ignores below.

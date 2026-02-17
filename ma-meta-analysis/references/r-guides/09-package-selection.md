@@ -312,55 +312,51 @@ coef_test(res_ml, vcov = "CR2")  # Cluster-robust SE
 
 **Best: `netmeta` (frequentist) or `gemtc` (Bayesian)**
 
-**Why**: `netmeta` is fast, comprehensive, and produces automatic network plots, league tables, and treatment rankings. `gemtc` offers Bayesian inference with prior flexibility. Use NMA when comparing **≥3 treatments** with direct and indirect evidence.
+**Why**: Per 2026 NICE/WHO/Cochrane consensus, **Bayesian NMA (gemtc) is the primary analysis**. Frequentist (netmeta) serves as sensitivity analysis in supplement. Use NMA when comparing **≥3 treatments** with direct and indirect evidence.
 
-**📖 Full NMA workflow**: See [NMA R Guide](../../../ma-network-meta-analysis/references/nma-r-guide.md) for the complete 10-step pipeline with netmeta.
+**📖 Full NMA workflow**: See [NMA R Guide](../../../ma-network-meta-analysis/references/nma-r-guide.md) for the complete 10-step pipeline.
 
 ```r
-# Frequentist network meta-analysis (PRIMARY)
-library(netmeta)
-
-# Check network connectivity first
-netconnection(treat1, treat2, studlab, data = network_data)
-
-# Fit NMA with REML (Cochrane-mandated default)
-net <- netmeta(
-  TE, seTE, treat1, treat2, studlab,
-  data = network_data,
-  sm = "RR",
-  random = TRUE,
-  method.tau = "REML"
-)
-
-netgraph(net)                            # Network geometry
-forest(net, ref = "Placebo")             # Forest plot
-netrank(net, small.values = "undesirable")  # P-score rankings
-netleague(net)                           # League table
-decomp.design(net)                       # Inconsistency test
-netsplit(net)                            # Node-splitting
-funnel(net)                              # Comparison-adjusted funnel
-
-# Bayesian network meta-analysis (SENSITIVITY)
+# PRIMARY: Bayesian NMA (gemtc)
 library(gemtc)
-network <- mtc.network(data.ab = network_data)
-model <- mtc.model(network, type = "consistency")
-results <- mtc.run(model)
+network <- mtc.network(data.re = nma_data)
+model <- mtc.model(network, type = "consistency", linearModel = "random", n.chain = 4)
+results <- mtc.run(model, n.adapt = 5000, n.iter = 50000, thin = 10)
+
+summary(results)                   # Posterior summaries
+gelman.diag(results)               # Convergence check (Rhat < 1.05)
+ranks <- rank.probability(results) # Rank probabilities
+sucra(ranks)                       # SUCRA rankings
+forest(results)                    # Forest plot
+
+# Empirical priors (Turner/Rhodes) — cite directly, no justification needed:
+# hn.prior <- mtc.hy.prior("dlnorm", -3.95, 1.79^(-2))  # mortality, pharma vs placebo
+
+# SENSITIVITY: Frequentist NMA (netmeta) — place in supplement
+library(netmeta)
+net <- netmeta(TE, seTE, treat1, treat2, studlab,
+               data = network_data, sm = "RR",
+               random = TRUE, method.tau = "REML")
+
+netgraph(net)                      # Network geometry (best visualization)
+decomp.design(net)                 # Inconsistency (complements Bayesian node-splitting)
 ```
 
 #### Package Comparison
 
-| Package      | Strengths                                                                         | Weaknesses                           |
-| ------------ | --------------------------------------------------------------------------------- | ------------------------------------ |
-| **netmeta**  | Fast frequentist NMA, automatic network graphs, league tables, ranking (P-scores), no external deps, Cochrane recommended | No Bayesian inference                |
-| **gemtc**    | Bayesian NMA with JAGS, prior flexibility, inconsistency models                   | Slower (MCMC), requires JAGS install |
-| **multinma** | Modern Bayesian NMA with Stan, IPD + aggregate data integration                   | Newer package, fewer tutorials, requires Stan |
-| **bnma**     | Bayesian NMA with contrast-based or arm-based models                              | Less active development              |
+| Package      | Role | Strengths                                                                         | Weaknesses                           |
+| ------------ | ---- | --------------------------------------------------------------------------------- | ------------------------------------ |
+| **gemtc**    | **Primary** | Bayesian NMA, SUCRA + rankograms from posterior, empirical priors (Turner/Rhodes), DIC model comparison, NICE/WHO/Cochrane aligned | Requires JAGS install, slower (MCMC) |
+| **netmeta**  | **Sensitivity** | Fast frequentist, excellent visualization (netgraph, netheat), P-scores, no external deps | No Bayesian inference, no priors     |
+| **multinma** | Advanced | Modern Stan-based, IPD + aggregate data, population adjustment                   | Requires Stan, steeper learning curve |
+| **bnma**     | Alternative | Bayesian NMA, contrast or arm-based                                              | Less active development              |
 
-**Recommendation**:
+**Recommendation (2026 consensus)**:
 
-- **For all NMA projects**: Use `netmeta` as primary analysis (frequentist, no external deps)
-- **For Bayesian sensitivity**: Use `gemtc` (requires JAGS) in sensitivity analysis
-- **For IPD + aggregate**: Use `multinma` (requires Stan)
+- **Primary**: Use `gemtc` (Bayesian) — matches NICE/WHO/Cochrane expectations
+- **Sensitivity**: Use `netmeta` (frequentist) — one run in supplement for robustness
+- **Advanced**: Use `multinma` when combining IPD with aggregate data
+- **CINeMA**: Non-negotiable GRADE-NMA assessment via https://cinema.ispm.unibe.ch/
 
 **📖 Detailed comparison**: See [NMA Package Comparison](../../../ma-network-meta-analysis/references/nma-package-comparison.md)
 
@@ -370,16 +366,16 @@ The full NMA workflow uses 10 R scripts in `ma-network-meta-analysis/assets/r/`:
 
 | Script | Purpose |
 |--------|---------|
-| `nma_01_setup.R` | Environment setup, install netmeta/gemtc |
-| `nma_02_data_prep.R` | Reshape data to contrast-based format |
+| `nma_01_setup.R` | Environment setup (gemtc + JAGS primary, netmeta sensitivity) |
+| `nma_02_data_prep.R` | Reshape data for gemtc (contrast/arm-based) |
 | `nma_03_network_graph.R` | Network geometry, connectivity check |
-| `nma_04_models.R` | Fit NMA (REML, fixed + random) |
-| `nma_05_inconsistency.R` | Design decomposition, heat plot, node-splitting |
-| `nma_06_forest_plots.R` | Forest plots by reference treatment |
-| `nma_07_ranking.R` | P-scores, league table |
+| `nma_04_models.R` | **Bayesian NMA (gemtc, primary)** + frequentist (netmeta, supplement) |
+| `nma_05_inconsistency.R` | Node-splitting (Bayesian) + design decomposition + heat plot |
+| `nma_06_forest_plots.R` | Forest plots from posterior distributions |
+| `nma_07_ranking.R` | **SUCRA + rankograms (Bayesian)**, P-scores (sensitivity) |
 | `nma_08_funnel.R` | Comparison-adjusted funnel plot |
-| `nma_09_sensitivity.R` | Leave-one-out, Bayesian sensitivity |
-| `nma_10_tables.R` | Export tables as gt/PNG (300 DPI) |
+| `nma_09_sensitivity.R` | Frequentist concordance, leave-one-out, **CINeMA (GRADE for NMA)** |
+| `nma_10_tables.R` | League table + rankings as gt/PNG (300 DPI) |
 
 ---
 

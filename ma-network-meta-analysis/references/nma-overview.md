@@ -47,7 +47,7 @@ How many treatments?
    │     │  ├─ No → Discuss limitations; consider sensitivity analyses
    │     │  └─ Yes → Network Meta-Analysis (ma-network-meta-analysis)
    │     └─ Do you need treatment rankings?
-   │        ├─ Yes → NMA with P-scores
+   │        ├─ Yes → NMA with SUCRA rankings (Bayesian)
    │        └─ No → NMA still valid for indirect comparisons
 ```
 
@@ -61,9 +61,44 @@ How many treatments?
 | Evidence | Direct only | Direct + indirect |
 | Assumptions | Homogeneity | Homogeneity + transitivity + consistency |
 | Key output | Pooled effect (1 comparison) | League table (all pairwise comparisons) |
-| Rankings | Not applicable | P-scores, SUCRA |
+| Rankings | Not applicable | SUCRA + rankograms (Bayesian) |
+| Certainty | GRADE | CINeMA (GRADE for NMA) |
 | Reporting | PRISMA 2020 | PRISMA-NMA extension |
-| R package | meta/metafor | netmeta (frequentist) / gemtc (Bayesian) |
+| Primary R package | meta/metafor | gemtc (Bayesian) |
+| Sensitivity R package | — | netmeta (frequentist) |
+
+---
+
+## 2026 Methodological Consensus
+
+### Bayesian as Primary Analysis
+
+NICE, WHO, and Cochrane methodological guidelines use Bayesian NMA as their framework. Most PRISMA-NMA reporting examples are Bayesian. Reviewers expect Bayesian NMA — using frequentist as primary occasionally triggers requests for Bayesian sensitivity analysis. Starting with Bayesian avoids this.
+
+### Empirical Priors Are Mature
+
+Turner et al. and Rhodes et al. established empirical priors for different outcome types (OR, HR, MD) that are widely accepted. You can cite them directly without needing to justify the prior choice. Vague priors also work — results will closely match frequentist estimates.
+
+### Frequentist as Supplement
+
+Run `netmeta` once and place results in the supplement. If results agree with Bayesian (they almost always will), one sentence establishes robustness. Reviewers have no room for objection.
+
+### CINeMA is Non-Negotiable
+
+CINeMA (Confidence in Network Meta-Analysis) is the GRADE framework adapted for NMA. It rates certainty of evidence for each comparison across 6 domains. Omitting CINeMA is a common reason for reviewer rejection in 2026.
+
+---
+
+## Top Reviewer Rejection Reasons (2026)
+
+Ranked by frequency:
+
+1. **Inconsistency handling inadequate** — Must use ≥2 methods (node-splitting + global test)
+2. **Transitivity assumption not justified** — Need table of study characteristics by comparison with explicit narrative
+3. **CINeMA / GRADE for NMA not done** — Rate certainty per comparison
+4. **Method choice issues** — Using Bayesian primary eliminates this concern entirely
+
+Spend your time on items 1-3, not agonizing over Bayesian vs frequentist.
 
 ---
 
@@ -87,15 +122,16 @@ See [nma-assumptions.md](nma-assumptions.md) for detailed assessment methods.
 When `analysis_type: nma` is set in `pico.yaml`:
 
 1. **Extraction** (Stage 05): Include `treat1`, `treat2` columns for each comparison
-2. **Analysis** (Stage 06): Use `nma_*.R` scripts instead of standard `01-09` scripts
-3. **Manuscript** (Stage 07): Report per PRISMA-NMA checklist
-4. **QA** (Stage 09): Verify network connectivity, consistency, PRISMA-NMA compliance
+2. **Analysis** (Stage 06): Use `nma_*.R` scripts — Bayesian primary (gemtc), frequentist sensitivity (netmeta)
+3. **CINeMA** (Stage 06): Rate certainty for all pairwise comparisons
+4. **Manuscript** (Stage 07): Report per PRISMA-NMA checklist
+5. **QA** (Stage 09): Verify convergence, consistency, CINeMA completion, PRISMA-NMA compliance
 
 ---
 
 ## Further Reading
 
-- [NMA R Guide](nma-r-guide.md) — Step-by-step netmeta workflow
+- [NMA R Guide](nma-r-guide.md) — Step-by-step Bayesian NMA workflow with gemtc
 - [NMA Assumptions](nma-assumptions.md) — How to assess transitivity and consistency
 - [NMA Reporting Checklist](nma-reporting-checklist.md) — PRISMA-NMA 32-item checklist
-- [Package Comparison](nma-package-comparison.md) — netmeta vs gemtc vs multinma
+- [Package Comparison](nma-package-comparison.md) — gemtc vs netmeta vs multinma

@@ -6,6 +6,7 @@ AI-assisted meta-analysis pipeline. This file is auto-loaded by Claude Code.
 
 ## Quick Start
 
+**First time setup?** → Run `bash setup.sh` then `bash verify_environment.sh` (see [ENVIRONMENT_QUICK_START.md](ENVIRONMENT_QUICK_START.md))
 **New project?** → Say "brainstorm" or "help me find a topic"
 **Have TOPIC.txt?** → Say "start" or "continue"
 **At Stage 06?** → Say "complete manuscript" or see [Manuscript Assembly](ma-manuscript-quarto/references/manuscript-assembly.md)
@@ -63,22 +64,42 @@ meta-pipe/
 
 ## When User Says "Brainstorm" or "Help me find a topic"
 
-Use the **brainstorm-topic** skill (`.claude/skills/brainstorm-topic/SKILL.md`):
+**⚠️ CRITICAL**: Use the **enhanced brainstorm-topic skill v2.0** (`.claude/skills/brainstorm-topic/SKILL.md`)
 
-1. **Ask ONE question at a time** - don't overwhelm
-2. **Guide through PICO** iteratively:
-   - Clinical area → Condition → Population → Intervention → Comparator → Outcomes
-3. **Check feasibility** - quick PubMed search to estimate study count
-4. **Present refined topic** in structured format
-5. **Save to `TOPIC.txt`** once confirmed
-6. **Offer to start** the pipeline
+**This skill now includes**:
 
-Example prompts that trigger this:
+- ✅ **Pre-assessment** (experience level, timeline, access)
+- ✅ **Instant feasibility checks** after each PICO element
+- ✅ **Red flag warnings** (study count, heterogeneity, outcome reporting)
+- ✅ **AI self-check prompts** (prevents common mistakes)
+- ✅ **Success/failure examples** (guide by precedent)
+- ✅ **Enhanced TOPIC.txt** (includes feasibility metadata)
+
+**Your job as AI**: Be a **guardian against wasted effort**, not just a question-answering bot.
+
+**Workflow**:
+
+1. **Phase 0**: Pre-assessment (4 quick questions)
+2. **Phase 1**: Clinical area (with instant red flag checks)
+3. **Phase 2**: PICO element-by-element (feasibility check after EACH)
+4. **Phase 3**: Early feasibility assessment (WebSearch for reviews, study count)
+5. **Phase 4**: Present topic + feasibility report
+6. **Phase 5**: Save enhanced TOPIC.txt + recommend 4-hour formal assessment
+
+**Key references for AI**:
+
+- **Skill file**: `.claude/skills/brainstorm-topic/SKILL.md` (full workflow)
+- **Best practices**: `ma-topic-intake/references/brainstorming-best-practices.md` (examples, red flags)
+- **Quick card**: `ma-topic-intake/references/topic-feasibility-quickcard.md` (2-min reference)
+
+**Trigger prompts**:
 
 - "help me brainstorm a topic"
 - "I don't know what to study"
 - "help me refine my research question"
 - "/brainstorm"
+
+**Remember**: Your goal is to help user find a **feasible** topic, not just any topic. Flag red flags immediately, don't wait until later.
 
 ---
 
@@ -133,18 +154,134 @@ Then proceed:
 
 ## Resume Behavior
 
-If user says "continue", "what's next", or "status":
+**⚠️ IMPORTANT**: When resuming after a break (hours/days later), ALWAYS run these commands first:
 
-1. Check which stage folders have content
-2. Report current progress
-3. Suggest next action
+### When User Says "continue", "what's next", or "status"
+
+**Step 1: Check Project Status** (Automated)
+
+```bash
+cd /Users/htlin/meta-pipe/tooling/python
+
+# Get comprehensive project status
+uv run project_status.py --project <project-name> --verbose
+```
+
+**This shows**:
+
+- ✅ Which stages are complete
+- 🔄 Which stage is in progress
+- ⬜ Which stages are pending
+- 📁 Files created in each stage
+- ⏰ Last modification time
+- 🎯 Suggested next action
+
+**Step 2: Show Last Session Summary** (Context Recovery)
+
+```bash
+# Get what you did last time
+uv run session_log.py --project <project-name> resume
+```
+
+**This shows**:
+
+- 📋 Last session ID and date
+- ✅ Tasks completed
+- 🎯 Decisions made
+- ❓ Open questions
+- 📁 Files created/modified
+- ➡️ Suggested next steps
+
+**Step 3: Generate Personalized Resume Report**
+
+Based on the above outputs, provide user with:
+
+1. **Where we are**: Current stage and completion %
+2. **What we did last time**: Summary of last session
+3. **What's next**: Specific actionable next step with command
+4. **Open issues**: Any unresolved questions from last session
+
+### Automatic Session Logging
+
+**During work, automatically track progress**:
+
+```bash
+# At start of session
+uv run session_log.py --project <project-name> start --notes "Starting Stage X"
+
+# When completing tasks (automatically)
+uv run session_log.py --project <project-name> update --task "Completed Y"
+
+# When making decisions (automatically)
+uv run session_log.py --project <project-name> update --decision "Decided to use Z"
+
+# When encountering questions (automatically)
+uv run session_log.py --project <project-name> update --question "Need to clarify W"
+
+# At end of session
+uv run session_log.py --project <project-name> end --summary "Finished Stage X, ready for Stage Y"
+```
+
+### Example Resume Flow
+
+**User**: "continue"
+
+**Assistant**:
+
+```bash
+# Run status check
+uv run project_status.py --project ici-breast-cancer --verbose
+
+# Run resume summary
+uv run session_log.py --project ici-breast-cancer resume
+```
+
+**Then provide personalized report**:
+
+```
+📊 Welcome back! Here's where we are:
+
+CURRENT STATUS (as of 2026-02-17):
+✅ Completion: 45% (Stages 1-4 done)
+🔄 Current Stage: 05_extraction (Data Extraction)
+⏰ Last worked: 2 days ago (2026-02-15)
+
+LAST SESSION RECAP:
+✅ Completed:
+   • Converted BibTeX to CSV (15 studies)
+   • Started LLM extraction (completed 8/15 PDFs)
+
+🎯 Decisions Made:
+   • Using Hybrid extraction approach (web + PDF)
+   • Targeting 90% completeness threshold
+
+❓ Open Questions:
+   • Missing HR data for Study #12 - need to contact authors?
+
+NEXT STEPS (Pick up where we left off):
+1. Complete LLM extraction for remaining 7 PDFs
+   Command: uv run llm_extract_cli.py --resume
+
+2. Validate extraction.csv completeness
+   Command: uv run validate_extraction.py
+
+3. Perform Risk of Bias assessment (RoB 2)
+
+Ready to continue? Let's finish the extraction!
+```
 
 ---
 
 ## Rules
 
+- **Environment**:
+  - First-time setup: `bash setup.sh` (30-60 min, one-time)
+  - Verify anytime: `bash verify_environment.sh` (2 min)
+  - See [ENVIRONMENT_QUICK_START.md](ENVIRONMENT_QUICK_START.md) for details
 - **Python**: Always `uv run`, never `python3` directly
-- **Dependencies**: `uv add <package>`
+- **Dependencies**:
+  - Python: `uv add <package>` in `tooling/python/`
+  - R: `install.packages()` then `renv::snapshot()` in project root
 - **API keys**: Read from `.env` ([ma-search-bibliography/references/api-setup.md](ma-search-bibliography/references/api-setup.md))
 - **Rounds**: Keep all `round-XX` data, never overwrite
 - **Delete**: Use `rip` not `rm`
@@ -153,17 +290,17 @@ If user says "continue", "what's next", or "status":
 
 ## Pipeline Stages
 
-| Stage | Folder           | Key Output                | Validation          | Quickstart Guide                                                                 |
-| ----- | ---------------- | ------------------------- | ------------------- | -------------------------------------------------------------------------------- |
-| 01    | `01_protocol/`   | pico.yaml, eligibility.md | PICO complete       | —                                                                                |
-| 02    | `02_search/`     | dedupe.bib                | Records > 0         | —                                                                                |
-| 03    | `03_screening/`  | decisions.csv             | Kappa ≥ 0.60        | ✅ [Template](ma-screening-quality/references/screening-quickstart-template.md)  |
-| 04    | `04_fulltext/`   | manifest.csv              | PDFs collected      | ✅ [Template](ma-fulltext-management/references/fulltext-quickstart-template.md) |
-| 05    | `05_extraction/` | extraction.csv            | No missing study_id | —                                                                                |
-| 06    | `06_analysis/`   | figures/, tables/         | R scripts 01-12 (pairwise) or nma_01-10 (NMA) | ✅ [Template](ma-meta-analysis/references/analysis-progress-template.md)         |
-| 07    | `07_manuscript/` | index.docx/pdf/html       | Outline approved + PRISMA complete | ✅ [Template](ma-manuscript-quarto/references/manuscript-completion-template.md) — **Outline required**: fill `manuscript_outline.md` first |
-| 08    | `08_reviews/`    | grade_summary.md          | GRADE filled        | —                                                                                |
-| 09    | `09_qa/`         | final_qa_report.md        | All checks pass     | —                                                                                |
+| Stage | Folder           | Key Output                | Validation                                    | Quickstart Guide                                                                                                                            |
+| ----- | ---------------- | ------------------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| 01    | `01_protocol/`   | pico.yaml, eligibility.md | PICO complete                                 | —                                                                                                                                           |
+| 02    | `02_search/`     | dedupe.bib                | Records > 0                                   | —                                                                                                                                           |
+| 03    | `03_screening/`  | decisions.csv             | Kappa ≥ 0.60                                  | ✅ [Template](ma-screening-quality/references/screening-quickstart-template.md)                                                             |
+| 04    | `04_fulltext/`   | manifest.csv              | PDFs collected                                | ✅ [Template](ma-fulltext-management/references/fulltext-quickstart-template.md)                                                            |
+| 05    | `05_extraction/` | extraction.csv            | No missing study_id                           | —                                                                                                                                           |
+| 06    | `06_analysis/`   | figures/, tables/         | R scripts 01-12 (pairwise) or nma_01-10 (NMA) | ✅ [Template](ma-meta-analysis/references/analysis-progress-template.md)                                                                    |
+| 07    | `07_manuscript/` | index.docx/pdf/html       | Outline approved + PRISMA complete            | ✅ [Template](ma-manuscript-quarto/references/manuscript-completion-template.md) — **Outline required**: fill `manuscript_outline.md` first |
+| 08    | `08_reviews/`    | grade_summary.md          | GRADE filled                                  | —                                                                                                                                           |
+| 09    | `09_qa/`         | final_qa_report.md        | All checks pass                               | —                                                                                                                                           |
 
 **Note**: Quickstart guide templates use `{{PLACEHOLDERS}}` that can be auto-filled from project data. See [Template Extraction Status](ma-end-to-end/references/template-extraction-status.md) for automation roadmap.
 
@@ -598,19 +735,23 @@ Run in order from `06_analysis/`:
 
 **Network meta-analysis (ma-network-meta-analysis/assets/r/) — use when `analysis_type: nma`:**
 
+Primary: Bayesian (gemtc) per 2026 NICE/WHO/Cochrane consensus. Frequentist (netmeta) as sensitivity in supplement.
+
 ```r
 # Execute NMA R scripts in order (replaces standard 01-09 for NMA projects)
-nma_01_setup.R                 # Load NMA packages (netmeta, gemtc)
-nma_02_data_prep.R             # Reshape to contrast-based format
+nma_01_setup.R                 # Load NMA packages (gemtc primary, netmeta sensitivity)
+nma_02_data_prep.R             # Reshape to contrast/arm-based format
 nma_03_network_graph.R         # Network geometry, connectivity check
-nma_04_models.R                # Fit frequentist NMA (REML)
-nma_05_inconsistency.R         # Design decomposition, heat plot, node-splitting
-nma_06_forest_plots.R          # Forest plots by reference treatment (300 DPI)
-nma_07_ranking.R               # P-scores, league table
+nma_04_models.R                # Bayesian NMA (gemtc, primary) + frequentist (netmeta, supplement)
+nma_05_inconsistency.R         # Node-splitting, design decomposition, heat plot
+nma_06_forest_plots.R          # Forest plots from posterior (300 DPI)
+nma_07_ranking.R               # SUCRA + rankograms (Bayesian), P-scores (sensitivity)
 nma_08_funnel.R                # Comparison-adjusted funnel plot
-nma_09_sensitivity.R           # Leave-one-out, Bayesian sensitivity (gemtc)
+nma_09_sensitivity.R           # Leave-one-out, frequentist concordance, CINeMA (GRADE for NMA)
 nma_10_tables.R                # League table + rankings as gt/PNG (300 DPI)
 ```
+
+**CINeMA (GRADE for NMA)**: Non-negotiable for publication. Rate certainty per comparison via https://cinema.ispm.unibe.ch/
 
 **📖 See**: [NMA R Guide](ma-network-meta-analysis/references/nma-r-guide.md) | [NMA Overview](ma-network-meta-analysis/references/nma-overview.md)
 
@@ -719,6 +860,7 @@ Tables are generated in R (`06_analysis/07_export_tables.R`) using `gt` + `flext
 
 ```markdown
 ## Table 1. Trial Characteristics {#tbl-characteristics}
+
 ![](tables/table1_characteristics.png){width=100%}
 ```
 
@@ -726,11 +868,11 @@ Tables are generated in R (`06_analysis/07_export_tables.R`) using `gt` + `flext
 
 ### Output Formats
 
-| Format | Command | Tables | Notes |
-| ------ | ------- | ------ | ----- |
+| Format | Command     | Tables       | Notes                              |
+| ------ | ----------- | ------------ | ---------------------------------- |
 | HTML   | `make html` | Embedded PNG | Self-contained (`embed-resources`) |
-| DOCX   | `make docx` | Embedded PNG | For journal submission |
-| PDF    | `make pdf`  | Embedded PNG | Via Typst engine |
+| DOCX   | `make docx` | Embedded PNG | For journal submission             |
+| PDF    | `make pdf`  | Embedded PNG | Via Typst engine                   |
 
 </details>
 
@@ -852,10 +994,11 @@ uv run ../../ma-end-to-end/scripts/checkpoint.py --restore --name pre-analysis -
 **Network Meta-Analysis** (for ≥3 treatments):
 
 - [NMA Overview](ma-network-meta-analysis/references/nma-overview.md) - When to use NMA vs pairwise MA (10 min)
-- [NMA R Guide](ma-network-meta-analysis/references/nma-r-guide.md) - Step-by-step netmeta workflow (30-45 min)
+- [NMA R Guide](ma-network-meta-analysis/references/nma-r-guide.md) - Step-by-step Bayesian NMA workflow (30-45 min)
 - [NMA Reporting Checklist](ma-network-meta-analysis/references/nma-reporting-checklist.md) - PRISMA-NMA 32-item checklist
 - [NMA Package Comparison](ma-network-meta-analysis/references/nma-package-comparison.md) - netmeta vs gemtc vs multinma
 - [NMA Assumptions](ma-network-meta-analysis/references/nma-assumptions.md) - Transitivity, consistency, homogeneity
+- [NMA Oncology TTE](ma-network-meta-analysis/references/nma-oncology-tte.md) - Survival endpoints, PH testing, Guyot IPD reconstruction, multinma M-splines
 
 **Reference**:
 

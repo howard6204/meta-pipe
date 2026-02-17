@@ -9,17 +9,88 @@
 
 | Your Situation | Use This | Why |
 |---------------|----------|-----|
-| Default NMA | **netmeta** | Fast, comprehensive, no external deps |
-| Need Bayesian inference | **gemtc** | Mature, well-documented, prior flexibility |
-| IPD + aggregate data | **multinma** | Modern Stan-based, handles both data types |
-| Simple, quick analysis | **netmeta** | One function fits all |
-| Publication for Cochrane | **netmeta** | Recommended in Cochrane Handbook |
+| **Default NMA (recommended)** | **gemtc** (primary) + **netmeta** (sensitivity) | Bayesian primary per NICE/WHO/Cochrane; frequentist sensitivity in supplement |
+| Need IPD + aggregate data | **multinma** | Modern Stan-based, handles both data types |
+| No JAGS available | **netmeta** only | Fall back to frequentist if JAGS install not possible |
+| Cochrane review | **gemtc** primary | Cochrane Handbook supports Bayesian NMA |
+
+---
+
+## 2026 Recommended Workflow
+
+### Primary Analysis: gemtc (Bayesian)
+
+**Why Bayesian first?**
+- NICE, WHO, Cochrane guidelines are Bayesian-based
+- Reviewers expect Bayesian NMA; frequentist-only may trigger requests for Bayesian sensitivity
+- SUCRA + rankograms are the most familiar ranking presentation
+- Empirical priors (Turner/Rhodes) are mature and widely accepted
+- Formal model comparison via DIC
+- Convergence diagnostics are standardized (Rhat, trace plots, ESS)
+
+### Sensitivity: netmeta (Frequentist)
+
+**Why include frequentist?**
+- One run in supplement demonstrates robustness
+- If results agree (almost always), one sentence handles it
+- Fast to run, no convergence concerns
+- Leaves reviewers with zero methodological objections
 
 ---
 
 ## Detailed Comparison
 
-### netmeta (Frequentist) — PRIMARY
+### gemtc (Bayesian) — PRIMARY
+
+**Version**: Stable, well-established
+**Authors**: van Valkenhoef, Kuiper
+**Dependencies**: rjags, JAGS (external software required)
+
+| Feature | Support |
+|---------|---------|
+| Contrast-based data | Yes |
+| Arm-based data | Yes |
+| Consistency model | Yes |
+| Inconsistency model | Yes (unrelated mean effects) |
+| Node-splitting | Yes (`mtc.nodesplit()`) |
+| Rankings (SUCRA) | Yes (from posterior) |
+| Rankograms | Yes (rank probability plots) |
+| Prior specification | Yes (vague or empirical Turner/Rhodes) |
+| Model comparison | DIC |
+| Convergence diagnostics | Rhat, trace plots, ESS (via coda) |
+
+**Strengths**:
+- Full Bayesian inference with credible intervals
+- Empirical priors available (Turner et al., Rhodes et al.) — cite directly
+- SUCRA + rankograms produced naturally from posterior distributions
+- Formal model comparison via DIC (random vs fixed)
+- Matches NICE/WHO/Cochrane methodological expectations
+- Well-established methodology with extensive literature
+
+**Limitations**:
+- Requires JAGS installation (C++ program, ~5 min setup)
+- Slower than netmeta (MCMC sampling)
+- Convergence must be verified (but this is standardized)
+
+**Install**:
+1. Install JAGS: https://mcmc-jags.sourceforge.io/
+2. `install.packages(c("rjags", "gemtc", "coda"))`
+
+**Empirical Priors (Turner/Rhodes)**:
+```r
+# Log-OR, pharmacological vs placebo, all-cause mortality
+hn.prior <- mtc.hy.prior("dlnorm", -3.95, 1.79^(-2))
+
+# Log-OR, pharmacological vs placebo, subjective outcomes
+hn.prior <- mtc.hy.prior("dlnorm", -2.56, 1.74^(-2))
+
+# Vague prior (results ≈ frequentist)
+# Just use default — no prior specification needed
+```
+
+---
+
+### netmeta (Frequentist) — SENSITIVITY
 
 **Version**: Actively maintained (CRAN updated Jan 2026)
 **Authors**: Rücker, Schwarzer, Krahn
@@ -37,60 +108,21 @@
 | Rankings (P-scores) | `netrank()` |
 | Inconsistency tests | `decomp.design()`, `netsplit()`, `netheat()` |
 | Funnel plot | `funnel.netmeta()` (comparison-adjusted) |
-| Multi-arm studies | Automatic correction |
-| Component NMA | Yes (for disconnected networks) |
 | Meta-regression | `netmetareg()` |
 
 **Strengths**:
 - No external dependencies (pure R)
-- Comprehensive: covers entire NMA workflow
-- P-scores are more interpretable than SUCRA
-- Active development and community support
-- Recommended by Cochrane
+- Fast execution (no MCMC)
+- Comprehensive visualization (network graph, heat plot)
+- P-scores as alternative to SUCRA
+- Excellent for sensitivity analysis and visualization
 
 **Limitations**:
 - Frequentist only (no posterior distributions)
 - No informative priors
-- Limited to standard parametric models
+- Some reviewers may request Bayesian analysis as supplement
 
 **Install**: `install.packages("netmeta")`
-
----
-
-### gemtc (Bayesian) — SENSITIVITY
-
-**Version**: Stable (uses JAGS backend)
-**Authors**: van Valkenhoef, Kuiper
-**Dependencies**: rjags, JAGS (external software required)
-
-| Feature | Support |
-|---------|---------|
-| Contrast-based data | Yes |
-| Arm-based data | Yes |
-| Consistency model | Yes |
-| Inconsistency model | Yes (unrelated mean effects) |
-| Node-splitting | Yes |
-| Rankings (SUCRA) | Yes |
-| Prior specification | Yes (informative or vague) |
-| Deviance information | DIC for model comparison |
-| MCMC diagnostics | Trace plots, Gelman-Rubin |
-
-**Strengths**:
-- Full Bayesian inference with credible intervals
-- Informative priors possible (useful with sparse data)
-- Formal model comparison via DIC
-- Well-established methodology
-
-**Limitations**:
-- Requires JAGS installation (external C++ program)
-- Slower than netmeta (MCMC sampling)
-- Less active development recently
-- SUCRA less interpretable than P-scores
-- Convergence must be manually checked
-
-**Install**:
-1. Install JAGS: https://mcmc-jags.sourceforge.io/
-2. `install.packages(c("rjags", "gemtc"))`
 
 ---
 
@@ -103,65 +135,38 @@
 | Feature | Support |
 |---------|---------|
 | IPD + aggregate data | Yes (unique feature) |
-| Contrast-based | Yes |
-| Arm-based | Yes |
-| Meta-regression | Yes (including IPD covariates) |
+| Population adjustment | Yes (MAIC, STC) |
+| Meta-regression with IPD | Yes |
 | Informative priors | Yes |
 | Model comparison | LOO-IC, WAIC |
-| Population adjustment | Yes (MAIC, STC) |
 
-**Strengths**:
-- Can combine individual patient data (IPD) with aggregate data
-- Modern Stan backend (faster than JAGS, better diagnostics)
-- Population-adjusted indirect comparisons
-- Handles complex covariate adjustment
-
-**Limitations**:
-- Requires Stan installation (complex setup)
-- Fewer tutorials and examples than netmeta/gemtc
-- Newer package, less battle-tested
-- Steeper learning curve
+**Use when**: Combining individual patient data with aggregate data, or need population-adjusted indirect comparisons.
 
 **Install**: `install.packages("multinma")` (requires rstan or cmdstanr)
 
 ---
 
-## Recommendation for This Pipeline
-
-### Primary Analysis: netmeta
-- Use for all NMA analyses by default
-- No external dependencies
-- Produces all required outputs (network graph, forest, league table, rankings)
-
-### Sensitivity Check: gemtc
-- Run in `nma_09_sensitivity.R` if JAGS available
-- Compare Bayesian vs frequentist results
-- Use when reviewers request Bayesian analysis
-
-### Advanced: multinma
-- Use only when combining IPD with aggregate data
-- Use when population adjustment is needed
-- Requires Stan setup
-
----
-
 ## Feature Matrix
 
-| Feature | netmeta | gemtc | multinma |
-|---------|---------|-------|----------|
-| Install difficulty | Easy | Medium (JAGS) | Hard (Stan) |
-| Speed | Fast | Slow | Medium |
-| Learning curve | Low | Medium | High |
-| Framework | Frequentist | Bayesian | Bayesian |
-| Rankings | P-scores | SUCRA | SUCRA |
+| Feature | gemtc | netmeta | multinma |
+|---------|-------|---------|----------|
+| **Role in pipeline** | **Primary** | **Sensitivity** | Advanced |
+| Install difficulty | Medium (JAGS) | Easy | Hard (Stan) |
+| Speed | Slow (MCMC) | Fast | Medium |
+| Learning curve | Medium | Low | High |
+| Framework | Bayesian | Frequentist | Bayesian |
+| Rankings | SUCRA + rankogram | P-scores | SUCRA |
+| Priors | Turner/Rhodes or vague | N/A | Flexible |
+| Model comparison | DIC | — | LOO-IC |
 | IPD support | No | No | Yes |
-| Active development | Yes | Limited | Yes |
-| Cochrane recommended | Yes | — | — |
-| External deps | None | JAGS | Stan |
+| Network visualization | Basic | Excellent | Basic |
+| NICE/WHO alignment | Yes | Partial | Yes |
+| External deps | JAGS | None | Stan |
 
 ---
 
 ## See Also
 
-- [NMA R Guide](nma-r-guide.md) — Step-by-step netmeta workflow
+- [NMA R Guide](nma-r-guide.md) — Step-by-step Bayesian NMA workflow
+- [NMA Overview](nma-overview.md) — When to use NMA vs pairwise
 - [Package Selection](../../ma-meta-analysis/references/r-guides/09-package-selection.md) — Full R package guide (pairwise + NMA)

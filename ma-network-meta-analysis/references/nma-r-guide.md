@@ -1,7 +1,7 @@
 # Network Meta-Analysis in R: Step-by-Step Guide
 
 **Time**: 30-45 minutes
-**Packages**: netmeta (primary), meta, metafor, ggplot2, gt
+**Primary**: gemtc (Bayesian) | **Sensitivity**: netmeta (frequentist)
 **Stage**: 06 (Analysis)
 
 ---
@@ -9,19 +9,27 @@
 ## Quick Start
 
 ```r
+# PRIMARY: Bayesian NMA
+library(gemtc)
+network <- mtc.network(data.re = nma_data)
+model <- mtc.model(network, type = "consistency", linearModel = "random")
+results <- mtc.run(model, n.adapt = 5000, n.iter = 50000, thin = 10)
+summary(results)
+rank.probability(results)  # Rankings
+sucra(rank.probability(results))  # SUCRA
+
+# SENSITIVITY: Frequentist NMA (supplement)
 library(netmeta)
-
-# Fit NMA from contrast-based data
-net <- netmeta(TE, seTE, treat1, treat2, studlab,
-               data = nma_data, sm = "RR",
-               random = TRUE, method.tau = "REML")
-
-# Visualize
-netgraph(net)                    # Network geometry
-forest(net, ref = "Placebo")     # Forest plot
-netrank(net)                     # Treatment rankings
-netleague(net)                   # League table
+net <- netmeta(TE, seTE, treat1, treat2, studlab, data = nma_data,
+               sm = "RR", random = TRUE, method.tau = "REML")
 ```
+
+---
+
+## Prerequisites
+
+1. **JAGS installed**: https://mcmc-jags.sourceforge.io/
+2. R packages: `gemtc`, `rjags`, `coda`, `netmeta`, `meta`
 
 ---
 
@@ -29,253 +37,245 @@ netleague(net)                   # League table
 
 NMA data can be in **contrast-based** or **arm-based** format.
 
-### Contrast-Based Format (most common)
+### Contrast-Based (Relative Effects)
 
-Each row = one comparison from one study:
+For gemtc:
+```r
+gemtc_data <- data.frame(
+  study     = c("Trial1", "Trial1", "Trial2"),
+  treatment = c("DrugA", "Placebo", "DrugB"),
+  diff      = c(0.23, NA, 0.35),     # log-scale for RR/OR
+  std.err   = c(0.11, NA, 0.14)
+)
+network <- mtc.network(data.re = gemtc_data)
+```
 
-| studlab | treat1 | treat2 | TE | seTE |
-|---------|--------|--------|----|------|
-| Trial1 | DrugA | Placebo | 0.23 | 0.11 |
-| Trial2 | DrugB | Placebo | 0.35 | 0.14 |
-| Trial3 | DrugA | DrugB | -0.12 | 0.16 |
-
-- `TE`: Treatment effect (log-scale for RR/OR/HR)
-- `seTE`: Standard error of TE
-
-### Arm-Based Format
-
-Each row = one treatment arm:
-
-| studlab | treatment | events | n |
-|---------|-----------|--------|---|
-| Trial1 | DrugA | 45 | 100 |
-| Trial1 | Placebo | 30 | 100 |
-
-Convert with `pairwise()`:
+### Arm-Based (Events + Totals)
 
 ```r
-pw_data <- pairwise(
-  treat = treatment,
-  event = events,
-  n = n,
-  studlab = studlab,
-  data = arm_data,
-  sm = "RR"
+arm_data <- data.frame(
+  study      = c("Trial1", "Trial1", "Trial2", "Trial2"),
+  treatment  = c("DrugA", "Placebo", "DrugB", "Placebo"),
+  responders = c(45, 30, 50, 28),
+  sampleSize = c(100, 100, 120, 120)
 )
+network <- mtc.network(data.ab = arm_data)
 ```
 
 ---
 
 ## Step 2: Network Connectivity
 
-Before fitting NMA, verify the network is connected:
-
 ```r
+# Use netmeta utility for connectivity check
+library(netmeta)
 nc <- netconnection(treat1, treat2, studlab, data = nma_data)
-print(nc)
-# Must show: n.subnets = 1
+print(nc)  # Must show: n.subnets = 1
 ```
-
-If disconnected, you cannot run NMA on the full network. Options:
-1. Add bridging studies
-2. Analyze sub-networks separately
-3. Remove isolated treatments
 
 ---
 
 ## Step 3: Network Graph
 
 ```r
-net <- netmeta(TE, seTE, treat1, treat2, studlab,
-               data = nma_data, sm = "RR",
-               random = TRUE, method.tau = "REML")
+# netmeta has the best visualization
+net <- netmeta(TE, seTE, treat1, treat2, studlab, data = nma_data,
+               sm = "RR", random = TRUE, method.tau = "REML")
 
 netgraph(net,
-         number.of.studies = TRUE,    # Show study counts on edges
-         cex.points = 3,              # Node size
-         thickness = "number.of.studies",  # Edge width
-         plastic = FALSE)
+         number.of.studies = TRUE,
+         thickness = "number.of.studies",
+         cex.points = 3)
 ```
-
-Node size can represent number of patients; edge width represents number of studies.
 
 ---
 
-## Step 4: Fit NMA Models
+## Step 4: Fit Bayesian NMA (Primary)
 
-### Random-Effects (Primary)
-
-```r
-net_re <- netmeta(
-  TE, seTE, treat1, treat2, studlab,
-  data = nma_data,
-  sm = "RR",
-  random = TRUE,
-  fixed = FALSE,
-  method.tau = "REML",
-  reference.group = "Placebo"
-)
-summary(net_re)
-```
-
-### Fixed-Effect (Sensitivity)
+### Random-Effects with Vague Priors
 
 ```r
-net_fe <- netmeta(
-  TE, seTE, treat1, treat2, studlab,
-  data = nma_data,
-  sm = "RR",
-  random = FALSE,
-  fixed = TRUE,
-  reference.group = "Placebo"
-)
+library(gemtc)
+model_re <- mtc.model(network,
+                       type = "consistency",
+                       linearModel = "random",
+                       n.chain = 4)
+
+results <- mtc.run(model_re,
+                    n.adapt = 5000,
+                    n.iter = 50000,
+                    thin = 10)
 ```
 
-Key output:
-- `net_re$TE.random` — Treatment effect matrix
-- `net_re$tau2` — Between-study variance
-- `net_re$I2` — Overall heterogeneity
+### With Empirical Priors (Turner/Rhodes)
+
+```r
+# Log-OR, pharmacological vs placebo, all-cause mortality
+hn.prior <- mtc.hy.prior("dlnorm", -3.95, 1.79^(-2))
+
+model_re <- mtc.model(network,
+                       type = "consistency",
+                       linearModel = "random",
+                       n.chain = 4,
+                       hy.prior = hn.prior)
+
+results <- mtc.run(model_re, n.adapt = 5000, n.iter = 50000, thin = 10)
+```
+
+### Convergence Diagnostics (Mandatory)
+
+```r
+library(coda)
+
+# Gelman-Rubin (all Rhat must be < 1.05)
+gelman.diag(results)
+
+# Effective sample size (should be > 1000)
+effectiveSize(results)
+
+# Trace plots (visual check for mixing)
+plot(results)
+```
+
+If Rhat > 1.05: increase `n.iter` or `n.adapt`.
+
+### Model Comparison (DIC)
+
+```r
+model_fe <- mtc.model(network, type = "consistency",
+                       linearModel = "fixed", n.chain = 4)
+results_fe <- mtc.run(model_fe, n.adapt = 5000, n.iter = 50000, thin = 10)
+
+# Lower DIC = better model
+summary(results)$DIC      # Random-effects
+summary(results_fe)$DIC   # Fixed-effect
+```
 
 ---
 
 ## Step 5: Inconsistency Assessment
 
-### Design Decomposition (Global)
+### Node-Splitting (Bayesian)
 
 ```r
-dd <- decomp.design(net_re)
-print(dd)
-# Check Q_between-designs p-value
-# p < 0.05 → significant inconsistency
+nodesplit <- mtc.nodesplit(network, linearModel = "random", n.chain = 4)
+nodesplit_results <- mtc.nodesplit.comparisons(nodesplit)
+summary(nodesplit_results)
+# p < 0.10 suggests local inconsistency
+```
+
+### Design Decomposition (via netmeta)
+
+```r
+dd <- decomp.design(net)
+# Q_between-designs p < 0.05 → significant global inconsistency
 ```
 
 ### Net Heat Plot
 
 ```r
-netheat(net_re, random = TRUE)
-# Hot colors = inconsistency between design pairs
+netheat(net, random = TRUE)
 ```
-
-### Node-Splitting (Local)
-
-```r
-ns <- netsplit(net_re)
-print(ns)
-forest(ns)  # Visual comparison of direct vs indirect
-```
-
-Node-splitting compares direct and indirect estimates for each comparison. Significant p-values indicate local inconsistency.
 
 ---
 
 ## Step 6: Forest Plots
 
 ```r
-# All treatments vs reference
-forest(net_re,
-       reference.group = "Placebo",
-       sortvar = TE,
-       drop.reference.group = TRUE,
-       label.left = "Favours Placebo",
-       label.right = "Favours treatment")
-```
+# Bayesian forest plot
+forest(results)
 
-Export at 300 DPI:
-
-```r
-png("figures/nma_forest.png", width = 12, height = 8, units = "in", res = 300)
-forest(net_re, reference.group = "Placebo", sortvar = TE)
-dev.off()
+# Frequentist forest plot (more customizable)
+forest(net, reference.group = "Placebo", sortvar = TE)
 ```
 
 ---
 
-## Step 7: Treatment Rankings
-
-### P-scores
+## Step 7: SUCRA Rankings + Rankograms
 
 ```r
-ranking <- netrank(net_re, small.values = "undesirable")
-print(ranking)
-# P-score: 0 = worst, 1 = best
+# Rank probabilities from Bayesian posterior
+ranks <- rank.probability(results)
+print(ranks)
+
+# SUCRA
+sucra_values <- sucra(ranks)
+print(sucra_values)
+
+# Rankogram (rank probability plot)
+plot(ranks)  # Built-in rankogram
 ```
 
-`small.values`: Set to `"desirable"` if lower values are better (e.g., adverse events).
-
-### League Table
-
-```r
-league <- netleague(net_re, random = TRUE, seq = ranking, digits = 2)
-print(league)
-```
-
-The league table shows all pairwise comparisons. Read row vs column.
+SUCRA interpretation: 0 = definitely worst, 1 = definitely best. Present with caution — SUCRA quantifies ranking probability, not clinical significance.
 
 ---
 
-## Step 8: Publication Bias
+## Step 8: League Table
 
 ```r
-# Comparison-adjusted funnel plot
-funnel(net_re,
-       order = ranking$Pscore.random,
-       legend = TRUE)
-```
+# Bayesian: relative effects vs each reference
+rel <- relative.effect(results, t1 = "Placebo")
+summary(rel)
 
-Note: Standard Egger's test doesn't apply directly to NMA. The comparison-adjusted funnel plot (Chaimani & Salanti 2012) is the primary tool.
-
----
-
-## Step 9: Sensitivity Analyses
-
-### Leave-One-Out
-
-Remove each study and refit. Check if results are robust.
-
-### Exclude High-RoB Studies
-
-```r
-data_low_rob <- nma_data[!nma_data$studlab %in% high_rob_studies, ]
-net_low_rob <- netmeta(TE, seTE, treat1, treat2, studlab,
-                       data = data_low_rob, sm = "RR",
-                       random = TRUE, method.tau = "REML")
-```
-
-### Bayesian Sensitivity (gemtc)
-
-```r
-library(gemtc)
-network <- mtc.network(data.re = gemtc_data)
-model <- mtc.model(network, type = "consistency", linearModel = "random")
-results <- mtc.run(model, n.adapt = 5000, n.iter = 20000)
-summary(results)
+# Frequentist league table (supplement)
+league <- netleague(net, random = TRUE, digits = 2)
 ```
 
 ---
 
-## Step 10: Export Tables
+## Step 9: CINeMA (GRADE for NMA)
 
-Use `gt` for publication-quality tables:
+**This is non-negotiable for publication.** CINeMA rates certainty of evidence for each comparison across 6 domains:
+
+1. Within-study bias (RoB)
+2. Across-study bias (reporting/publication bias)
+3. Indirectness (transitivity concerns)
+4. Imprecision (width of credible intervals)
+5. Heterogeneity (between-study variance)
+6. Incoherence (inconsistency)
+
+**Tool**: https://cinema.ispm.unibe.ch/ (web app)
+
+Export your NMA results and RoB assessments, upload to CINeMA, rate each domain, and include the CINeMA summary table in your manuscript.
+
+---
+
+## Step 10: Frequentist Sensitivity (Supplement)
 
 ```r
-library(gt)
-summary_gt <- rank_df %>%
-  gt() %>%
-  tab_header(title = "Treatment Rankings") %>%
-  fmt_number(columns = P_score, decimals = 3)
+# One run, place in supplement
+net <- netmeta(TE, seTE, treat1, treat2, studlab,
+               data = nma_data, sm = "RR",
+               random = TRUE, method.tau = "REML")
 
-gtsave(summary_gt, "tables/nma_rankings.png", expand = 10)
+# If results agree with Bayesian (they almost always will):
+# "Frequentist sensitivity analysis using netmeta yielded
+#  consistent results (Supplement Table SX)."
 ```
 
 ---
 
 ## Common Pitfalls
 
-1. **Disconnected network**: Always check with `netconnection()` first
-2. **Ignoring transitivity**: Document why populations are comparable across comparisons
-3. **Over-interpreting P-scores**: P-scores quantify ranking probability, not clinical significance
-4. **Missing multi-arm corrections**: `netmeta()` handles multi-arm studies automatically
-5. **Wrong effect scale**: Use log-scale for RR/OR/HR in `TE` column
+1. **Skipping convergence diagnostics**: Always check Rhat, ESS, and trace plots
+2. **Disconnected network**: Always check with `netconnection()` first
+3. **Ignoring transitivity**: Document why populations are comparable across comparisons
+4. **Over-interpreting SUCRA**: SUCRA quantifies ranking probability, not clinical significance
+5. **Omitting CINeMA**: Top-3 reviewer rejection reason in 2026
+6. **Wrong effect scale**: Use log-scale for RR/OR/HR in contrast data
+
+---
+
+## Turner/Rhodes Empirical Priors Reference
+
+| Outcome Type | Prior | Source |
+|-------------|-------|--------|
+| All-cause mortality (pharma vs placebo) | `dlnorm(-3.95, 1.79^-2)` | Turner 2012 |
+| Subjective outcomes (pharma vs placebo) | `dlnorm(-2.56, 1.74^-2)` | Turner 2012 |
+| Semi-objective outcomes | `dlnorm(-3.40, 1.69^-2)` | Turner 2012 |
+| Objective outcomes | `dlnorm(-4.18, 1.55^-2)` | Turner 2012 |
+
+Use `mtc.hy.prior()` to set these in gemtc.
 
 ---
 
@@ -284,5 +284,5 @@ gtsave(summary_gt, "tables/nma_rankings.png", expand = 10)
 - [NMA Overview](nma-overview.md) — Decision criteria for NMA vs pairwise
 - [NMA Assumptions](nma-assumptions.md) — Transitivity, consistency, homogeneity
 - [NMA Reporting Checklist](nma-reporting-checklist.md) — PRISMA-NMA items
-- [Package Comparison](nma-package-comparison.md) — netmeta vs alternatives
+- [Package Comparison](nma-package-comparison.md) — gemtc vs netmeta vs multinma
 - [Package Selection](../../ma-meta-analysis/references/r-guides/09-package-selection.md) — Full R package guide
