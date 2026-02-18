@@ -1,0 +1,239 @@
+#!/usr/bin/env python3
+"""
+AI-powered title/abstract screening for meta-analysis projects.
+Uses `claude -p` CLI (OAuth) to screen studies against project eligibility criteria.
+
+Topic-agnostic: reads eligibility.md from any project and applies generic
+PICO-based exclusion codes. Outputs conform to the dual-review schema so
+the result plugs directly into dual_review_agreement.py.
+
+Usage:
+    uv run tooling/python/ai_screen.py --project <name>
+    uv run tooling/python/ai_screen.py --project <name> --reviewer 2
+"""
+
+import argparse
+import csv
+import subprocess
+import sys
+from pathlib import Path
+
+META_PIPE_ROOT = Path("/Users/htlin/meta-pipe")
+
+EXCLUSION_CODES = """\
+- P1: Wrong population
+- P2: Wrong age group
+- I1: Wrong intervention
+- I2: Intervention used for wrong indication
+- C1: Wrong comparator
+- S1: Wrong study design (review/meta-analysis/editorial/commentary)
+- S2: Case report or small series below minimum sample size
+- S3: Preclinical/in vitro/animal study
+- S4: Study protocol without results
+- O1: No relevant outcomes reported
+- O2: Insufficient follow-up duration
+- T1: Outside date range
+- T2: Conference abstract too old without full publication
+- L1: Language not meeting criteria
+- D1: Duplicate or superseded publication
+- NONE: No exclusion (use for INCLUDE or MAYBE decisions)"""
+
+
+def load_eligibility_criteria(project_path: Path) -> str:
+    """Load PICO criteria from project's eligibility.md."""
+    eligibility_file = project_path / "01_protocol" / "eligibility.md"
+    if eligibility_file.exists():
+        return eligibility_file.read_text()
+    return ""
+
+
+def screen_one(title, abstract, year, authors, journal, eligibility_criteria) -> dict:
+    """
+    Call `claude -p` to screen a single study.
+    Returns dict with decision, reason, confidence, exclusion_code.
+    """
+    prompt = f"""You are an expert systematic reviewer screening studies for a meta-analysis.
+
+ELIGIBILITY CRITERIA (from the project protocol -- read carefully):
+{eligibility_criteria}
+
+STUDY TO SCREEN:
+Title: {title}
+Authors: {authors}
+Journal: {journal}
+Year: {year}
+Abstract: {abstract[:1500] if abstract else "No abstract available"}
+
+TASK:
+Based on ONLY the title and abstract, decide if this study should be:
+1. INCLUDE - clearly meets all eligibility criteria
+2. EXCLUDE - clearly violates one or more eligibility criteria
+3. MAYBE - uncertain, needs full-text review
+
+When in doubt, prefer MAYBE over EXCLUDE (liberal screening at title/abstract stage).
+
+Respond in this EXACT format (one line each, no markdown, no extra text):
+DECISION: [INCLUDE/EXCLUDE/MAYBE]
+REASON: [Brief explanation in one sentence]
+CONFIDENCE: [HIGH/MEDIUM/LOW]
+EXCLUSION_CODE: [code or NONE]
+
+Exclusion codes:
+{EXCLUSION_CODES}
+"""
+
+    result = subprocess.run(
+        ["claude", "-p", "--model", "haiku"],
+        input=prompt,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+
+    if result.returncode != 0:
+        raise RuntimeError(f"claude -p failed: {result.stderr.strip()}")
+
+    parsed = {
+        "decision": "maybe",
+        "reason": "Unable to determine",
+        "confidence": "LOW",
+        "exclusion_code": "NONE",
+    }
+    for line in result.stdout.strip().split("\n"):
+        line = line.strip()
+        if line.startswith("DECISION:"):
+            parsed["decision"] = line.split(":", 1)[1].strip().lower()
+        elif line.startswith("REASON:"):
+            parsed["reason"] = line.split(":", 1)[1].strip()
+        elif line.startswith("CONFIDENCE:"):
+            parsed["confidence"] = line.split(":", 1)[1].strip()
+        elif line.startswith("EXCLUSION_CODE:"):
+            parsed["exclusion_code"] = line.split(":", 1)[1].strip()
+
+    return parsed
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="AI-powered title/abstract screening for any meta-analysis project"
+    )
+    parser.add_argument("--project", required=True, help="Project name under projects/")
+    parser.add_argument(
+        "--reviewer",
+        type=int,
+        choices=[1, 2],
+        default=1,
+        help="Which reviewer column to fill (1 or 2, default: 1)",
+    )
+    parser.add_argument(
+        "--round",
+        default="round-01",
+        help="Screening round directory name (default: round-01)",
+    )
+    args = parser.parse_args()
+
+    project_path = META_PIPE_ROOT / "projects" / args.project
+    screening_db = project_path / "03_screening" / "screening-database.csv"
+    round_dir = project_path / "03_screening" / args.round
+    output_csv = round_dir / "decisions.csv"
+
+    # Validate inputs
+    if not screening_db.exists():
+        print(f"ERROR: {screening_db} not found. Run search stage first.")
+        sys.exit(1)
+
+    eligibility = load_eligibility_criteria(project_path)
+    if not eligibility:
+        print("WARNING: No eligibility.md found. AI will use basic heuristics.")
+
+    round_dir.mkdir(parents=True, exist_ok=True)
+
+    # Read screening database
+    with open(screening_db, "r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        fieldnames = list(reader.fieldnames)
+        records = list(reader)
+
+    print(f"Loaded {len(records)} records from {screening_db.name}")
+    print(f"Filling Reviewer{args.reviewer} columns (AI screening)")
+
+    decision_col = f"Reviewer{args.reviewer}_Decision"
+    reason_col = f"Reviewer{args.reviewer}_Reason"
+
+    # Screen each record
+    screened = 0
+    skipped = 0
+    for i, record in enumerate(records, 1):
+        # Skip if this reviewer already decided
+        if record.get(decision_col, "").strip():
+            skipped += 1
+            continue
+
+        pmid = record.get("PMID", "")
+        title = record.get("Title", "")
+        abstract = record.get("Abstract", "")
+        year = record.get("Year", "")
+        authors = record.get("Authors", "")
+        journal = record.get("Journal", "")
+
+        print(f"\n[{i}/{len(records)}] PMID {pmid}")
+        print(f"   {title[:80]}...")
+
+        try:
+            result = screen_one(title, abstract, year, authors, journal, eligibility)
+            record[decision_col] = result["decision"]
+            record[reason_col] = (
+                f"{result['exclusion_code']}: {result['reason']}"
+                if result["exclusion_code"] != "NONE"
+                else result["reason"]
+            )
+            record["Notes"] = (
+                record.get("Notes", "")
+                + f" | AI-R{args.reviewer} confidence={result['confidence']}"
+            ).strip(" |")
+            screened += 1
+
+            print(f"   -> {result['decision']} ({result['confidence']})")
+            if result["exclusion_code"] != "NONE":
+                print(f"      {result['exclusion_code']}: {result['reason']}")
+
+        except Exception as e:
+            print(f"   ERROR: {e}")
+            record[decision_col] = "maybe"
+            record[reason_col] = f"AI error: {e}"
+            screened += 1
+
+    # Write decisions.csv
+    with open(output_csv, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(records)
+
+    # Summary
+    decisions = [r.get(decision_col, "").lower() for r in records]
+    inc = decisions.count("include")
+    exc = decisions.count("exclude")
+    may = decisions.count("maybe")
+    total = len(records)
+
+    print(f"\n{'='*60}")
+    print(f"SCREENING SUMMARY (Reviewer {args.reviewer} = AI)")
+    print(f"{'='*60}")
+    print(f"Total:    {total}")
+    print(f"Screened: {screened}  (skipped {skipped} already decided)")
+    print(f"  include: {inc} ({inc/total*100:.1f}%)")
+    print(f"  exclude: {exc} ({exc/total*100:.1f}%)")
+    print(f"  maybe:   {may} ({may/total*100:.1f}%)")
+    print(f"{'='*60}")
+    print(f"\nOutput: {output_csv}")
+
+    # Next steps hint
+    if args.reviewer == 1:
+        print(f"\nNext: run with --reviewer 2 for dual review, or have a human fill Reviewer2 columns.")
+        print(f"Then: uv run ma-screening-quality/scripts/dual_review_agreement.py \\")
+        print(f"        --file {output_csv} --col-a Reviewer1_Decision --col-b Reviewer2_Decision \\")
+        print(f"        --out {round_dir}/agreement.md")
+
+
+if __name__ == "__main__":
+    main()

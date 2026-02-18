@@ -25,16 +25,26 @@ Extract consistent data, capture provenance, and build a clean analysis dataset.
 - `05_extraction/source.csv` (optional source references)
 - `05_extraction/source_validation.md` (optional)
 
-## Workflow
+## Workflow (Web-First Hybrid — Default)
+
+⚠️ **Default approach**: Run web-based extraction FIRST, then use PDFs only for gaps.
+
+### Phase 1: Web-Based Extraction (Default — Run First)
 
 1. Define a data dictionary that covers outcomes, covariates, and study identifiers.
 2. Initialize a normalized SQLite database using `scripts/init_extraction_db.py` via `uv run`.
-3. Extract data with double-entry or verification where possible.
-4. Optionally run `scripts/llm_extract.py` via `uv run` to generate extraction suggestions for manual review.
-5. Record unit conversions and assumptions in `05_extraction/extraction-log.md`.
-6. Export a tidy CSV for analysis and lock the database snapshot.
-7. **Fallback – WebSearch gap-fill**: For any remaining missing or low-confidence fields, use Claude Code's `WebSearch` tool directly to look up each study (by DOI, PMID, or title+author) and populate the gaps. See details in **WebSearch Fallback** below.
-8. (Recommended) Record source references in `05_extraction/source.csv` and validate with `scripts/validate_sources.py`.
+3. **Run WebSearch extraction for ALL included studies** — see **WebSearch Extraction (Default)** below.
+   - This fills 70-80% of data fields automatically from PubMed, ClinicalTrials.gov, etc.
+   - Tag all web-sourced values with `[web]` in the `notes` column.
+4. Review confidence scores: flag studies/fields with confidence < 0.7.
+
+### Phase 2: PDF-Based Extraction (Only for Gaps)
+
+5. For studies with low-confidence fields, run `scripts/llm_extract.py` via `uv run` on available PDFs.
+6. Extract remaining data with double-entry or verification where possible.
+7. Record unit conversions and assumptions in `05_extraction/extraction-log.md`.
+8. Export a tidy CSV for analysis and lock the database snapshot.
+9. (Recommended) Record source references in `05_extraction/source.csv` and validate with `scripts/validate_sources.py`.
 
 ## Resources
 
@@ -46,15 +56,15 @@ Extract consistent data, capture provenance, and build a clean analysis dataset.
 - `references/source-template.csv` for source references.
   Note: `llm_extract.py` requires a PDF parser such as `pdfplumber` or `pypdf` (install via `uv add`).
 
-## WebSearch Fallback
+## WebSearch Extraction (Default)
 
-When extraction has missing or uncertain fields and PDFs are unavailable, Claude Code can fill gaps directly using its built-in `WebSearch` and `WebFetch` tools — no scripts or API keys required.
+⚠️ **This is the DEFAULT first step** — Claude Code should run this BEFORE attempting PDF-based extraction. No scripts or API keys required.
 
 ### When to Use
 
-- Fields left NULL or marked low-confidence after PDF/LLM extraction
-- No institutional PDF access for specific studies
-- Need quick verification of a value already extracted
+- **ALWAYS** — run as Phase 1 for every extraction workflow
+- Fills 70-80% of fields from structured online sources
+- Identifies exactly which studies need PDF follow-up
 
 ### Procedure
 

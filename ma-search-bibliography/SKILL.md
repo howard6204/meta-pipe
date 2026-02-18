@@ -27,7 +27,7 @@ Run reproducible database searches, capture the search strategy, and produce ver
 2. Initialize Python tooling with uv in `tooling/python/` using `uv init` and `uv add` dependencies.
 3. Run search scripts with `uv run` from `tooling/python/` (avoid direct `python3` calls).
 4. Use `uv tool` for any one-off CLI utilities (do not install them globally).
-5. Query PubMed first, then extend to other databases (Scopus, Embase, Cochrane) defined in the protocol.
+5. **Always search PubMed + Scopus as the mandatory minimum** (PRISMA requires ≥2 databases). Optionally extend to Embase and Cochrane if defined in the protocol.
 6. Export results to `.bib` and record the run date, database, and query hash in `log.md`.
 7. Deduplicate by DOI, PMID, and title, then save `dedupe.bib`.
 8. If running updates, increment the round folder name and record deltas.

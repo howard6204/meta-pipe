@@ -1,27 +1,27 @@
-# Web-Based AI Extraction (Alternative to PDF)
+# Web-Based AI Extraction (Default Phase 1)
 
-**Purpose**: Use Claude Code's web search to extract data directly from online sources, bypassing PDF download and reading
+**Purpose**: Use Claude Code's web search to extract data directly from online sources — run BEFORE PDF retrieval
 **Time**: 2-4 hours (vs 8-12 hours for PDF-based extraction)
-**Stage**: 05 (Extraction) - Alternative approach
+**Stage**: 05 (Extraction) - **Default first step** (PDF retrieval is Phase 2, only for gaps)
 
 ---
 
 ## When to Use This Approach
 
-### ✅ Use Web-Based Extraction When:
+### ✅ ALWAYS Use Web-Based Extraction As Phase 1:
 
-- **No institutional access** to paywalled PDFs
-- **Time-sensitive** projects (need results fast)
-- **Preliminary analysis** to check feasibility
-- **Supplementary data** that may be in online appendices
+- **Default for every project** — run before any PDF retrieval
+- **Fills 70-80% of data** from structured online sources
+- **Identifies gaps** that require targeted PDF retrieval (Phase 2)
+- **No institutional access** required
 - **Recent publications** with detailed online abstracts
 
-### ❌ Avoid Web-Based Extraction When:
+### ⚠️ Studies That Will Need PDF Follow-Up (Phase 2):
 
-- **High-stakes submission** to top-tier journals (reviewers may question)
 - **Complex data** not available in abstracts (e.g., subgroup analyses)
 - **Risk of bias assessment** requires full Methods section
 - **Original data** needed (only in full text, not abstracts)
+- **Confidence < 0.7** for primary outcome fields after web extraction
 
 ---
 

@@ -21,14 +21,34 @@ Gather full texts, validate completeness, and prepare a clean manifest.
 - `04_fulltext/` PDF files
 - `04_fulltext/previews/` (optional PDF image previews)
 
-## Workflow
+## Workflow (Web-First Hybrid — Default)
 
-1. Create `04_fulltext/` and request the user to deposit PDFs there.
-2. Build `manifest.csv` with `record_id`, DOI, PMID, title, file path, and access notes.
-3. Optionally query Unpaywall for OA links using `scripts/unpaywall_fetch.py` via `uv run`.
-4. Optionally render PDF previews with `scripts/render_pdf_previews.py` for visual QA.
-5. Flag missing files and request them explicitly.
-6. Run OCR only when needed and preserve original files.
+⚠️ **Default approach**: Web-based extraction first, PDF retrieval only for gaps.
+
+### Phase 1: Web-Based Data Gathering (Default — No PDFs Needed)
+
+1. Create `04_fulltext/` and build `manifest.csv` with `record_id`, DOI, PMID, title, and access notes.
+2. **Automatically run web extraction** for all included studies using Claude Code's `WebSearch` and `WebFetch` tools:
+   - Query PubMed structured abstracts (`https://pubmed.ncbi.nlm.nih.gov/<pmid>/`)
+   - Query ClinicalTrials.gov registries (`https://clinicaltrials.gov/study/<nct_id>`)
+   - Search Europe PMC, journal supplementary materials
+3. Record confidence scores per field (see `references/web-extraction.md` for scoring).
+4. Flag studies with confidence < 0.7 for primary outcome fields → these need PDFs.
+
+### Phase 2: Targeted PDF Retrieval (Only for Low-Confidence Studies)
+
+5. For flagged studies only (~20-30%), query Unpaywall for OA links using `scripts/unpaywall_fetch.py` via `uv run`.
+6. Download available PDFs with `scripts/download_oa_pdfs.py`.
+7. Optionally render PDF previews with `scripts/render_pdf_previews.py` for visual QA.
+8. Request user to manually deposit any remaining PDFs that cannot be auto-retrieved.
+9. Run OCR only when needed and preserve original files.
+
+### Why Web-First?
+
+- **Speed**: 50-70% faster than PDF-only (2-3h vs 8-12h)
+- **No institutional access required** for Phase 1
+- **90-95% completeness** with hybrid approach
+- PDFs are only needed for ~20-30% of studies
 
 ## Resources
 
