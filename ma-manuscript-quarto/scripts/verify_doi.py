@@ -306,8 +306,12 @@ def parse_bib(bib_path: Path) -> list[dict]:
 
 
 def write_patched_bib(bib_path: Path, patches: dict[str, str]) -> int:
-    """Patch missing DOIs into BibTeX file. Returns number of patches applied."""
+    """Patch missing DOIs into BibTeX file. Returns number of patches applied.
+
+    Safety: creates .bak backup and validates output before overwriting.
+    """
     text = bib_path.read_text(encoding="utf-8")
+    original_len = len(text)
     applied = 0
     for entry_id, doi in patches.items():
         # Find the entry block and insert doi field before closing brace
@@ -321,6 +325,18 @@ def write_patched_bib(bib_path: Path, patches: dict[str, str]) -> int:
             text = text[: match.start(3)] + insert + text[match.start(3) :]
             applied += 1
     if applied > 0:
+        # Safety: patched file must be at least as long as original
+        if len(text.strip()) < original_len * 0.5:
+            print(
+                f"ERROR: patched output ({len(text)} bytes) is much smaller than "
+                f"original ({original_len} bytes). Refusing to write. "
+                f"Backup preserved at {bib_path}.bak",
+                file=sys.stderr,
+            )
+            return 0
+        # Write backup, then patched file
+        backup = bib_path.with_suffix(".bib.bak")
+        backup.write_text(bib_path.read_text(encoding="utf-8"), encoding="utf-8")
         bib_path.write_text(text, encoding="utf-8")
     return applied
 

@@ -147,9 +147,49 @@ ok "Synced $fig_count figures, $tbl_count table files"
 echo ""
 
 # -------------------------------------------------------------------
-# 2. Citation coverage check
+# 2. BibTeX tidy
 # -------------------------------------------------------------------
-info "Step 2: Citation coverage"
+info "Step 2: BibTeX tidy (bibtex-tidy)"
+
+if [ -f "$MS_DIR/references.bib" ] && command -v bibtex-tidy &>/dev/null; then
+  tidy_flags="--curly --numeric --sort-fields --trailing-commas --remove-empty-fields --encode-urls --sort"
+  if $DO_FIX; then
+    info "Tidying references.bib in-place..."
+    set +e
+    tidy_output=$(bibtex-tidy "$MS_DIR/references.bib" --modify $tidy_flags --quiet 2>&1)
+    tidy_rc=$?
+    set -e
+    if [ $tidy_rc -eq 0 ]; then
+      ok "references.bib tidied"
+    else
+      fail "bibtex-tidy failed"
+      echo "$tidy_output"
+      ERRORS=$((ERRORS+1))
+    fi
+  else
+    # Dry-run: check if file would change
+    set +e
+    tidy_output=$(bibtex-tidy "$MS_DIR/references.bib" --no-modify $tidy_flags --quiet 2>&1)
+    tidy_rc=$?
+    set -e
+    if [ $tidy_rc -eq 0 ]; then
+      ok "references.bib is valid BibTeX"
+    else
+      warn "references.bib has formatting issues (use --fix to auto-tidy)"
+    fi
+  fi
+elif [ ! -f "$MS_DIR/references.bib" ]; then
+  fail "references.bib not found"
+  ERRORS=$((ERRORS+1))
+else
+  warn "bibtex-tidy not installed (pnpm add -g bibtex-tidy)"
+fi
+echo ""
+
+# -------------------------------------------------------------------
+# 3. Citation coverage check
+# -------------------------------------------------------------------
+info "Step 3: Citation coverage"
 
 # Extract all [@key] from QMD files (macOS-compatible)
 # Grab full [...] citation blocks, then extract individual @keys
@@ -212,7 +252,7 @@ echo ""
 # -------------------------------------------------------------------
 # 3. Per-section word count
 # -------------------------------------------------------------------
-info "Step 3: Word counts"
+info "Step 4: Word counts"
 
 printf "  %-20s %6s  %s\n" "Section" "Words" "Target"
 printf "  %-20s %6s  %s\n" "-------" "-----" "------"
@@ -259,7 +299,7 @@ echo ""
 # -------------------------------------------------------------------
 # 4. QMD Lint
 # -------------------------------------------------------------------
-info "Step 4: QMD lint check"
+info "Step 5: QMD lint check"
 
 LINT_SCRIPT="$REPO_ROOT/ma-manuscript-quarto/scripts/lint_qmd.py"
 if [ -f "$LINT_SCRIPT" ]; then
@@ -290,7 +330,7 @@ echo ""
 # -------------------------------------------------------------------
 # 5. DOI verification
 # -------------------------------------------------------------------
-info "Step 5: DOI coverage check"
+info "Step 6: DOI coverage check"
 
 DOI_SCRIPT="$REPO_ROOT/ma-manuscript-quarto/scripts/verify_doi.py"
 QA_DIR="$PROJECT_ROOT/09_qa"
@@ -348,7 +388,7 @@ echo ""
 # -------------------------------------------------------------------
 # 6. Figure/table file checks
 # -------------------------------------------------------------------
-info "Step 6: Figure and table file check"
+info "Step 7: Figure and table file check"
 
 check_file() {
   local path="$1"
@@ -382,7 +422,7 @@ echo ""
 # 7. Quarto render (only with --render or --all)
 # -------------------------------------------------------------------
 if $DO_RENDER; then
-  info "Step 7: Quarto render"
+  info "Step 8: Quarto render"
 
   IFS=',' read -ra fmt_list <<< "$FORMATS"
   for fmt in "${fmt_list[@]}"; do
@@ -415,7 +455,7 @@ if $DO_RENDER; then
   shopt -u nullglob
   echo ""
 else
-  info "Step 7: Quarto render — SKIPPED (use --render or --all)"
+  info "Step 8: Quarto render — SKIPPED (use --render or --all)"
   echo ""
 fi
 
