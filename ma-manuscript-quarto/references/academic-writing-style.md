@@ -75,7 +75,7 @@ Run these checks before finalizing any manuscript section:
 |-------|--------|---------------|
 | CSL file present | `ls 07_manuscript/american-medical-association.csl` | File exists |
 | Citations render | Render HTML, inspect citation output | Sequential superscript numerals |
-| DOI coverage | Check `references.bib` DOI fields | >= 90% of journal articles |
+| DOI verification | `scripts/verify_doi.py --bib references.bib --out doi_report.md` | Exit code 0 (>= 90% coverage, 0 invalid) |
 | P value format | Search for `p =`, `p <` (lowercase) | Correct per target journal |
 | Serial comma | Search for "X, Y and Z" patterns | All lists use Oxford comma |
 | Drug names | Search for brand names (Keytruda, Opdivo, Tecentriq) | Generic names used |

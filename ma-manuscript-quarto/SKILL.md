@@ -202,13 +202,27 @@ Once the outline is approved, write each section following it exactly.
 
 21. Assemble Results into `03_results.qmd` with `scripts/assemble_results.py` (also inserts `result_summary_table.md`).
 22. Populate the bibliography and ensure all `[@key]` citations in all QMD files have matching entries in `references.bib`.
-23. Generate a results consistency report with `scripts/results_consistency_report.py`.
+23. **Verify DOI existence** with `scripts/verify_doi.py`:
+    ```bash
+    uv run ma-manuscript-quarto/scripts/verify_doi.py \
+      --bib projects/<project>/07_manuscript/references.bib \
+      --out projects/<project>/09_qa/doi_verification_report.md \
+      --email "your@email.com"
+    ```
+    - Must exit with code 0 (>= 90% DOI coverage, 0 invalid DOIs).
+    - For missing DOIs, review candidates and patch: add `--patch --min-confidence 85`.
+    - **If exit code 1**: add missing DOIs manually or via `--patch`.
+    - **If exit code 2**: fix invalid DOIs before proceeding.
+24. Generate a results consistency report with `scripts/results_consistency_report.py`.
     - **If any missing items**: fix before proceeding.
 24. Initialize the submission checklist with `scripts/init_submission_checklist.py`.
 25. Run `scripts/lint_qmd.py --dir 07_manuscript/` — must pass with exit code 0 (no errors).
     - **If errors**: fix with `--fix` flag, then re-run to confirm.
-26. Use Makefile `sync` target to copy figures and tables from `06_analysis/`.
-27. Render to HTML, PDF, and DOCX with `make all` or individual targets.
+26. Sync, validate, and render with the all-in-one build script:
+    ```bash
+    bash ma-manuscript-quarto/scripts/build_manuscript.sh --project <name> --all
+    ```
+    Alternatively, use Makefile: `make all` from `07_manuscript/`.
     - **If render fails**: check Quarto error output, fix broken references/includes, re-render.
 
 #### Step 2.4: Post-writing validation
@@ -226,13 +240,50 @@ Once the outline is approved, write each section following it exactly.
 
 ## Build & Sync Workflow
 
-The manuscript uses a **Makefile** to automate syncing analysis outputs and rendering.
+Two build options: **`build_manuscript.sh`** (recommended, all-in-one) or **Makefile** (render only).
+
+### `build_manuscript.sh` (Recommended)
+
+All-in-one validation + sync + lint + render script. Runs standalone without AI — output goes to stdout.
+
+```bash
+# From repo root:
+bash ma-manuscript-quarto/scripts/build_manuscript.sh --project <name>           # Validate only (fast)
+bash ma-manuscript-quarto/scripts/build_manuscript.sh --project <name> --fix      # Auto-fix lint
+bash ma-manuscript-quarto/scripts/build_manuscript.sh --project <name> --render   # Validate + render
+bash ma-manuscript-quarto/scripts/build_manuscript.sh --project <name> --all      # Fix + render
+bash ma-manuscript-quarto/scripts/build_manuscript.sh --project <name> --render --formats docx  # DOCX only
+```
+
+**7-step validation pipeline** (all results to stdout):
+
+| Step | Check | Details |
+|------|-------|---------|
+| 1 | Sync | Copy figures/tables from `06_analysis/` to `07_manuscript/` |
+| 2 | Citations | Verify all `[@key]` in QMD match `references.bib`; report unused bib entries |
+| 3 | Word counts | Per-section word count vs journal targets |
+| 4 | QMD lint | Run `lint_qmd.py` (15 rules), optional `--fix` |
+| 5 | DOI coverage | Check % of bib entries with DOI fields (target: >=90%) |
+| 6 | File check | Verify all figures/tables referenced in QMD exist on disk |
+| 7 | Render | Quarto render to DOCX, HTML, PDF (each format independent) |
+
+**Exit codes**: 0 = all passed, N = number of errors found.
+
+**No `--project`?** Lists all available projects:
+```
+$ bash ma-manuscript-quarto/scripts/build_manuscript.sh
+Available projects:
+  --project hrd-parp-inhibitors
+  --project ici-breast-cancer
+```
 
 ### Why Sync?
 
 Analysis scripts in `06_analysis/` produce figures (PNG) and tables (PNG + CSV + HTML + DOCX via `gt`/`flextable`). The manuscript in `07_manuscript/` references local copies so Quarto can embed them. The `sync` step copies the latest outputs before every render, ensuring the manuscript always reflects current analysis.
 
-### Makefile
+### Makefile (Alternative)
+
+For projects that prefer `make`, create a Makefile in `07_manuscript/`:
 
 ```makefile
 .PHONY: all html pdf docx clean sync
@@ -260,7 +311,7 @@ clean:
 	command rip -f index.html index.pdf index.docx index_files/
 ```
 
-### Usage
+### Makefile Usage
 
 ```bash
 cd projects/<project>/07_manuscript
@@ -465,6 +516,7 @@ uv run ma-manuscript-quarto/scripts/lint_qmd.py \
   - `references/style-professional-register.md` — Rule 2 detail: sentence structure, passive/active voice, transitions, terminology
   - `references/style-ama-guide.md` — Rule 3 detail: AMA citations, bibliography, numbers, abbreviations, drug names, P values
 - `references/quarto-syntax-guide.md` — Quarto syntax reference for meta-analysis manuscripts.
+- `scripts/verify_doi.py` verifies DOI existence via Crossref API and finds missing DOIs by title search. Outputs markdown report + optional CSV. Supports auto-patching.
 - `scripts/lint_qmd.py` validates and auto-fixes QMD/MD files against Quarto best practices.
 - `scripts/prisma_flow.py` generates a PRISMA flow diagram summary and optional SVG.
 - `scripts/insert_search_report.py` injects search report content into Methods.
@@ -478,6 +530,7 @@ uv run ma-manuscript-quarto/scripts/lint_qmd.py \
 - `scripts/results_consistency_report.py` checks claim/output/citation consistency.
 - `scripts/init_submission_checklist.py` seeds a journal submission checklist.
 - `scripts/render_manuscript.py` validates checklists before rendering.
+- `scripts/build_manuscript.sh` **all-in-one build script** — sync, validate citations, word counts, lint, DOI check, render. Runs standalone without AI. Usage: `bash ma-manuscript-quarto/scripts/build_manuscript.sh --project <name> [--fix] [--render] [--all]`.
 
 ## Validation
 

@@ -95,6 +95,29 @@ AMA bibliography entries follow a specific format. BibTeX + `american-medical-as
 - Include `volume`, `number` (issue), and `pages` fields.
 - Use `year` or `date` field consistently.
 
+**DOI verification** (mandatory before submission):
+
+```bash
+# Verify all DOIs exist and find missing ones via Crossref API
+uv run ma-manuscript-quarto/scripts/verify_doi.py \
+  --bib projects/<project>/07_manuscript/references.bib \
+  --out projects/<project>/09_qa/doi_verification_report.md \
+  --email "your@email.com"
+
+# Auto-patch high-confidence missing DOIs (>= 85% match)
+uv run ma-manuscript-quarto/scripts/verify_doi.py \
+  --bib projects/<project>/07_manuscript/references.bib \
+  --out projects/<project>/09_qa/doi_verification_report.md \
+  --patch --min-confidence 85
+```
+
+The tool uses the Crossref API to:
+1. **Verify existing DOIs** — confirms each DOI resolves (catches typos, expired DOIs)
+2. **Find missing DOIs** — searches by title + year with confidence scoring (title similarity + year match)
+3. **Auto-patch** — inserts high-confidence DOIs directly into `references.bib`
+
+Exit codes: 0 = pass (>= 90% coverage, 0 invalid), 1 = low coverage, 2 = invalid DOIs found.
+
 ---
 
 ## 3.3 AMA Writing Conventions

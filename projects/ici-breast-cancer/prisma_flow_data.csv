@@ -1,0 +1,33 @@
+data,node,box,description,boxtext,tooltips,url,n
+NA,node4,prevstud,Previous studies,Previous studies,No previous meta-analysis,NA,0
+previous_studies,node5,box1,Studies included in previous version,Studies included in previous version,This is a new meta-analysis,NA,0
+previous_reports,NA,box1,Reports from previous version,Reports from previous version,NA,NA,0
+NA,node6,newstud,Identification of new studies via databases and registers,Identification of new studies via databases and registers,Systematic database search,NA,0
+database_results,node7,box2,Records identified from PubMed/MEDLINE,PubMed/MEDLINE,Comprehensive search 2015-2026,NA,122
+database_specific_results,NA,box2,Database details,PubMed/MEDLINE search (Jan 2015 - Dec 2026),NA,NA,"PubMed/MEDLINE, n=122"
+register_results,NA,box2,Trial registries,Trial registries,Not searched,NA,0
+register_specific_results,NA,box2,Registry details,Not applicable,NA,NA,NA
+NA,node16,othstud,Identification of new studies via other methods,Identification of new studies via other methods,No additional sources,NA,0
+website_results,node17,box11,Records from websites,Websites,NA,NA,0
+organisation_results,,box11,Records from organisations,Organisations,NA,NA,0
+citations_results,NA,box11,Records from citation searching,Citation searching,NA,NA,0
+duplicates,node8,box3,Duplicate records removed,Duplicate records removed,No duplicates within PubMed,NA,0
+excluded_automatic,NA,box3,Records marked as ineligible by automation,Automated exclusions,NA,NA,0
+excluded_other,NA,box3,Records removed for other reasons,Other exclusions,NA,NA,0
+records_screened,node9,box4,Records screened (title/abstract),Records screened,Dual independent screening by two reviewers,NA,122
+records_excluded,node10,box5,Records excluded after screening,Records excluded,Did not meet PICO criteria,NA,117
+dbr_sought_reports,node11,box6,Full-text articles sought,Reports sought for retrieval,Retrieval attempted for all eligible studies,NA,5
+dbr_notretrieved_reports,node12,box7,Full-text articles not retrieved,Reports not retrieved,All articles successfully obtained,NA,0
+other_sought_reports,node18,box12,Reports sought (other sources),Reports sought (other),NA,NA,0
+other_notretrieved_reports,node19,box13,Reports not retrieved (other),Reports not retrieved (other),NA,NA,0
+dbr_assessed,node13,box8,Full-text articles assessed for eligibility,Reports assessed for eligibility,Dual independent eligibility assessment,NA,5
+dbr_excluded,node14,box9,Full-text articles excluded with reasons,Reports excluded,All 5 articles met inclusion criteria,NA,0
+other_assessed,node20,box14,Reports assessed (other sources),Reports assessed (other),NA,NA,0
+other_excluded,node21,box15,Reports excluded (other sources),Reports excluded (other),NA,NA,0
+new_studies,node15,box10,New studies included in review,New studies included,5 RCTs: KEYNOTE-522 IMpassion031 GeparNuevo NeoTRIPaPDL1 CamRelief,NA,5
+new_reports,NA,box10,Reports of new included studies,Reports included,Total N=2402 participants,NA,5
+total_studies,node22,box16,Total studies included in meta-analysis,Total studies included,5 randomized controlled trials,NA,5
+total_reports,NA,box16,Total reports included,Total reports,Triple-negative breast cancer neoadjuvant immunotherapy,NA,5
+identification,node1,identification,Identification,Identification,Study identification phase,NA,0
+screening,node2,screening,Screening,Screening,Title/abstract and full-text screening,NA,0
+included,node3,included,Included,Included,Final included studies,NA,0

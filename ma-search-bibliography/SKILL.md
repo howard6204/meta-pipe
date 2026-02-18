@@ -31,6 +31,7 @@ Run reproducible database searches, capture the search strategy, and produce ver
 6. Export results to `.bib` and record the run date, database, and query hash in `log.md`.
 7. Deduplicate by DOI, PMID, and title, then save `dedupe.bib`.
 8. If running updates, increment the round folder name and record deltas.
+9. **Generate PRISMA flowchart** after search completion using `generate_prisma_flowchart.R` (see below).
 
 ## PubMed Implementation Notes
 
@@ -41,6 +42,7 @@ Run reproducible database searches, capture the search strategy, and produce ver
 
 ## Resources
 
+### Python Scripts (Search & Deduplication)
 - `scripts/pubmed_fetch.py` fetches PubMed records and writes BibTeX.
 - `scripts/dedupe_bib.py` removes duplicate records based on DOI, PMID, or title.
 - `scripts/build_queries.py` builds multi-DB queries from `pico.yaml`.
@@ -58,19 +60,65 @@ Run reproducible database searches, capture the search strategy, and produce ver
 - `scripts/zotero_fetch.py` fetches records from a Zotero collection.
 - `scripts/zotero_sync.py` syncs a `.bib` file back to a Zotero collection.
 - `scripts/env_utils.py` loads `.env` credentials.
+
+### R Scripts (PRISMA Flowchart)
+- `scripts/generate_prisma_flowchart.R` generates PRISMA 2020 compliant flow diagrams in PNG/PDF/SVG/HTML formats.
+
+### Reference Documentation
 - `references/pubmed-eutils.md` summarizes the E-utilities workflow.
 - `references/database-auth.md` summarizes authentication per database.
 - `references/emtree-synonyms-template.csv` provides a template for Emtree synonyms.
+- `references/prisma-flowchart-guide.md` provides complete PRISMA 2020 flowchart generation guide.
 
 ## Notes
 
 - Keep all rounds. Do not overwrite prior `.bib` files.
 - Add a short note in each `.bib` entry for the round (example: `note = {round-01}` ).
 
+## PRISMA Flowchart Generation
+
+**Purpose**: Generate publication-quality PRISMA 2020 flow diagrams automatically.
+
+**When**: After completing database searches and deduplication.
+
+**Command**:
+```bash
+cd ma-search-bibliography/scripts
+
+Rscript generate_prisma_flowchart.R \
+  DB_RECORDS \
+  SCREENED \
+  EXCLUDED \
+  FULLTEXT \
+  INCLUDED \
+  [PARTICIPANTS] \
+  [OUTPUT_DIR]
+```
+
+**Example** (after search completion, before screening):
+```bash
+# Count database records
+DB_RECORDS=$(wc -l < ../../projects/<project-name>/02_search/round-01/dedupe.bib | xargs)
+
+# Generate initial flowchart (screening numbers TBD)
+Rscript generate_prisma_flowchart.R $DB_RECORDS 0 0 0 0 NA ../../projects/<project-name>/figures/
+```
+
+**Outputs**:
+- `prisma_flowchart.png` (300 DPI, for manuscript)
+- `prisma_flowchart.pdf` (vector, for publication)
+- `prisma_flowchart.svg` (scalable, for presentations)
+- `prisma_flowchart_interactive.html` (interactive, for supplementary materials)
+
+**Time**: 30 seconds to 2 minutes
+
+**See**: `references/prisma-flowchart-guide.md` for complete documentation
+
 ## Validation
 
 - Confirm query coverage matches the protocol scope.
 - Verify dedupe retains the best metadata per record.
+- **Generate PRISMA flowchart** to visualize search results and verify counts.
 
 ## Pipeline Navigation
 
