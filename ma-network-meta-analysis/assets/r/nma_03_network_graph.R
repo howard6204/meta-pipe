@@ -8,8 +8,22 @@
 
 source("nma_02_data_prep.R")
 
+# =============================================================================
+# VALIDATION
+# =============================================================================
+stopifnot(
+  "nma_data not found — run nma_02_data_prep.R first" = exists("nma_data"),
+  "nma_data has no rows" = nrow(nma_data) > 0
+)
+
 # --- 1. Check network connectivity ---
-nc <- netconnection(treat1, treat2, studlab, data = nma_data)
+nc <- tryCatch(
+  netconnection(treat1, treat2, studlab, data = nma_data),
+  error = function(e) {
+    stop("netconnection() failed: ", e$message,
+         "\nCheck that nma_data has treat1, treat2, studlab columns.")
+  }
+)
 cat("Network connectivity:\n")
 print(nc)
 
@@ -26,26 +40,35 @@ if (nc$n.subnets > 1) {
 }
 
 # --- 2. Network graph (basic) ---
-png(file.path(FIG_DIR, "network_graph.png"),
-    width = FIG_WIDTH, height = FIG_HEIGHT, units = "in", res = FIG_DPI)
+tryCatch({
+  # Fit a temporary netmeta just for graphing
+  net_tmp <- netmeta(TE, seTE, treat1, treat2, studlab, data = nma_data,
+                     sm = NMA_SM, random = TRUE, method.tau = "REML")
 
-netgraph(
-  netmeta(TE, seTE, treat1, treat2, studlab, data = nma_data,
-          sm = NMA_SM, random = TRUE, method.tau = "REML"),
-  seq = "optimal",
-  number.of.studies = TRUE,
-  cex.points = 3,
-  col.points = "steelblue",
-  col = "grey60",
-  plastic = FALSE,
-  thickness = "number.of.studies",
-  multiarm = TRUE,
-  col.multiarm = "purple",
-  points = TRUE
-)
+  png(file.path(FIG_DIR, "network_graph.png"),
+      width = FIG_WIDTH, height = FIG_HEIGHT, units = "in", res = FIG_DPI)
 
-dev.off()
-cat("Network graph saved to", file.path(FIG_DIR, "network_graph.png"), "\n")
+  netgraph(
+    net_tmp,
+    seq = "optimal",
+    number.of.studies = TRUE,
+    cex.points = 3,
+    col.points = "steelblue",
+    col = "grey60",
+    plastic = FALSE,
+    thickness = "number.of.studies",
+    multiarm = TRUE,
+    col.multiarm = "purple",
+    points = TRUE
+  )
+
+  dev.off()
+  cat("Network graph saved to", file.path(FIG_DIR, "network_graph.png"), "\n")
+}, error = function(e) {
+  tryCatch(dev.off(), error = function(x) NULL)
+  cat("Warning: Network graph generation failed:", e$message, "\n")
+  cat("Check that the network is connected and data are valid.\n")
+})
 
 # --- 3. Network graph (ggplot2 alternative for customization) ---
 # Extract edge/node data for custom plotting if needed
