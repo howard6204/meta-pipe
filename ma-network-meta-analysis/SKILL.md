@@ -192,8 +192,23 @@ Compile all tables (league table, rankings, inconsistency) for manuscript/supple
 Rate certainty of evidence per comparison across 6 domains. **Non-negotiable for publication.**
 
 - Tool: https://cinema.ispm.unibe.ch/
-- Domains: within-study bias, reporting bias, indirectness, imprecision, heterogeneity, incoherence
+- Reference: Nikolakopoulou A, Higgins JPT, Papakonstantinou T, et al. CINeMA: An approach for assessing confidence in the results of a network meta-analysis. *PLoS Med*. 2020;17(4):e1003082. [PMC7122720](https://pmc.ncbi.nlm.nih.gov/articles/PMC7122720/)
 - Output: `08_reviews/cinema_assessment.csv`
+
+**6 CINeMA Domains** (rate per pairwise comparison):
+
+| Domain | What it assesses | Downgrade trigger |
+|--------|-----------------|-------------------|
+| Within-study bias | Risk of bias in contributing studies | Majority high/some concerns RoB |
+| Reporting bias | Publication/selective reporting bias | Funnel asymmetry, small-study effects |
+| Indirectness | Transitivity violations | Population/intervention differences across comparisons |
+| Imprecision | Width of credible/confidence intervals | CrI crosses clinical decision threshold |
+| Heterogeneity | Between-study variance | Large tau², high I² in direct comparisons |
+| Incoherence | Direct vs indirect evidence disagreement | Significant node-splitting p-values |
+
+**Judgment levels**: No concerns → Some concerns (-1) → Major concerns (-2)
+
+**Workflow**: Export NMA results + RoB → upload to CINeMA web app → rate each domain → download summary → include as Table S10 in supplement.
 
 ## Validation
 
