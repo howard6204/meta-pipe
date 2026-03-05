@@ -11,6 +11,13 @@ source("nma_04_models.R")
 library(gt)
 library(flextable)
 
+# =============================================================================
+# VALIDATION
+# =============================================================================
+stopifnot(
+  "net_re not found — run nma_04_models.R first" = exists("net_re")
+)
+
 # --- 1. League table ---
 # Full league table (Bayesian + frequentist) is generated in nma_08_league_table.R
 # This script focuses on the summary table and export formats.
@@ -23,6 +30,14 @@ ranking <- netrank(net_re, small.values = NMA_SMALL_VALUES)
 ref_treat <- net_re$reference.group
 if (is.null(ref_treat)) {
   ref_treat <- sort(net_re$trts)[1]
+  cat("No reference group set. Using:", ref_treat, "\n")
+}
+
+# Validate reference treatment
+if (!(ref_treat %in% net_re$trts)) {
+  cat("Warning: Reference '", ref_treat, "' not in network.\n")
+  ref_treat <- sort(net_re$trts)[1]
+  cat("Falling back to:", ref_treat, "\n")
 }
 
 # Extract pairwise estimates vs reference

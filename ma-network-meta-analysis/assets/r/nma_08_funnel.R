@@ -8,20 +8,42 @@
 
 source("nma_04_models.R")
 
+# =============================================================================
+# VALIDATION
+# =============================================================================
+stopifnot(
+  "net_re not found — run nma_04_models.R first" = exists("net_re")
+)
+
+# Check minimum studies for meaningful funnel plot
+n_studies <- length(unique(nma_data$studlab))
+if (n_studies < 10) {
+  cat("Note:", n_studies, "studies in network. Funnel plots have limited\n")
+  cat("interpretability with < 10 studies (Sterne et al., 2011).\n\n")
+}
+
 # --- 1. Comparison-adjusted funnel plot ---
 cat("Generating comparison-adjusted funnel plot...\n")
 
-png(file.path(FIG_DIR, "nma_funnel.png"),
-    width = FIG_WIDTH, height = FIG_HEIGHT, units = "in", res = FIG_DPI)
+tryCatch({
+  ranking_order <- netrank(net_re, small.values = NMA_SMALL_VALUES)$Pscore.random
 
-funnel(net_re,
-       order = netrank(net_re)$Pscore.random,
-       pch = 16,
-       col = "steelblue",
-       legend = TRUE)
+  png(file.path(FIG_DIR, "nma_funnel.png"),
+      width = FIG_WIDTH, height = FIG_HEIGHT, units = "in", res = FIG_DPI)
 
-dev.off()
-cat("Funnel plot saved to", file.path(FIG_DIR, "nma_funnel.png"), "\n")
+  funnel(net_re,
+         order = ranking_order,
+         pch = 16,
+         col = "steelblue",
+         legend = TRUE)
+
+  dev.off()
+  cat("Funnel plot saved to", file.path(FIG_DIR, "nma_funnel.png"), "\n")
+}, error = function(e) {
+  tryCatch(dev.off(), error = function(x) NULL)
+  cat("Warning: Funnel plot generation failed:", e$message, "\n")
+  cat("This can happen with very few studies or disconnected comparisons.\n")
+})
 
 # --- 2. Interpretation guide ---
 cat("\n=== Funnel Plot Interpretation ===\n")

@@ -10,13 +10,27 @@
 source("nma_04_models.R")
 
 # =============================================================================
+# VALIDATION
+# =============================================================================
+stopifnot(
+  "bayes_re not found — run nma_04_models.R first" = exists("bayes_re"),
+  "net_re not found — run nma_04_models.R first"   = exists("net_re")
+)
+
+# =============================================================================
 # SECTION A: BAYESIAN RANKINGS (PRIMARY)
 # =============================================================================
 
 cat("=== Treatment Rankings (SUCRA from Bayesian Posterior) ===\n")
 
 # --- 1. Compute rank probabilities ---
-ranks <- rank.probability(bayes_re)
+ranks <- tryCatch(
+  rank.probability(bayes_re),
+  error = function(e) {
+    stop("rank.probability() failed: ", e$message,
+         "\nCheck that bayes_re converged (Rhat < 1.05).")
+  }
+)
 cat("Rank probability matrix:\n")
 print(ranks)
 

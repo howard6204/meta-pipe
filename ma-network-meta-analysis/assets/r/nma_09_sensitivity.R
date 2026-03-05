@@ -9,6 +9,15 @@
 source("nma_04_models.R")
 
 # =============================================================================
+# VALIDATION
+# =============================================================================
+stopifnot(
+  "bayes_re not found — run nma_04_models.R first" = exists("bayes_re"),
+  "net_re not found — run nma_04_models.R first"   = exists("net_re"),
+  "nma_data not found" = exists("nma_data")
+)
+
+# =============================================================================
 # SECTION A: FREQUENTIST vs BAYESIAN CONCORDANCE
 # =============================================================================
 
@@ -66,12 +75,19 @@ for (s in studies) {
 }
 
 # Summarize leave-one-out
-loo_df <- do.call(rbind, lapply(loo_results, function(x) {
-  data.frame(Excluded = x$excluded,
-             tau2 = round(x$tau2, 4),
-             I2_pct = round(x$I2 * 100, 1),
-             stringsAsFactors = FALSE)
-}))
+if (length(loo_results) == 0) {
+  cat("Warning: No studies could be removed without disconnecting the network.\n")
+  cat("Leave-one-out analysis not possible for this network.\n")
+  loo_df <- data.frame(Excluded = character(), tau2 = numeric(),
+                       I2_pct = numeric(), stringsAsFactors = FALSE)
+} else {
+  loo_df <- do.call(rbind, lapply(loo_results, function(x) {
+    data.frame(Excluded = x$excluded,
+               tau2 = round(x$tau2, 4),
+               I2_pct = round(x$I2 * 100, 1),
+               stringsAsFactors = FALSE)
+  }))
+}
 
 if (nrow(loo_df) > 0) {
   cat("\n--- Leave-One-Out Results ---\n")

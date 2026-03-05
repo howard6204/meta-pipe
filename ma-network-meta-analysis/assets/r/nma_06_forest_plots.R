@@ -8,12 +8,28 @@
 
 source("nma_04_models.R")
 
+# =============================================================================
+# VALIDATION
+# =============================================================================
+stopifnot(
+  "net_re not found — run nma_04_models.R first" = exists("net_re"),
+  "nma_data not found" = exists("nma_data")
+)
+
 # --- 1. Set reference treatment ---
-# Change to your control/reference treatment
 ref_treat <- net_re$reference.group
 if (is.null(ref_treat)) {
   ref_treat <- sort(unique(c(nma_data$treat1, nma_data$treat2)))[1]
   cat("No reference group set. Using:", ref_treat, "\n")
+}
+
+# Validate reference treatment exists in the network
+available_trts <- net_re$trts
+if (!(ref_treat %in% available_trts)) {
+  cat("Warning: Reference '", ref_treat, "' not in network treatments.\n")
+  cat("Available:", paste(available_trts, collapse = ", "), "\n")
+  ref_treat <- sort(available_trts)[1]
+  cat("Falling back to:", ref_treat, "\n")
 }
 
 # --- 2. Forest plot: all treatments vs reference ---
