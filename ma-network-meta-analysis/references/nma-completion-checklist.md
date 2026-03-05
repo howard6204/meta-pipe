@@ -247,7 +247,7 @@ uv run ../../ma-publication-quality/scripts/claim_audit.py \
 ## 📚 **References**
 
 - **PRISMA-NMA**: Hutton et al. (2015) - https://doi.org/10.7326/M14-2385
-- **CINeMA**: Nikolakopoulou et al. (2020) - https://doi.org/10.1136/bmj.m3983
+- **CINeMA**: Nikolakopoulou et al. (2020) - https://doi.org/10.1371/journal.pmed.1003082
 - **NMA Guidelines**: NICE DSU TSD series - http://nicedsu.org.uk/
 - **gemtc Package**: van Valkenhoef et al. (2016) - https://doi.org/10.18637/jss.v068.i08
 

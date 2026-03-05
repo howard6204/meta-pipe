@@ -102,12 +102,9 @@ ggsave(file.path(FIG_DIR, "nma_sucra_plot.png"), p_sucra,
        dpi = FIG_DPI)
 cat("SUCRA plot saved to", file.path(FIG_DIR, "nma_sucra_plot.png"), "\n")
 
-# --- 5. League table (Bayesian) ---
-cat("\n=== League Table (Bayesian Posterior Medians + 95% CrI) ===\n")
-# Extract relative effects from gemtc
-rel_effects <- relative.effect(bayes_re, t1 = rank_df$Treatment[1])
-cat("Relative effects vs", rank_df$Treatment[1], ":\n")
-print(summary(rel_effects))
+# --- 5. League table ---
+# Full league table generation is in nma_08_league_table.R
+cat("\nNote: Full n×n league table is generated in nma_08_league_table.R\n")
 
 # =============================================================================
 # SECTION B: FREQUENTIST RANKINGS (SENSITIVITY)
@@ -158,8 +155,5 @@ gtsave(rank_gt, file.path(TBL_DIR, "nma_rankings.png"), expand = 10)
 cat("Rankings table (PNG) saved to", file.path(TBL_DIR, "nma_rankings.png"), "\n")
 
 # --- 7. Frequentist league table (supplement) ---
-cat("\n=== League Table (Frequentist — for Supplement) ===\n")
-league <- netleague(net_re, random = TRUE, seq = pscore_ranking, digits = 2)
-league_df <- as.data.frame(league$random)
-write_csv(league_df, file.path(TBL_DIR, "nma_league_table_frequentist.csv"))
-cat("Frequentist league table saved (supplement).\n")
+# Frequentist league table is generated in nma_08_league_table.R
+cat("Note: Frequentist league table is in nma_08_league_table.R\n")

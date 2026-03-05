@@ -64,9 +64,10 @@ See [Package Comparison](references/nma-package-comparison.md) for detailed feat
 - `06_analysis/nma_06_forest.R`
 - `06_analysis/nma_07_ranking.R`
 - `06_analysis/nma_08_league_table.R`
+- `06_analysis/nma_08_funnel.R`
 - `06_analysis/nma_09_sensitivity.R`
 - `06_analysis/nma_10_tables.R`
-- `06_analysis/figures/` — network graph, forest plots, rankograms, net heat plot (300 DPI)
+- `06_analysis/figures/` — network graph, forest plots, rankograms, funnel plot, net heat plot (300 DPI)
 - `06_analysis/tables/` — league table (PNG + CSV + HTML), SUCRA rankings, contribution matrix
 - `06_analysis/validation.md`
 
@@ -172,6 +173,15 @@ gtsave(league_gt, "tables/league_table.png")
 gtsave(league_gt, "tables/league_table.html")
 write.csv(league_df, "tables/league_table.csv", row.names = FALSE)
 ```
+
+### Step 7b: Comparison-Adjusted Funnel Plot
+
+Assess small-study effects and publication bias in the network.
+
+- Script: `nma_08_funnel.R`
+- Output: `figures/nma_funnel.png` (300 DPI)
+- Treatments ordered by P-score; asymmetry suggests potential small-study effects
+- Note: Standard Egger's test does not directly apply to NMA — the comparison-adjusted funnel is the primary diagnostic (Chaimani & Salanti, 2012)
 
 ### Step 8: Sensitivity Analysis
 

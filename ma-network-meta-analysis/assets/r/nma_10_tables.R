@@ -11,17 +11,10 @@ source("nma_04_models.R")
 library(gt)
 library(flextable)
 
-# --- 1. League table (full pairwise comparisons) ---
-cat("Building league table...\n")
-ranking <- netrank(net_re, small.values = "undesirable")
-league <- netleague(net_re, random = TRUE, seq = ranking, digits = 2)
-
-# Convert to data frame for gt
-league_matrix <- league$random
-league_df <- as.data.frame(league_matrix)
-
-# Save as CSV
-write_csv(league_df, file.path(TBL_DIR, "nma_league_table_full.csv"))
+# --- 1. League table ---
+# Full league table (Bayesian + frequentist) is generated in nma_08_league_table.R
+# This script focuses on the summary table and export formats.
+cat("Note: Full league table is in nma_08_league_table.R\n")
 
 # --- 2. Summary table: all treatments vs reference ---
 ref_treat <- net_re$reference.group
