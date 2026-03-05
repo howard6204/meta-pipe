@@ -111,7 +111,7 @@ cat("\nNote: Full n×n league table is generated in nma_08_league_table.R\n")
 # =============================================================================
 
 cat("\n=== P-scores (Frequentist Sensitivity) ===\n")
-pscore_ranking <- netrank(net_re, small.values = "undesirable")
+pscore_ranking <- netrank(net_re, small.values = NMA_SMALL_VALUES)
 
 pscore_df <- data.frame(
   Treatment = names(pscore_ranking$Pscore.random),

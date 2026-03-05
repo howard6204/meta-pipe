@@ -72,6 +72,46 @@ FIG_DPI    <- 300
 FIG_DIR    <- "figures"
 TBL_DIR    <- "tables"
 
+# =============================================================================
+# PROJECT-SPECIFIC NMA CONFIGURATION
+# =============================================================================
+# IMPORTANT: Edit these values ONCE before running the pipeline.
+# All downstream scripts (nma_02 through nma_10) read from here.
+# =============================================================================
+
+# Effect measure: "RR", "OR", "HR" (ratio), or "MD", "SMD" (difference)
+NMA_SM <- "RR"
+
+# Reference/control treatment name (must match extraction data exactly)
+# Set to NULL to auto-select alphabetically first treatment
+NMA_REFERENCE <- NULL
+
+# Data format in extraction CSV:
+#   "contrast" = columns: study_id, treatment_1, treatment_2, effect_estimate, standard_error
+#   "arm"      = columns: study_id, treatment, events, total_n
+NMA_DATA_FORMAT <- "contrast"
+
+# Column mapping — adapt names to match your extraction CSV
+NMA_COL_STUDY     <- "study_id"
+NMA_COL_TREAT1    <- "treatment_1"   # contrast format only
+NMA_COL_TREAT2    <- "treatment_2"   # contrast format only
+NMA_COL_TE        <- "effect_estimate"  # contrast format: log-scale for RR/OR/HR
+NMA_COL_SETE      <- "standard_error"   # contrast format
+NMA_COL_TREATMENT <- "treatment"     # arm format only
+NMA_COL_EVENTS    <- "events"        # arm format only
+NMA_COL_TOTALN    <- "total_n"       # arm format only
+
+# Prior specification: "vague" (default, results ≈ frequentist) or "empirical"
+# If "empirical", set NMA_HY_PRIOR below (Turner/Rhodes)
+NMA_PRIOR_TYPE <- "vague"
+# Example empirical prior (Turner 2012, log-OR, pharmacological vs placebo, mortality):
+#   NMA_HY_PRIOR <- mtc.hy.prior("dlnorm", -3.95, 1.79^(-2))
+NMA_HY_PRIOR <- NULL
+
+# Direction for ranking: "undesirable" (higher = worse, e.g. mortality)
+# or "desirable" (higher = better, e.g. response rate)
+NMA_SMALL_VALUES <- "undesirable"
+
 if (!dir.exists(FIG_DIR)) dir.create(FIG_DIR, recursive = TRUE)
 if (!dir.exists(TBL_DIR)) dir.create(TBL_DIR, recursive = TRUE)
 

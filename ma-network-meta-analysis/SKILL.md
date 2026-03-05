@@ -93,9 +93,17 @@ net <- netmeta(TE, seTE, treat1, treat2, studlab, data = nma_data,
 
 ### Step 1: Setup & Data Preparation
 
-Initialize `renv` and prepare NMA data format (contrast-based or arm-based).
+Initialize `renv`, configure project-specific NMA parameters, and prepare data.
 
 - Script: `nma_01_setup.R`, `nma_02_data_prep.R`
+- **Before running**: Edit the `PROJECT-SPECIFIC NMA CONFIGURATION` section in `nma_01_setup.R`:
+  - `NMA_SM` — effect measure (`"RR"`, `"OR"`, `"HR"`, `"MD"`, `"SMD"`)
+  - `NMA_REFERENCE` — control/reference treatment name (or `NULL` for auto-select)
+  - `NMA_DATA_FORMAT` — `"contrast"` or `"arm"` (determines data prep path)
+  - `NMA_COL_*` — column name mapping to match your extraction CSV
+  - `NMA_PRIOR_TYPE` — `"vague"` (default) or `"empirical"` (Turner/Rhodes)
+  - `NMA_SMALL_VALUES` — ranking direction (`"undesirable"` or `"desirable"`)
+- All downstream scripts (nma_02 through nma_10) read from this config automatically
 - Verify network connectivity: `netconnection()` must show `n.subnets = 1`
 
 ### Step 2: Network Graph

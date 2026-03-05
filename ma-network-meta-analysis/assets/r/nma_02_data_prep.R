@@ -9,38 +9,69 @@
 source("nma_01_setup.R")
 
 # --- 1. Read extraction data ---
-extraction <- read_csv("../05_extraction/extraction.csv", show_col_types = FALSE)
+extraction_path <- "../05_extraction/extraction.csv"
+stopifnot(
+  "extraction.csv not found — run data extraction (Stage 05) first" =
+    file.exists(extraction_path)
+)
+
+extraction <- read_csv(extraction_path, show_col_types = FALSE)
 
 cat("Studies loaded:", nrow(extraction), "\n")
 cat("Columns:", paste(names(extraction), collapse = ", "), "\n")
 
-# --- 2. Prepare contrast-based data ---
-# Option A: Data already in contrast format (TE, seTE, treat1, treat2)
-# Uncomment and adapt column names:
-#
-# nma_data <- extraction %>%
-#   select(
-#     studlab  = study_id,
-#     treat1   = treatment_1,
-#     treat2   = treatment_2,
-#     TE       = effect_estimate,    # log-scale for RR/OR/HR
-#     seTE     = standard_error
-#   ) %>%
-#   filter(!is.na(TE), !is.na(seTE))
+# --- 2. Prepare NMA data (driven by NMA_DATA_FORMAT from nma_01_setup.R) ---
+cat("\nData format:", NMA_DATA_FORMAT, "\n")
+cat("Effect measure:", NMA_SM, "\n")
 
-# Option B: Data in arm-based format (events + totals per arm)
-# Use pairwise() to convert:
-#
-# nma_data <- pairwise(
-#   treat = treatment,
-#   event = events,
-#   n     = total_n,
-#   studlab = study_id,
-#   data  = extraction,
-#   sm    = "RR"         # "RR", "OR", "RD", "MD", "SMD"
-# )
+if (NMA_DATA_FORMAT == "contrast") {
+  # Contrast-based: columns map to TE, seTE, treat1, treat2
+  required_cols <- c(NMA_COL_STUDY, NMA_COL_TREAT1, NMA_COL_TREAT2,
+                     NMA_COL_TE, NMA_COL_SETE)
+  missing_cols <- setdiff(required_cols, names(extraction))
+  if (length(missing_cols) > 0) {
+    stop("Missing columns for contrast format: ",
+         paste(missing_cols, collapse = ", "),
+         "\nUpdate NMA_COL_* in nma_01_setup.R to match your extraction CSV.")
+  }
+
+  nma_data <- extraction %>%
+    select(
+      studlab = !!sym(NMA_COL_STUDY),
+      treat1  = !!sym(NMA_COL_TREAT1),
+      treat2  = !!sym(NMA_COL_TREAT2),
+      TE      = !!sym(NMA_COL_TE),
+      seTE    = !!sym(NMA_COL_SETE)
+    ) %>%
+    filter(!is.na(TE), !is.na(seTE))
+
+} else if (NMA_DATA_FORMAT == "arm") {
+  # Arm-based: use pairwise() to convert to contrast format
+  required_cols <- c(NMA_COL_STUDY, NMA_COL_TREATMENT, NMA_COL_EVENTS, NMA_COL_TOTALN)
+  missing_cols <- setdiff(required_cols, names(extraction))
+  if (length(missing_cols) > 0) {
+    stop("Missing columns for arm format: ",
+         paste(missing_cols, collapse = ", "),
+         "\nUpdate NMA_COL_* in nma_01_setup.R to match your extraction CSV.")
+  }
+
+  nma_data <- pairwise(
+    treat   = extraction[[NMA_COL_TREATMENT]],
+    event   = extraction[[NMA_COL_EVENTS]],
+    n       = extraction[[NMA_COL_TOTALN]],
+    studlab = extraction[[NMA_COL_STUDY]],
+    data    = extraction,
+    sm      = NMA_SM
+  )
+
+} else {
+  stop("Invalid NMA_DATA_FORMAT: '", NMA_DATA_FORMAT,
+       "'. Set to 'contrast' or 'arm' in nma_01_setup.R.")
+}
 
 # --- 3. Validate data ---
+stopifnot("No contrasts after filtering — check extraction data" = nrow(nma_data) > 0)
+
 cat("\n--- Data Summary ---\n")
 cat("Number of contrasts:", nrow(nma_data), "\n")
 cat("Unique studies:", length(unique(nma_data$studlab)), "\n")

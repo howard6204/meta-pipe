@@ -17,7 +17,7 @@ library(flextable)
 cat("Note: Full league table is in nma_08_league_table.R\n")
 
 # --- 2. Compute P-score ranking (needed for summary table) ---
-ranking <- netrank(net_re, small.values = "undesirable")
+ranking <- netrank(net_re, small.values = NMA_SMALL_VALUES)
 
 # --- 3. Summary table: all treatments vs reference ---
 ref_treat <- net_re$reference.group

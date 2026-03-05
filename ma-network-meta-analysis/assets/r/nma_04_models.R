@@ -16,45 +16,56 @@ source("nma_02_data_prep.R")
 # --- 1. Prepare gemtc network ---
 cat("=== Bayesian NMA (Primary Analysis) ===\n")
 
-# For contrast-based data (relative effects)
-gemtc_data <- data.frame(
-  study      = nma_data$studlab,
-  treatment  = nma_data$treat1,
-  diff       = nma_data$TE,
-  std.err    = nma_data$seTE
+stopifnot(
+  "nma_data not found — run nma_02_data_prep.R first" = exists("nma_data"),
+  "nma_data has no rows" = nrow(nma_data) > 0
 )
 
-# For arm-based data (events + totals), use instead:
-# gemtc_data <- data.frame(
-#   study     = arm_data$study_id,
-#   treatment = arm_data$treatment,
-#   responders = arm_data$events,
-#   sampleSize = arm_data$total_n
-# )
-
-network <- mtc.network(data.re = gemtc_data)
+if (NMA_DATA_FORMAT == "contrast") {
+  gemtc_data <- data.frame(
+    study     = nma_data$studlab,
+    treatment = nma_data$treat1,
+    diff      = nma_data$TE,
+    std.err   = nma_data$seTE
+  )
+  network <- mtc.network(data.re = gemtc_data)
+} else {
+  # Arm-based: read raw extraction for gemtc (needs arm-level data)
+  extraction_arm <- read_csv("../05_extraction/extraction.csv", show_col_types = FALSE)
+  gemtc_data <- data.frame(
+    study      = extraction_arm[[NMA_COL_STUDY]],
+    treatment  = extraction_arm[[NMA_COL_TREATMENT]],
+    responders = extraction_arm[[NMA_COL_EVENTS]],
+    sampleSize = extraction_arm[[NMA_COL_TOTALN]]
+  )
+  network <- mtc.network(data.ab = gemtc_data)
+}
 cat("Network summary:\n")
 summary(network)
 
 # --- 2. Fit consistency model (random effects) ---
 cat("\nFitting Bayesian consistency model (random-effects)...\n")
 
-# Option A: Vague priors (results ≈ frequentist)
-model_re <- mtc.model(
-  network,
-  type         = "consistency",
-  linearModel  = "random",
-  n.chain      = MCMC_N_CHAINS
-)
+# Prior selection driven by NMA_PRIOR_TYPE in nma_01_setup.R
+cat("Prior type:", NMA_PRIOR_TYPE, "\n")
 
-# Option B: Empirical priors (Turner et al. / Rhodes et al.)
-# Uncomment and adapt based on outcome type:
-# For log-OR outcomes (pharmacological vs placebo, all-cause mortality):
-#   hn.prior <- mtc.hy.prior("dlnorm", -3.95, 1.79^(-2))  # Turner 2012
-# For log-OR outcomes (pharmacological vs placebo, subjective outcomes):
-#   hn.prior <- mtc.hy.prior("dlnorm", -2.56, 1.74^(-2))  # Turner 2012
-# model_re <- mtc.model(network, type = "consistency", linearModel = "random",
-#                        n.chain = MCMC_N_CHAINS, hy.prior = hn.prior)
+if (NMA_PRIOR_TYPE == "empirical" && !is.null(NMA_HY_PRIOR)) {
+  model_re <- mtc.model(
+    network,
+    type         = "consistency",
+    linearModel  = "random",
+    n.chain      = MCMC_N_CHAINS,
+    hy.prior     = NMA_HY_PRIOR
+  )
+} else {
+  # Vague priors (default, results ≈ frequentist)
+  model_re <- mtc.model(
+    network,
+    type         = "consistency",
+    linearModel  = "random",
+    n.chain      = MCMC_N_CHAINS
+  )
+}
 
 # Run MCMC
 bayes_re <- mtc.run(
@@ -134,11 +145,11 @@ cat("\n=== Frequentist NMA (Sensitivity Analysis for Supplement) ===\n")
 net_re <- netmeta(
   TE, seTE, treat1, treat2, studlab,
   data       = nma_data,
-  sm         = "RR",           # Adapt: "RR", "OR", "MD", "SMD"
+  sm         = NMA_SM,
   random     = TRUE,
   fixed      = TRUE,
   method.tau = "REML",
-  reference.group = NULL       # Set to control treatment name
+  reference.group = NMA_REFERENCE
 )
 
 cat("Frequentist summary (for supplement):\n")

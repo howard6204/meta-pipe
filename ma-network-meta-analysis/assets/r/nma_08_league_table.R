@@ -13,13 +13,40 @@ source("nma_04_models.R")
 library(gt)
 
 # =============================================================================
+# VALIDATION: Ensure upstream objects exist
+# =============================================================================
+
+stopifnot(
+  "bayes_re not found — run nma_04_models.R first" = exists("bayes_re"),
+  "net_re not found — run nma_04_models.R first"   = exists("net_re"),
+  "network not found — run nma_04_models.R first"  = exists("network")
+)
+
+sm <- NMA_SM
+cat("Effect measure:", sm, "\n")
+
+# =============================================================================
 # SECTION A: BAYESIAN LEAGUE TABLE (PRIMARY — gemtc)
 # =============================================================================
 
 cat("=== Building Bayesian League Table ===\n")
 
-treatments <- sort(network$treatments$id)
-n_treat    <- length(treatments)
+# Extract treatments from gemtc network (defensive: check structure)
+if (!is.null(network$treatments) && "id" %in% names(network$treatments)) {
+  treatments <- sort(network$treatments$id)
+} else if (!is.null(network$treatments) && is.character(network$treatments)) {
+  treatments <- sort(network$treatments)
+} else {
+  # Fallback: get treatments from nma_data
+  treatments <- sort(unique(c(nma_data$treat1, nma_data$treat2)))
+  cat("Warning: Could not read treatments from gemtc network object.",
+      "Using treatments from nma_data.\n")
+}
+
+n_treat <- length(treatments)
+stopifnot("Need at least 2 treatments for league table" = n_treat >= 2)
+
+cat("Treatments (", n_treat, "):", paste(treatments, collapse = ", "), "\n")
 
 # Build n×n matrix: cell [i, j] = effect of treatment i vs treatment j
 league_matrix <- matrix(NA_character_,
@@ -27,11 +54,37 @@ league_matrix <- matrix(NA_character_,
                         dimnames = list(treatments, treatments))
 
 for (ref in treatments) {
-  rel <- relative.effect(bayes_re, t1 = ref)
+  rel <- tryCatch(
+    relative.effect(bayes_re, t1 = ref),
+    error = function(e) {
+      cat("Warning: relative.effect() failed for", ref, ":", e$message, "\n")
+      NULL
+    }
+  )
+  if (is.null(rel)) next
+
   rel_summary <- summary(rel)
 
-  # Extract posterior quantiles (median, 2.5%, 97.5%)
-  stats <- rel_summary$summaries$quantiles
+  # Extract posterior quantiles — handle both gemtc output structures
+  stats <- NULL
+  if (!is.null(rel_summary$summaries) && !is.null(rel_summary$summaries$quantiles)) {
+    stats <- rel_summary$summaries$quantiles
+  } else if (!is.null(rel_summary$quantiles)) {
+    stats <- rel_summary$quantiles
+  }
+
+  if (is.null(stats)) {
+    cat("Warning: No quantiles found for reference =", ref, "\n")
+    next
+  }
+
+  # Verify expected percentile columns exist
+  expected_pcts <- c("50%", "2.5%", "97.5%")
+  if (!all(expected_pcts %in% colnames(stats))) {
+    cat("Warning: Expected quantile columns (50%, 2.5%, 97.5%) not found.",
+        "Available:", paste(colnames(stats), collapse = ", "), "\n")
+    next
+  }
 
   for (comp in treatments) {
     if (comp == ref) next
@@ -43,7 +96,6 @@ for (ref in treatments) {
     upper_val  <- stats[row_name, "97.5%"]
 
     # Exponentiate if ratio measure (RR, OR, HR)
-    sm <- net_re$sm
     if (sm %in% c("RR", "OR", "HR")) {
       league_matrix[comp, ref] <- sprintf("%.2f (%.2f-%.2f)",
                                           exp(median_val),
@@ -59,7 +111,15 @@ for (ref in treatments) {
 # Diagonal: treatment names
 diag(league_matrix) <- treatments
 
-cat("Bayesian league table (", n_treat, "×", n_treat, "):\n")
+# Check for empty cells (not on diagonal)
+n_filled <- sum(!is.na(league_matrix)) - n_treat  # subtract diagonal
+n_expected <- n_treat * (n_treat - 1)
+if (n_filled < n_expected) {
+  cat("Warning:", n_expected - n_filled, "of", n_expected,
+      "off-diagonal cells are empty.\n")
+}
+
+cat("Bayesian league table (", n_treat, "x", n_treat, "):\n")
 print(league_matrix)
 
 # Convert to data frame for export
@@ -74,7 +134,7 @@ league_gt <- league_df %>%
   gt() %>%
   tab_header(
     title = "League Table: All Pairwise Comparisons",
-    subtitle = paste("Bayesian NMA —", sm, "(95% CrI)")
+    subtitle = paste("Bayesian NMA \u2014", sm, "(95% CrI)")
   ) %>%
   tab_footnote(
     footnote = paste0(
@@ -114,7 +174,7 @@ cat("League table HTML saved to", file.path(TBL_DIR, "league_table.html"), "\n")
 
 cat("\n=== Building Frequentist League Table (Sensitivity) ===\n")
 
-ranking_freq <- netrank(net_re, small.values = "undesirable")
+ranking_freq <- netrank(net_re, small.values = NMA_SMALL_VALUES)
 league_freq  <- netleague(net_re, random = TRUE, seq = ranking_freq, digits = 2)
 
 league_freq_df <- as.data.frame(league_freq$random)
