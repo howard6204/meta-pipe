@@ -23,9 +23,11 @@
 
 - [ ] **03. League table complete**
   - File: `06_analysis/tables/league_table.png` or `.csv`
+  - Heatmap: `06_analysis/tables/league_table_heatmap.png`
   - All n*(n-1)/2 pairwise comparisons present
   - Upper triangle: effect estimates (RR/OR/HR)
   - Lower triangle: credible/confidence intervals
+  - Heatmap: color-coded by effect direction/magnitude, bold = significant
   - **Missing?** Run `nma_10_tables.R`
 
 - [ ] **04. Treatment rankings generated**
@@ -147,6 +149,7 @@
   - All pairwise comparisons
   - Upper/lower triangle format
   - **Format**: PNG (300 DPI) via `gt` package
+  - **Heatmap**: `league_table_heatmap.png` — color-coded version (Figure S9)
   - **Tool**: `nma_10_tables.R`
 
 - [ ] **20. Table S8: Treatment rankings**
