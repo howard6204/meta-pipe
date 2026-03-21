@@ -1,48 +1,65 @@
-## Results
+# Results
 
-### Pipeline Implementation
+## Pipeline Implementation
 
-The meta-pipe framework comprises 24 Python scripts, 12 R analysis scripts, 12 skill modules, and 74 reference documents organized across 10 sequential stages. The complete source code, including all skill specifications and quality gate definitions, is available as an open-source repository.
+The meta-pipe pipeline comprises 12 skill modules, 24 Python automation scripts (~3,600 lines of code), 5 R analysis scripts, and 74 methodology reference documents.
+The complete source code is available as an open-source repository.
+<!-- TODO: add repository URL and Zenodo DOI -->
 
-<!-- TODO: Add exact counts from current codebase -->
+## Demonstration: Literature Search and Study Selection
 
-### Literature Search and Screening
+<!-- TODO: Insert PRISMA flow diagram (Figure 2) -->
 
-The search strategy, executed across PubMed and Scopus, identified 847 records. After automated deduplication (removing 535 duplicates via DOI and fuzzy title matching), 312 unique records underwent title-abstract screening. Dual-review screening (AI-generated recommendations validated by human reviewer) yielded an inter-rater agreement of kappa = TODO, with TODO records advancing to full-text review. After full-text assessment, 5 randomized controlled trials met inclusion criteria.
+The systematic search identified [N] records from PubMed and Scopus.
+After deduplication and title/abstract screening (inter-rater kappa = [value]), [N] full-text articles were assessed for eligibility.
+Five randomized controlled trials met the inclusion criteria: KEYNOTE-522, IMpassion031, GeparNuevo, NeoTRIPaPDL1, and CamRelief, enrolling a total of 2,402 patients.
 
-<!-- TODO: Update with exact numbers from projects/ici-breast-cancer/ -->
+## Study Characteristics
 
-### Study Characteristics
+<!-- TODO: Insert Table 3 -->
 
-The five included RCTs enrolled a total of 2,402 patients with triple-negative breast cancer, published between 2019 and 2023 (@tbl-studies). All trials evaluated the addition of a PD-1 or PD-L1 inhibitor (pembrolizumab, n = 3; atezolizumab, n = 2) to platinum-based neoadjuvant chemotherapy. The primary outcome in all trials was pathological complete response (pCR), defined as ypT0/is ypN0.
+The five included trials were published between 2019 and 2024.
+Sample sizes ranged from 174 to 1,174 participants.
+Three trials evaluated pembrolizumab, one evaluated atezolizumab, and one evaluated camrelizumab.
+All trials compared immune checkpoint inhibitor plus neoadjuvant chemotherapy versus chemotherapy alone in patients with early-stage triple-negative breast cancer.
 
-<!-- TODO: Fill from 05_data_extraction -->
+## Efficacy Outcomes
 
-### Efficacy: Pathological Complete Response
+### Pathologic Complete Response (Primary Outcome)
 
-The pooled analysis demonstrated a statistically significant improvement in pCR with the addition of immune checkpoint inhibitors: risk ratio 1.26 (95% CI 1.16–1.37, p = 0.0015) using a random-effects model with REML estimator and Hartung-Knapp adjustment (@fig-forest). Heterogeneity was low (I² = TODO%, τ² = TODO), and the prediction interval was TODO to TODO.
+The addition of immune checkpoint inhibitors to neoadjuvant chemotherapy was associated with a significantly higher rate of pathologic complete response (RR 1.26, 95% CI 1.16-1.37, p=0.0015; I^2^=0%, 5 trials, N=2,402; @fig-forest).
+The quality of evidence was rated HIGH by GRADE assessment.
+The number needed to treat was 7 (95% CI 5-11).
 
-Subgroup analyses by ICI agent (pembrolizumab vs. atezolizumab), PD-L1 status, and chemotherapy backbone are reported in the supplementary materials.
+<!-- TODO: Insert Figure 3 (forest plot) -->
 
-<!-- TODO: Update heterogeneity values, add subgroup summary -->
+### Event-Free Survival
 
-### Safety: Treatment-Related Adverse Events
+Event-free survival at 5 years favored the immune checkpoint inhibitor group (HR 0.66, 95% CI 0.51-0.86, p=0.021).
+The quality of evidence was rated MODERATE by GRADE assessment, downgraded for imprecision due to the limited number of trials reporting this outcome.
 
-<!-- TODO: Extract from 06_analysis safety scripts -->
+### Overall Survival
 
-Grade 3–4 treatment-related adverse events were reported in TODO% of the ICI group versus TODO% of the control group. The most common immune-related adverse events were TODO.
+Overall survival at 5 years was reported in two trials, both showing significant benefit (HR 0.48).
+The quality of evidence was rated LOW, downgraded for imprecision and incomplete reporting.
 
-### Process Metrics and Time Investment
+## Safety Outcomes
 
-The complete pipeline execution — from topic formulation to publication-ready manuscript — required 14 hours of wall-clock time, compared with an estimated 100+ hours for manual production (@tbl-time). The stage-by-stage time breakdown is shown in @tbl-time.
+Serious adverse events were more frequent in the immune checkpoint inhibitor group (RR 1.50, 95% CI 1.13-1.98; NNH=10).
+Grade 3 or higher immune-related adverse events increased approximately 8.5-fold.
+Fatal adverse events occurred in 0.40% of the intervention group versus 0% of the control group (NNH=250).
 
-The pipeline achieved the following quality metrics:
+## Time and Quality Metrics
 
-- **PRISMA compliance**: 27/27 items reported
-- **Publication readiness score**: 95–98% (automated scoring across 8 components)
-- **Overclaim detection**: 0 overclaim patterns identified in final manuscript
-- **Figure quality**: All figures generated at ≥300 DPI
-- **GRADE certainty**: HIGH for primary outcome (pCR)
-- **Computational reproducibility**: Full artifact chain preserved with round-based versioning
+The complete pipeline execution required approximately 14 hours (@tbl-time), compared with an estimated 100 or more hours for manual conduct.
+The publication readiness score reached 95-98%, with PRISMA compliance at 27 of 27 items.
+The final manuscript comprised 4,921 words with 31 citations, 7 tables, and 5 figures.
 
-The 87–93% time reduction was distributed unevenly across stages: the largest absolute savings occurred in literature search and deduplication (Stage 02: ~2h vs ~15h manual), data extraction (Stage 05: ~3h vs ~25h manual), and manuscript generation (Stage 07: ~2h vs ~20h manual). Stages requiring human judgment (PICO refinement, screening conflicts, RoB assessment) showed smaller reductions (~50% savings) as expected.
+<!-- TODO: Insert Table 4 (time breakdown) -->
+
+## Comparison with Existing Tools
+
+<!-- TODO: Insert Table 2 (feature comparison matrix) -->
+
+@tbl-comparison presents a feature comparison of meta-pipe with six existing SR/MA automation tools.
+meta-pipe is the only tool providing coverage across all 10 pipeline stages, including statistical analysis, manuscript generation, and automated quality assurance.

@@ -1,38 +1,64 @@
 ---
 title: "meta-pipe: An LLM-agent pipeline for end-to-end automated systematic review and meta-analysis"
 author:
-  - name: Hsieh-Ting Lin
+  - name: "Hsieh-Ting Lin"
     affiliations:
-      - id: TODO
-        name: TODO
+      - name: "Institution"
+        department: "Department"
+    orcid: "0000-0000-0000-0000"
     corresponding: true
-    email: TODO
+    email: "author@example.com"
 date: last-modified
 abstract: |
-  **Background**: Systematic reviews and meta-analyses (SR/MA) remain the cornerstone of evidence-based medicine, yet their production demands 100+ person-hours and suffers from quality bottlenecks at the seams between stages — manual data transfer, non-retroactive quality enforcement, and irreproducible non-statistical decisions. Existing AI tools (ASReview, Covidence, TrialMind) address isolated stages but leave inter-stage fragmentation unresolved.
+  **Background**: Systematic reviews and meta-analyses (SR/MA) are the gold standard for
+  clinical evidence synthesis but require an estimated 100+ person-hours and 12-18 months
+  to complete. Existing automation tools such as ASReview, Rayyan, and TrialMind address
+  only 1-3 of the 10+ stages in the SR/MA workflow, leaving statistical analysis and
+  manuscript generation entirely manual.
 
-  **Methods**: We developed meta-pipe, a 10-stage LLM-agent pipeline that integrates topic formulation, literature search, screening, data extraction, statistical analysis, manuscript generation, and publication quality assurance into a single reproducible workflow. The pipeline enforces quality gates at each stage boundary and preserves five human-in-the-loop decision points where clinical judgment is irreplaceable. We demonstrate meta-pipe on a pairwise meta-analysis of immune checkpoint inhibitors in triple-negative breast cancer.
+  **Methods**: We developed meta-pipe, a modular LLM-agent pipeline that orchestrates the
+  complete SR/MA workflow from topic brainstorming (Stage 00) through submission-ready
+  manuscript (Stage 10). The pipeline integrates Claude AI for screening and data extraction,
+  Python for automation (24 scripts, ~3,600 lines of code), R (meta/metafor) for statistical
+  analysis, and Quarto for manuscript rendering. Quality gates enforce PRISMA compliance,
+  dual-review agreement (kappa >=0.60), GRADE assessment, and automated overclaim detection.
 
-  **Results**: The demonstration project (5 RCTs, N = 2,402) was completed in 14 hours versus an estimated 100+ hours manually (87–93% time reduction). The primary outcome — pathological complete response — yielded RR 1.26 (95% CI 1.16–1.37, p = 0.0015) with GRADE HIGH certainty. The pipeline achieved 27/27 PRISMA compliance, publication readiness score 95–98%, and full computational reproducibility via artifact versioning.
+  **Results**: We demonstrate meta-pipe on a meta-analysis of immune checkpoint inhibitors
+  in triple-negative breast cancer (5 RCTs, N=2,402). The pipeline produced a publication-ready
+  manuscript in approximately 14 hours, reporting pathologic complete response RR 1.26
+  (95% CI 1.16-1.37, p=0.0015, I^2^=0%, GRADE HIGH). Publication readiness score reached
+  95-98%, with PRISMA compliance at 27/27 items.
 
-  **Conclusions**: Pipeline integration — not merely tool automation — addresses the methodological fragmentation that compromises SR/MA quality. meta-pipe demonstrates that end-to-end orchestration with embedded quality gates can substantially reduce production time while maintaining or improving methodological rigor. The pipeline architecture is generalizable to living systematic reviews and multi-team evidence synthesis.
+  **Conclusions**: meta-pipe is the first end-to-end AI-assisted pipeline covering all stages
+  of systematic review and meta-analysis. Its human-in-the-loop design with automated quality
+  gates addresses concerns about standalone AI use in evidence synthesis while achieving
+  75-80% time savings compared with manual workflows.
 keywords:
   - systematic review
   - meta-analysis
   - large language model
   - automation
   - evidence synthesis
-  - pipeline
-  - reproducibility
+  - artificial intelligence
+bibliography: references.bib
+csl: style.csl
 ---
 
 {{< include 00_abstract.qmd >}}
 
+{{< pagebreak >}}
+
 {{< include 01_introduction.qmd >}}
+
+{{< pagebreak >}}
 
 {{< include 02_methods.qmd >}}
 
+{{< pagebreak >}}
+
 {{< include 03_results.qmd >}}
+
+{{< pagebreak >}}
 
 {{< include 04_discussion.qmd >}}
 
@@ -40,4 +66,7 @@ keywords:
 
 {{< include figures_legends.qmd >}}
 
-## References {.unnumbered}
+# References {.unnumbered}
+
+::: {#refs}
+:::

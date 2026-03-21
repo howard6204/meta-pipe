@@ -1,9 +1,25 @@
-## Introduction
+# Introduction
 
-Systematic reviews and meta-analyses occupy the apex of the evidence hierarchy, yet their production remains among the most labor-intensive undertakings in biomedical research. A single review requires a median of 67.3 weeks from registration to publication [@borah2017], demands 100+ person-hours of skilled effort [@allen2019], and frequently suffers from methodological shortcuts that undermine the very rigor that justifies the enterprise. The gap between what systematic reviews promise — comprehensive, reproducible synthesis of all relevant evidence — and what the production process delivers has widened as the biomedical literature grows by over 1.5 million articles annually.
+<!-- Para 1: SR/MA as gold standard; time/resource burden -->
+Systematic reviews and meta-analyses represent the highest level of evidence in the hierarchy of clinical research, forming the foundation for clinical practice guidelines, health policy decisions, and regulatory approvals.
+However, the conduct of a rigorous SR/MA is resource-intensive, requiring an estimated 100 or more person-hours and 12 to 18 months from inception to publication.
+<!-- TODO: cite Borah 2017, Tsafnat 2014 -->
 
-The past decade has seen an encouraging proliferation of AI-assisted tools targeting individual stages of the systematic review workflow. ASReview applies active learning to title-abstract screening, reducing workload by up to 95% while maintaining sensitivity above 95% [@vandeschoot2021]. Covidence streamlines screening and data extraction through structured web interfaces. RobotReviewer automates risk-of-bias assessment using natural language processing [@marshall2017]. More recently, TrialMind and otto-SR have extended coverage to two or three stages, with otto-SR demonstrating reproducibility across 12 Cochrane reviews. Each of these tools represents a genuine advance — but each addresses at most a fragment of a process that spans ten or more distinct stages.
+<!-- Para 2: Existing automation tools and their scope -->
+Several automation tools have emerged to address this burden.
+ASReview and Rayyan employ active learning and crowd-based approaches for title and abstract screening.
+Covidence extends coverage to data extraction.
+RobotReviewer automates risk-of-bias assessment.
+More recently, LLM-based tools such as otto-SR and TrialMind have demonstrated promising results in screening and extraction tasks.
+<!-- TODO: cite van de Schoot 2021, Ouzzani 2016, Kellermeyer 2018, Marshall 2017, Blaizot 2022, Choi 2024 -->
 
-The fundamental challenge, we argue, is not that individual stages lack automation, but that the spaces between stages remain unmanaged. Three problems arise from this fragmentation. First, data transfer between steps is manual and error-prone: screening decisions are copied into extraction spreadsheets, extracted values are re-entered into statistical software, and analytical outputs are transcribed into manuscript text. Each seam is an opportunity for transcription error, version mismatch, or silent data loss. Second, quality assurance cannot be enforced retroactively across a fragmented workflow. When a PRISMA compliance check at the manuscript stage reveals an unreported search strategy modification, the correction must propagate backward through extraction and analysis — a cascade that is prohibitively painful in manual workflows, leading reviewers to patch rather than fix. Third, reproducibility in current practice extends only to the statistical layer. Tools like renv and Docker can lock package versions and guarantee identical analytical results, but the decisions made during screening, the judgments applied during extraction, and the phrasing chosen during manuscript writing remain undocumented, unreproducible, and effectively invisible. These are not efficiency problems — they are methodological problems that compromise the validity of the evidence synthesis itself.
+<!-- Para 3: The gap -->
+Despite these advances, no existing tool covers the complete SR/MA workflow.
+Statistical analysis, manuscript generation, and publication quality assurance remain entirely manual processes.
+A 2025 scoping review of 37 studies on LLMs for systematic reviews concluded that current tools are "not yet ready for standalone use," citing concerns about accuracy, reproducibility, and quality control.
+<!-- TODO: cite Gartlehner 2025 -->
 
-In this paper, we present meta-pipe, a 10-stage pipeline that integrates topic formulation, literature search, screening, full-text management, data extraction, statistical analysis, manuscript generation, peer review preparation, publication quality assurance, and submission preparation into a single, reproducible, quality-gated workflow. Rather than automating individual tasks, meta-pipe orchestrates the entire evidence synthesis process through an LLM-agent architecture with embedded quality gates at each stage boundary and five human-in-the-loop decision points where clinical judgment is irreplaceable. We demonstrate the pipeline on a pairwise meta-analysis of immune checkpoint inhibitors in triple-negative breast cancer (5 RCTs, N = 2,402), completed in 14 hours with GRADE HIGH certainty. Our aim is not to show that AI can replace systematic reviewers, but to demonstrate that pipeline integration — the methodological act of connecting stages with enforced quality transitions — addresses fragmentation problems that no single-stage tool can solve.
+<!-- Para 4: Aim -->
+To address this gap, we developed meta-pipe, an LLM-agent pipeline that orchestrates the complete SR/MA workflow from topic brainstorming (Stage 00) through submission-ready manuscript (Stage 10).
+The pipeline integrates large language model capabilities with established statistical methods and automated quality gates, maintaining human oversight at critical decision points.
+We demonstrate its application on a meta-analysis of immune checkpoint inhibitors in triple-negative breast cancer.
