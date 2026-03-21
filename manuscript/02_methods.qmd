@@ -1,0 +1,72 @@
+## Methods
+
+### Pipeline Architecture
+
+meta-pipe organizes the systematic review and meta-analysis workflow into 10 sequential stages, each with defined inputs, outputs, and quality gates (@tbl-stages). The stage boundaries were determined by identifying points in the SR/MA workflow where (a) the data format changes (e.g., from bibliographic records to structured extraction tables), (b) a distinct methodological skill set is required (e.g., statistical analysis vs. manuscript writing), or (c) a human decision point is needed before proceeding. This decomposition follows the PRISMA 2020 workflow but adds explicit quality enforcement at each transition.
+
+Each stage is implemented as a self-contained "skill module" — a structured directory containing a workflow specification (SKILL.md), reference documentation, validation scripts, and templates. The modular design allows stages to be executed independently for debugging or re-execution, while the pipeline orchestrator enforces sequential dependencies and quality gate passage.
+
+### Quality Gate Design
+
+Quality gates are checkpoint conditions that must be satisfied before the pipeline advances to the next stage. Gates serve two purposes: preventing error propagation (e.g., ensuring deduplicated records before screening) and enforcing methodological standards (e.g., requiring dual-review kappa ≥ 0.60 before proceeding to full-text retrieval).
+
+The pipeline implements the following gate categories:
+
+- **Completeness gates**: All required outputs exist and are non-empty (every stage)
+- **Consistency gates**: Cross-stage data integrity checks (e.g., number of included studies matches between extraction and analysis)
+- **Statistical gates**: Threshold-based checks (dual-review kappa ≥ 0.60, figure DPI ≥ 300)
+- **Compliance gates**: Checklist verification (PRISMA 27/27, GRADE assessment for each outcome)
+- **Overclaim gates**: Automated detection of 12 overclaim patterns in manuscript text (e.g., "proves", "definitely", causal language for observational data)
+
+Gate thresholds were set based on published methodological standards (e.g., Cochrane Handbook for kappa thresholds) and empirical calibration during development.
+
+### Human-in-the-Loop Decision Points
+
+Five decision points require human judgment and cannot be delegated to the LLM agent:
+
+1. **PICO confirmation** (Stage 00–01): Population, intervention, comparator, and outcome definitions require clinical expertise
+2. **Analysis type selection** (Stage 01): Choice between pairwise and network meta-analysis depends on the research question and available evidence geometry
+3. **Screening conflicts** (Stage 03): Disagreements between AI and human reviewers on borderline studies
+4. **Risk-of-bias judgment** (Stage 05): Domain-level RoB assessments require methodological expertise, particularly for "some concerns" classifications
+5. **Manuscript interpretation** (Stage 07): Clinical implications, practice recommendations, and limitation framing require domain knowledge
+
+These five points were selected by applying a decision framework: human oversight is required where (a) the decision has irreversible downstream consequences, (b) the decision requires domain knowledge not present in the training data, or (c) the decision involves value judgments (e.g., what constitutes a clinically meaningful effect).
+
+### Technology Stack
+
+The pipeline is built on three primary technologies:
+
+- **LLM agent**: Claude (Anthropic), operating through a skill-based architecture with 12 skill modules and 74 reference documents providing domain-specific guidance for each stage
+- **Statistical analysis**: R (v4.3+) with metafor, meta, and netmeta packages, managed via renv for version locking. Analysis scripts follow a standardized 12-script sequence (01_load_data through 12_sensitivity_analysis)
+- **Manuscript generation**: Quarto with Typst backend, producing journal-formatted outputs from structured .qmd files
+- **Orchestration**: Python (v3.11+) scripts for project initialization, status tracking, session logging, and quality gate evaluation
+
+All dependencies are version-locked (renv.lock for R, uv.lock for Python) and all intermediate artifacts are preserved with round-based versioning to ensure full computational reproducibility.
+
+### Literature Search and Bibliography Management
+
+<!-- TODO: Detail PubMed + Scopus search strategy, API integration, deduplication algorithm -->
+
+The search module supports PubMed (via Entrez API) and Scopus (via Elsevier API) as mandatory databases, with optional Embase and Cochrane Library integration. Deduplication uses a multi-field matching algorithm (DOI exact match → title fuzzy match → author + year + journal match) to identify and remove duplicate records while preserving provenance metadata for PRISMA reporting.
+
+### Data Extraction and Risk-of-Bias Assessment
+
+<!-- TODO: Detail structured extraction templates, RoB 2 integration -->
+
+Data extraction uses structured templates aligned with the Cochrane data extraction form, generating machine-readable outputs (CSV/JSON) that feed directly into the analysis stage without manual re-entry. Risk-of-bias assessment follows the RoB 2 tool for randomized trials or ROBINS-I for non-randomized studies, with domain-level assessments recorded in a structured format that supports automated summary generation.
+
+### Statistical Analysis
+
+<!-- TODO: Detail REML + Hartung-Knapp, heterogeneity assessment, sensitivity analyses -->
+
+The analysis module implements a 12-script sequence covering: data loading and validation, pairwise meta-analysis (random-effects model with REML estimator and Hartung-Knapp adjustment), heterogeneity assessment (I², τ², prediction intervals), subgroup analyses, sensitivity analyses (leave-one-out, influence diagnostics), publication bias assessment (funnel plot, Egger's test), and forest plot generation at publication quality (≥300 DPI). Network meta-analysis is supported via the netmeta package for studies comparing ≥3 interventions.
+
+### Manuscript Generation and Quality Assurance
+
+<!-- TODO: Detail Quarto pipeline, PRISMA compliance checking, overclaim detection -->
+
+The manuscript module generates structured Quarto documents (.qmd) with embedded cross-references to tables, figures, and analytical outputs. The publication quality module runs automated checks including PRISMA 2020 compliance (27-item checklist), overclaim detection (12 linguistic patterns), numerical consistency verification (manuscript values vs. analytical outputs), and an aggregate publication readiness score (0–100%).
+
+### Demonstration Case
+
+We demonstrate meta-pipe on a pairwise meta-analysis examining the efficacy of immune checkpoint inhibitors (ICIs) added to neoadjuvant chemotherapy in triple-negative breast cancer (TNBC). The research question — whether adding PD-1/PD-L1 inhibitors to standard neoadjuvant chemotherapy improves pathological complete response (pCR) rates — was selected because (a) multiple RCTs have been published, (b) high-quality published meta-analyses exist for comparison, and (c) the clinical question has clear relevance to current oncology practice. All pipeline stages were executed sequentially with timestamps and decision logs preserved for reproducibility assessment.

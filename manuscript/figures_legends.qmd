@@ -1,0 +1,31 @@
+## Figure Legends {.unnumbered}
+
+### Figure 1: meta-pipe Pipeline Architecture {#fig-pipeline}
+
+<!-- TODO: Generate pipeline architecture diagram showing 10 stages with quality gates -->
+<!-- Suggested tool: R (DiagrammeR) or Python (matplotlib/graphviz) -->
+<!-- Requirements: 300 DPI, show stage numbers, quality gate symbols, human decision points -->
+
+**Figure 1.** Overview of the meta-pipe pipeline architecture. Ten sequential stages (00–10) are connected by quality gates (diamond symbols) that enforce methodological standards before advancing. Five human-in-the-loop decision points (star symbols) mark stages where clinical judgment is required. Arrows indicate data flow; dashed arrows indicate optional feedback loops for quality gate failures. The color gradient represents the transition from human-intensive stages (blue, Stages 00–01) through mixed human-AI stages (purple, Stages 03–05) to predominantly AI-automated stages (red, Stages 06–10).
+
+### Figure 2: PRISMA 2020 Flow Diagram {#fig-prisma}
+
+<!-- TODO: Copy from projects/ici-breast-cancer/ or regenerate -->
+<!-- Source: projects/ici-breast-cancer/03_screening/ -->
+
+**Figure 2.** PRISMA 2020 flow diagram for the demonstration meta-analysis of immune checkpoint inhibitors in triple-negative breast cancer. Records were identified from PubMed and Scopus, deduplicated, screened at the title-abstract level, assessed at full-text level, and included in the quantitative synthesis. Numbers at each stage were automatically tracked by the pipeline.
+
+### Figure 3: Forest Plot — Pathological Complete Response {#fig-forest}
+
+<!-- TODO: Copy from projects/ici-breast-cancer/06_analysis/ -->
+<!-- Source: 06_analysis/output/forest_*.png -->
+
+**Figure 3.** Forest plot of pathological complete response (pCR) rates comparing neoadjuvant immune checkpoint inhibitors plus chemotherapy versus chemotherapy alone in triple-negative breast cancer. The pooled risk ratio was 1.26 (95% CI 1.16–1.37, p = 0.0015) using a random-effects model with REML estimator and Hartung-Knapp adjustment. The diamond represents the pooled estimate; square sizes are proportional to study weight. I² and τ² values indicate low heterogeneity.
+
+### Figure 4: Time Investment Comparison {#fig-time}
+
+<!-- TODO: Generate bar chart comparing meta-pipe vs manual time by stage -->
+<!-- Suggested tool: R (ggplot2) or Python (matplotlib) -->
+<!-- Requirements: 300 DPI, grouped bar chart, stage labels, total annotation -->
+
+**Figure 4.** Comparison of time investment (hours) by pipeline stage between meta-pipe (AI-assisted) and estimated manual production. The largest absolute time savings occurred in data extraction (Stage 05), screening (Stage 03), and manuscript generation (Stage 07). Stages requiring human judgment (Stages 00–01, 03 conflicts, 05 RoB) showed smaller reductions. Total: 14 hours (meta-pipe) versus 84–137 hours (manual estimate), representing 87–93% time reduction.

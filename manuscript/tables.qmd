@@ -1,0 +1,63 @@
+## Tables {.unnumbered}
+
+### Table 1: Pipeline Stages, Inputs/Outputs, and Quality Gates {#tbl-stages}
+
+<!-- TODO: Generate from pipeline architecture docs -->
+
+| Stage | Name | Key Inputs | Key Outputs | Quality Gate |
+|-------|------|------------|-------------|--------------|
+| 00 | Topic Intake | Research question | TOPIC.txt, feasibility report | Feasibility score ≥ 70% |
+| 01 | Protocol | TOPIC.txt | PROSPERO registration, protocol | PICO confirmed (human) |
+| 02 | Search & Bibliography | Protocol, API keys | Deduplicated record set | ≥2 databases, dedup completeness |
+| 03 | Screening & Quality | Record set | Included/excluded studies | Dual-review kappa ≥ 0.60 |
+| 04 | Full-text Management | Included PMIDs | Retrieved PDFs | ≥90% retrieval rate |
+| 05 | Data Extraction | PDFs, extraction template | Structured data (CSV/JSON) | RoB 2 complete for all studies |
+| 06 | Statistical Analysis | Extracted data | Forest plots, summary estimates | REML convergence, I² reported |
+| 07 | Manuscript | Analysis outputs | Quarto manuscript (.qmd) | PRISMA 27/27 |
+| 08 | Peer Review Prep | Manuscript | GRADE SoF table, response templates | GRADE for all outcomes |
+| 09 | Publication Quality | Complete manuscript | Readiness score, overclaim report | Readiness ≥ 95% |
+| 10 | Submission Prep | Final manuscript + supplements | Journal-formatted submission package | Checklist complete |
+
+### Table 2: Feature Comparison with Existing Tools {#tbl-comparison}
+
+<!-- TODO: Verify current capabilities of each tool -->
+
+| Feature | ASReview | Rayyan | Covidence | RobotReviewer | otto-SR | TrialMind | **meta-pipe** |
+|---------|----------|--------|-----------|---------------|---------|-----------|---------------|
+| Topic formulation | - | - | - | - | - | - | **Yes** |
+| Protocol generation | - | - | - | - | - | - | **Yes** |
+| Literature search | - | - | - | - | Yes | Yes | **Yes** |
+| Screening | Yes | Yes | Yes | - | Yes | Yes | **Yes** |
+| Data extraction | - | - | Yes | - | Yes | Yes | **Yes** |
+| Risk-of-bias | - | - | - | Yes | - | - | **Yes** |
+| Statistical analysis | - | - | - | - | - | - | **Yes** |
+| NMA support | - | - | - | - | - | - | **Yes** |
+| Manuscript generation | - | - | - | - | - | - | **Yes** |
+| Quality assurance | - | - | - | - | - | - | **Yes** |
+| PRISMA compliance | - | - | Partial | - | - | - | **Yes** |
+| Open source | Yes | No | No | Yes | No | No | **Yes** |
+
+### Table 3: Characteristics of Included Studies {#tbl-studies}
+
+<!-- TODO: Extract from projects/ici-breast-cancer/05_data_extraction/ -->
+
+| Study | Year | N | Intervention | Control | Primary Outcome | pCR Rate (ICI) | pCR Rate (Control) |
+|-------|------|---|-------------|---------|-----------------|-----------------|---------------------|
+| TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO |
+
+### Table 4: Time Investment by Pipeline Stage {#tbl-time}
+
+<!-- TODO: Extract from session logs -->
+
+| Stage | meta-pipe (hours) | Estimated Manual (hours) | Reduction (%) |
+|-------|-------------------|--------------------------|---------------|
+| 00 Topic Intake | 0.5 | 2–4 | 75–88% |
+| 01 Protocol | 1.0 | 4–8 | 75–88% |
+| 02 Search & Bibliography | 1.5 | 10–15 | 85–90% |
+| 03 Screening | 2.0 | 15–25 | 87–92% |
+| 04 Full-text Management | 0.5 | 3–5 | 83–90% |
+| 05 Data Extraction | 3.0 | 20–30 | 85–90% |
+| 06 Statistical Analysis | 2.0 | 10–15 | 80–87% |
+| 07 Manuscript | 2.0 | 15–25 | 87–92% |
+| 08–10 QA & Submission | 1.5 | 5–10 | 70–85% |
+| **Total** | **14** | **84–137** | **87–93%** |

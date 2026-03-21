@@ -1,0 +1,43 @@
+---
+title: "meta-pipe: An LLM-agent pipeline for end-to-end automated systematic review and meta-analysis"
+author:
+  - name: Hsieh-Ting Lin
+    affiliations:
+      - id: TODO
+        name: TODO
+    corresponding: true
+    email: TODO
+date: last-modified
+abstract: |
+  **Background**: Systematic reviews and meta-analyses (SR/MA) remain the cornerstone of evidence-based medicine, yet their production demands 100+ person-hours and suffers from quality bottlenecks at the seams between stages — manual data transfer, non-retroactive quality enforcement, and irreproducible non-statistical decisions. Existing AI tools (ASReview, Covidence, TrialMind) address isolated stages but leave inter-stage fragmentation unresolved.
+
+  **Methods**: We developed meta-pipe, a 10-stage LLM-agent pipeline that integrates topic formulation, literature search, screening, data extraction, statistical analysis, manuscript generation, and publication quality assurance into a single reproducible workflow. The pipeline enforces quality gates at each stage boundary and preserves five human-in-the-loop decision points where clinical judgment is irreplaceable. We demonstrate meta-pipe on a pairwise meta-analysis of immune checkpoint inhibitors in triple-negative breast cancer.
+
+  **Results**: The demonstration project (5 RCTs, N = 2,402) was completed in 14 hours versus an estimated 100+ hours manually (87–93% time reduction). The primary outcome — pathological complete response — yielded RR 1.26 (95% CI 1.16–1.37, p = 0.0015) with GRADE HIGH certainty. The pipeline achieved 27/27 PRISMA compliance, publication readiness score 95–98%, and full computational reproducibility via artifact versioning.
+
+  **Conclusions**: Pipeline integration — not merely tool automation — addresses the methodological fragmentation that compromises SR/MA quality. meta-pipe demonstrates that end-to-end orchestration with embedded quality gates can substantially reduce production time while maintaining or improving methodological rigor. The pipeline architecture is generalizable to living systematic reviews and multi-team evidence synthesis.
+keywords:
+  - systematic review
+  - meta-analysis
+  - large language model
+  - automation
+  - evidence synthesis
+  - pipeline
+  - reproducibility
+---
+
+{{< include 00_abstract.qmd >}}
+
+{{< include 01_introduction.qmd >}}
+
+{{< include 02_methods.qmd >}}
+
+{{< include 03_results.qmd >}}
+
+{{< include 04_discussion.qmd >}}
+
+{{< include tables.qmd >}}
+
+{{< include figures_legends.qmd >}}
+
+## References {.unnumbered}

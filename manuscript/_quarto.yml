@@ -1,0 +1,36 @@
+project:
+  type: manuscript
+  output-dir: output
+
+manuscript:
+  article: index.qmd
+
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    theme: cosmo
+    comments:
+      hypothesis: true
+  docx:
+    toc: true
+    number-sections: true
+    reference-doc: custom-reference.docx
+  typst:
+    toc: true
+    number-sections: true
+    papersize: a4
+    margin:
+      x: 2.5cm
+      y: 2.5cm
+    fontsize: 11pt
+    mainfont: "Times New Roman"
+
+bibliography: references.bib
+csl: systematic-reviews.csl
+
+execute:
+  echo: false
+  warning: false
+  message: false
