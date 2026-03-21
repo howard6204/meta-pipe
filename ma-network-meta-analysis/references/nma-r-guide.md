@@ -221,6 +221,64 @@ summary(rel)
 league <- netleague(net, random = TRUE, digits = 2)
 ```
 
+### League Table Heatmap
+
+A color-coded heatmap makes it easy to spot which comparisons favor which treatment at a glance. The script `nma_10_tables.R` generates this automatically, but here is the core approach for customization:
+
+```r
+library(ggplot2)
+library(tidyr)
+
+# 1. Get league matrix ordered by ranking
+ranking <- netrank(net, small.values = "undesirable")
+league  <- netleague(net, random = TRUE, seq = ranking, digits = 2)
+mat     <- league$random
+
+# 2. Parse each cell into numeric estimate + CI
+#    Cell format is typically "0.85 [0.62, 1.17]"
+parse_league_cell <- function(cell_text) {
+  m <- regmatches(cell_text, regexec(
+    "([0-9.-]+)\\s*[\\[\\(]([0-9.-]+)[,;]\\s*([0-9.-]+)[\\]\\)]", cell_text
+  ))[[1]]
+  if (length(m) == 4) {
+    list(est = as.numeric(m[2]), lo = as.numeric(m[3]), hi = as.numeric(m[4]))
+  } else {
+    list(est = NA, lo = NA, hi = NA)
+  }
+}
+
+# 3. Build long-format data frame
+treat_names <- rownames(mat)
+long_df <- do.call(rbind, lapply(seq_along(treat_names), function(i) {
+  do.call(rbind, lapply(seq_along(treat_names), function(j) {
+    if (i == j || is.na(mat[i, j])) return(NULL)
+    vals <- parse_league_cell(mat[i, j])
+    data.frame(
+      row_treat = treat_names[i], col_treat = treat_names[j],
+      estimate = vals$est, sig = (vals$lo > 1) | (vals$hi < 1),
+      label = trimws(mat[i, j]), stringsAsFactors = FALSE
+    )
+  }))
+}))
+
+# 4. Plot
+ggplot(long_df, aes(col_treat, row_treat)) +
+  geom_tile(aes(fill = log(estimate)), color = "white") +
+  geom_text(aes(label = label, fontface = ifelse(sig, "bold", "plain")),
+            size = 3) +
+  scale_fill_gradient2(
+    low = "#2166AC", mid = "white", high = "#B2182B", midpoint = 0
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 0),
+        panel.grid = element_blank())
+```
+
+**Customization options**:
+- Change `scale_fill_gradient2` colors to match journal style
+- Adjust `size` in `geom_text()` for readability (smaller for many treatments)
+- For MD/SMD (non-ratio measures), use `estimate` directly instead of `log(estimate)` and set the null at 0
+
 ---
 
 ## Step 9: CINeMA (GRADE for NMA)

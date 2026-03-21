@@ -125,6 +125,15 @@ def check_league_table(
         if len(rows) < n:
             issues.append(f"⚠️ League table has {len(rows)} rows, expected {n}")
 
+    # Check for league table heatmap
+    heatmap_path = (
+        project_root / "06_analysis" / "tables" / "league_table_heatmap.png"
+    )
+    if not heatmap_path.exists():
+        issues.append(
+            "⚠️ League table heatmap not found - run nma_10_tables.R to generate"
+        )
+
     return True, issues
 
 

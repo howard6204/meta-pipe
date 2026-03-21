@@ -3,13 +3,16 @@
 # =============================================================================
 # Purpose: Create gt/PNG tables for manuscript inclusion
 # Input: net_re from nma_04_models.R, rankings from nma_07_ranking.R
-# Output: tables/league_table.png, tables/nma_summary.png
+# Output: tables/league_table.png, tables/league_table_heatmap.png,
+#         tables/nma_summary.png
 # =============================================================================
 
 source("nma_04_models.R")
 
 library(gt)
 library(flextable)
+library(ggplot2)
+library(tidyr)
 
 # --- 1. League table (full pairwise comparisons) ---
 cat("Building league table...\n")
@@ -22,6 +25,114 @@ league_df <- as.data.frame(league_matrix)
 
 # Save as CSV
 write_csv(league_df, file.path(TBL_DIR, "nma_league_table_full.csv"))
+
+# --- 1b. League table heatmap (color-coded by effect size) ---
+cat("Generating league table heatmap...\n")
+
+# Order treatments by P-score ranking
+treat_order <- names(sort(ranking$Pscore.random, decreasing = TRUE))
+n_treats <- length(treat_order)
+sm <- net_re$sm
+is_ratio <- sm %in% c("RR", "OR", "HR")
+
+# Build long-format data from the league matrix
+heatmap_rows <- list()
+for (i in seq_len(n_treats)) {
+  for (j in seq_len(n_treats)) {
+    if (i == j) next
+    cell_text <- league_matrix[i, j]
+    if (is.na(cell_text) || cell_text == "") next
+
+    # Parse "estimate [lower, upper]" or "estimate (lower, upper)"
+    m <- regmatches(cell_text, regexec(
+      "([0-9.-]+)\\s*[\\[\\(]([0-9.-]+)[,;]\\s*([0-9.-]+)[\\]\\)]", cell_text
+    ))[[1]]
+
+    if (length(m) == 4) {
+      est <- as.numeric(m[2])
+      lo  <- as.numeric(m[3])
+      hi  <- as.numeric(m[4])
+
+      # Determine statistical significance (CI excludes null)
+      null_val <- if (is_ratio) 1 else 0
+      sig <- (lo > null_val) || (hi < null_val)
+
+      heatmap_rows[[length(heatmap_rows) + 1]] <- data.frame(
+        row_treat = rownames(league_matrix)[i],
+        col_treat = colnames(league_matrix)[j],
+        estimate  = est,
+        lower     = lo,
+        upper     = hi,
+        sig       = sig,
+        label     = trimws(cell_text),
+        stringsAsFactors = FALSE
+      )
+    }
+  }
+}
+
+if (length(heatmap_rows) > 0) {
+  heatmap_df <- do.call(rbind, heatmap_rows)
+
+  # Factor levels ordered by P-score ranking
+  heatmap_df$row_treat <- factor(heatmap_df$row_treat, levels = treat_order)
+  heatmap_df$col_treat <- factor(heatmap_df$col_treat, levels = treat_order)
+
+  # Color scale: centered on null effect (1 for ratios, 0 for differences)
+  if (is_ratio) {
+    # Log-transform ratios so color scale is symmetric around 1
+    heatmap_df$fill_val <- log(heatmap_df$estimate)
+  } else {
+    heatmap_df$fill_val <- heatmap_df$estimate
+  }
+  fill_limit <- max(abs(heatmap_df$fill_val), na.rm = TRUE)
+
+  # Font size scales with number of treatments
+  cell_font_size <- if (n_treats <= 5) 3.2 else if (n_treats <= 8) 2.8 else 2.2
+
+  p_heatmap <- ggplot(heatmap_df, aes(x = col_treat, y = row_treat)) +
+    geom_tile(aes(fill = fill_val), color = "white", linewidth = 0.8) +
+    geom_text(
+      aes(label = label, fontface = ifelse(sig, "bold", "plain")),
+      size = cell_font_size, color = "black"
+    ) +
+    scale_fill_gradient2(
+      low = "#2166AC", mid = "white", high = "#B2182B",
+      midpoint = 0,
+      limits = c(-fill_limit, fill_limit),
+      name = if (is_ratio) paste0("log(", sm, ")") else sm
+    ) +
+    scale_x_discrete(position = "top") +
+    labs(
+      title = "League Table Heatmap",
+      subtitle = paste0(
+        "Effect estimates (", sm, " with 95% CI). ",
+        "Bold = statistically significant. ",
+        "Blue = favors row; Red = favors column."
+      ),
+      x = NULL, y = NULL
+    ) +
+    theme_minimal(base_size = 12) +
+    theme(
+      axis.text.x = element_text(angle = 45, hjust = 0, face = "bold"),
+      axis.text.y = element_text(face = "bold"),
+      panel.grid   = element_blank(),
+      plot.title   = element_text(face = "bold", size = 14),
+      plot.subtitle = element_text(size = 9, color = "grey40"),
+      legend.position = "right"
+    )
+
+  # Scale figure dimensions to treatment count
+  fig_size <- max(6, n_treats * 1.4)
+  ggsave(
+    file.path(TBL_DIR, "league_table_heatmap.png"),
+    plot = p_heatmap, width = fig_size, height = fig_size * 0.85,
+    dpi = FIG_DPI, bg = "white"
+  )
+  cat("League table heatmap saved to", file.path(TBL_DIR, "league_table_heatmap.png"), "\n")
+} else {
+  cat("⚠️ Could not parse league matrix cells — heatmap skipped.\n")
+}
 
 # --- 2. Summary table: all treatments vs reference ---
 ref_treat <- net_re$reference.group
