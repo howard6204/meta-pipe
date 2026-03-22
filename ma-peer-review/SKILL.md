@@ -22,8 +22,10 @@ Perform structured peer review and produce actionable feedback and validation ch
 - `08_reviews/action-items.md`
 - `08_reviews/grade_summary.csv`
 - `08_reviews/grade_summary.md`
-- `08_reviews/grade_suggestions.csv` (optional)
-- `08_reviews/grade_suggestions.md` (optional)
+- `08_reviews/analysis_stats.json` (collected from Stage 06)
+- `08_reviews/grade_suggestions.csv` (semi-automated)
+- `08_reviews/grade_suggestions.md` (semi-automated)
+- `08_reviews/grade_detailed.md` (per-domain reviewer decision format)
 - `03_screening/round-01/quality_rob2.csv` (RoB 2 for RCTs)
 - `03_screening/round-01/rob2_assessment.md` (RoB 2 narrative)
 - `03_screening/round-01/quality_robins_i.csv` (ROBINS-I for observational)
@@ -46,9 +48,14 @@ Perform structured peer review and produce actionable feedback and validation ch
    - Read from `05_extraction/extraction.csv` (outcomes)
    - Write to `08_reviews/grade_summary.csv` (columns: outcome, n_studies, n_participants, effect_estimate, certainty, reasons)
    - Write to `08_reviews/grade_summary.md`
-6. Optionally generate preliminary GRADE suggestions with `scripts/auto_grade_suggestion.py`.
-   - Use `scripts/auto_grade_suggestion.py`
-   - Write to `08_reviews/grade_suggestions.csv`, `08_reviews/grade_suggestions.md`
+6. Collect analysis statistics from Stage 06 outputs with `scripts/collect_analysis_stats.py`.
+   - Parses markdown reports and CSV tables for I², Egger's test, CI bounds, total events
+   - Optionally includes RoB 2 assessment summary via `--rob-csv`
+   - Write to `08_reviews/analysis_stats.json`
+7. Generate semi-automated GRADE suggestions with `scripts/auto_grade_suggestion.py`.
+   - Use `--stats 08_reviews/analysis_stats.json` to enable computed suggestions
+   - Use `--out-detailed-md` for per-domain reviewer decision format
+   - Write to `08_reviews/grade_suggestions.csv`, `grade_suggestions.md`, `grade_detailed.md`
 
 ## Resources
 
@@ -58,7 +65,8 @@ Perform structured peer review and produce actionable feedback and validation ch
 - `references/rob2-template.md` for RoB 2 per-study assessment (RCTs).
 - `references/robins-i-template.md` for ROBINS-I per-study assessment (observational).
 - `scripts/init_grade_summary.py` for generating GRADE summary tables.
-- `scripts/auto_grade_suggestion.py` for initial certainty suggestions.
+- `scripts/collect_analysis_stats.py` for extracting statistics from Stage 06 outputs.
+- `scripts/auto_grade_suggestion.py` for semi-automated certainty suggestions with computed rationale.
 - `scripts/init_rob2_assessment.py` for initializing RoB 2 assessment tables.
 - `scripts/init_robins_i_assessment.py` for initializing ROBINS-I assessment tables.
 

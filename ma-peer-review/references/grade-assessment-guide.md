@@ -365,22 +365,55 @@ uv run ../../ma-peer-review/scripts/init_grade_summary.py \
   --out-csv ../../projects/<project>/08_reviews/grade_summary.csv
 ```
 
-### **Step 2: Auto-Populate Suggestions**
+### **Step 2: Collect Analysis Statistics**
+```bash
+uv run ../../ma-peer-review/scripts/collect_analysis_stats.py \
+  --analysis-dir ../../projects/<project>/06_analysis \
+  --rob-csv ../../projects/<project>/08_reviews/quality_rob2.csv \
+  --out ../../projects/<project>/08_reviews/analysis_stats.json
+```
+
+This parses Stage 06 markdown reports and CSV tables to extract I², Egger's
+test p-values, pooled effects, CI bounds, total events, and RoB 2 judgments
+into a structured JSON file.
+
+### **Step 3: Auto-Populate Suggestions (Semi-Automated)**
 ```bash
 uv run ../../ma-peer-review/scripts/auto_grade_suggestion.py \
   --grade ../../projects/<project>/08_reviews/grade_summary.csv \
-  --out-csv ../../projects/<project>/08_reviews/grade_suggestions.csv
+  --stats ../../projects/<project>/08_reviews/analysis_stats.json \
+  --out-csv ../../projects/<project>/08_reviews/grade_suggestions.csv \
+  --out-md ../../projects/<project>/08_reviews/grade_suggestions.md \
+  --out-detailed-md ../../projects/<project>/08_reviews/grade_detailed.md \
+  --default-start high
 ```
 
-This script will:
-- Check I² → suggest inconsistency downgrade
-- Check RoB distribution → suggest risk of bias downgrade
-- Check total events → suggest imprecision downgrade
+This script will compute per-domain suggestions with rationale:
 
-### **Step 3: Manual Review**
-- Open `grade_summary.csv` in Excel/Numbers
-- Apply GRADE criteria systematically
-- Document rationale in "explanation" column
+| Domain | Computable input | Suggested logic | Reference |
+|--------|-----------------|-----------------|-----------|
+| **Inconsistency** | I², prediction interval | I²>50% + PI crossing null → "serious" | Cochrane Handbook §14.4.4 |
+| **Imprecision** | Total events, CI width | <300 events → "serious"; CI crosses null → "serious" | Guyatt et al. 2011 (PMID: 21208779) |
+| **Publication bias** | Egger's test | Egger p<0.10 → "serious" (caveat if <10 studies) | Sterne et al. 2011 (PMID: 21952616) |
+| **Risk of bias** | RoB 2 per-study assessments | >25% high risk → "serious" | Sterne et al. 2019 (PMID: 31462531) |
+| **Indirectness** | PICO vs study characteristics | Flag for human review | Guyatt et al. 2011 (PMID: 21208780) |
+
+Output format per outcome × domain (in `grade_detailed.md`):
+```
+### Inconsistency
+- Computed: I² = 62%, prediction interval [0.85, 1.92] (crosses null)
+- Suggested downgrade: Serious (-1)
+- Rationale: I² >50% with prediction interval including no effect (Cochrane Handbook §14.4.4)
+- Reviewer decision: [ ] Accept  [ ] Override to: ___
+```
+
+> **Note**: Without `--stats`, the script falls back to legacy text-parsing mode.
+
+### **Step 4: Manual Review**
+- Open `grade_detailed.md` for per-domain computed suggestions
+- Accept or override each domain suggestion
+- Flag indirectness concerns (not computable automatically)
+- Document rationale for any overrides
 
 ### **Step 4: Render SoF Table**
 ```bash
