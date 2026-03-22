@@ -229,7 +229,9 @@
 
 - [ ] **07**: Publication bias assessment
   - [ ] Funnel plot symmetry evaluated
-  - [ ] Egger's test performed
+  - [ ] Egger's test performed (continuous outcomes)
+  - [ ] Peters' test performed (binary outcomes — preferred over Egger's)
+  - [ ] Low-power caveat noted if <10 studies
   - [ ] Trim-and-fill analysis (if needed)
   - [ ] Interpretation documented
 
