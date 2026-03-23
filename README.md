@@ -130,6 +130,7 @@ If you use meta-pipe in your research, please cite it:
 
 - `uv` (Python)
 - R ≥ 4.2 + `renv`
+- `cmake` (required for building R packages like `fs` on macOS ARM)
 - Quarto
 - API keys in `.env`
 

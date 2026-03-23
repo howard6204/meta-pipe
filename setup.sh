@@ -74,6 +74,24 @@ echo "✅ Python environment ready"
 cd ../..
 echo ""
 
+# Step 3b: Check cmake (required for R packages like 'fs' on macOS ARM)
+echo "Checking cmake (needed for R package compilation)..."
+if ! command -v cmake &> /dev/null; then
+    echo "⚠️  cmake not found."
+    if [ "${PLATFORM}" = "macOS" ]; then
+        echo "   Install with: brew install cmake"
+    elif [ "${PLATFORM}" = "Linux" ]; then
+        echo "   Install with: sudo apt install cmake"
+    fi
+    echo "   cmake is required for building R packages like 'fs' on macOS ARM."
+    echo "   Please install cmake and run this script again."
+    exit 1
+else
+    CMAKE_VERSION=$(cmake --version | head -n1)
+    echo "✅ ${CMAKE_VERSION}"
+fi
+echo ""
+
 # Step 4: Check R
 echo "Step 4/5: Checking R..."
 if ! command -v R &> /dev/null; then

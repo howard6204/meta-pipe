@@ -35,6 +35,11 @@ check_command "python3" "python3 --version" || SYSTEM_OK=false
 check_command "uv" "uv --version" || SYSTEM_OK=false
 check_command "R" "R --version | head -n1" || SYSTEM_OK=false
 check_command "git" "git --version" || SYSTEM_OK=false
+check_command "cmake" "cmake --version" || {
+    echo -e "${YELLOW}⚠️  cmake is required for building some R packages (e.g., 'fs') on macOS ARM${NC}"
+    echo "   Install: brew install cmake"
+    SYSTEM_OK=false
+}
 
 # Optional tools
 if check_command "jags" "jags -v 2>&1 | head -n1"; then

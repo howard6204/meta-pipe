@@ -26,6 +26,7 @@ bash verify_environment.sh
 - ✅ **Python 3.12+** - Data processing
 - ✅ **uv** - Python package manager (fast)
 - ✅ **R 4.3+** - Statistical analysis
+- ✅ **cmake** - Required for building R packages (e.g., `fs`) on macOS ARM
 - ⚠️ **JAGS** - Optional (only for Network Meta-Analysis)
 - ⚠️ **Quarto** - Optional (for manuscript rendering)
 
@@ -133,11 +134,12 @@ uv sync
 **macOS**:
 ```bash
 xcode-select --install
+brew install cmake  # Required for packages like 'fs' on ARM Macs
 ```
 
 **Linux**:
 ```bash
-sudo apt install build-essential libcurl4-openssl-dev
+sudo apt install build-essential libcurl4-openssl-dev cmake
 ```
 
 ### "JAGS not found"
