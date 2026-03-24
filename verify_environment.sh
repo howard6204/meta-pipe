@@ -68,10 +68,12 @@ if [ -d ".venv" ]; then
     echo -e "${GREEN}✅ Virtual environment exists${NC}"
 
     # Check each package
-    PACKAGES=("bibtexparser" "biopython" "pandas" "pdfplumber" "pyyaml" "requests")
-    for pkg in "${PACKAGES[@]}"; do
-        if uv run python -c "import $pkg" &> /dev/null; then
-            VERSION=$(uv run python -c "import $pkg; print($pkg.__version__)" 2>/dev/null || echo "installed")
+    PACKAGES=("bibtexparser:bibtexparser" "biopython:Bio" "pandas:pandas" "pdfplumber:pdfplumber" "pyyaml:yaml" "requests:requests")
+    for entry in "${PACKAGES[@]}"; do
+        pkg="${entry%%:*}"        # display name (e.g., "biopython")
+        mod="${entry##*:}"        # import module (e.g., "Bio")
+        if uv run python -c "import $mod" &> /dev/null; then
+            VERSION=$(uv run python -c "import $mod; print($mod.__version__)" 2>/dev/null || echo "installed")
             echo -e "${GREEN}✅ $pkg${NC} - $VERSION"
         else
             echo -e "${RED}❌ $pkg not installed${NC}"
