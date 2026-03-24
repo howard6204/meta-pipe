@@ -82,9 +82,52 @@ meta-pipe/
 | 09    | `/ma-publication-quality`   | QA, overclaim audit, readiness      | Use skill for detailed commands  |
 | 10    | `/ma-submission-prep`       | PROSPERO, final checks, submit      | Use skill for detailed commands  |
 
-**Orchestration**: `/ma-end-to-end` - Complete workflow management
+**Orchestration**: `/ma-end-to-end` - Complete workflow management | `/ma-agent-teams` - Agent team coordination
 
 **Note**: Skills are invoked using the `Skill` tool. Each skill contains both workflow guidance and complete command references.
+
+---
+
+## Agent Teams (Experimental)
+
+Coordinate multiple Claude Code instances for parallel meta-analysis pipeline work.
+
+### Quick Commands
+
+- "Create a team for project X" → Full pipeline team (all stages)
+- "Parallel screen project X" → Dual-review screening team only
+- "Analysis team for project X" → Statistician + manuscript writer + QA auditor
+
+### How It Works
+
+- Lead reads `/ma-agent-teams` skill for orchestration playbook
+- Teammates spawned with role-specific prompts from `ma-agent-teams/prompts/`
+- Shared task list tracks dependencies; hooks enforce quality gates
+- Each teammate owns specific directories (no cross-teammate file writes)
+
+### Generate Spawn Prompts
+
+```bash
+uv run tooling/python/team_spawn_helper.py --project <project-name> --role <role> [--list]
+```
+
+### Prerequisites
+
+- Claude Code v2.1.32+
+- Enabled via `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` in `.claude/settings.local.json`
+
+### Team Roles
+
+| Role                    | Stages | File Ownership              |
+| ----------------------- | ------ | --------------------------- |
+| protocol-architect      | 00-01  | `01_protocol/**`            |
+| search-specialist       | 02     | `02_search/**`              |
+| screener-a / screener-b | 03     | `03_screening/**`           |
+| fulltext-manager        | 04     | `04_fulltext/**`            |
+| data-extractor          | 05     | `05_extraction/**`          |
+| statistician            | 06     | `06_analysis/**`            |
+| manuscript-writer       | 07     | `07_manuscript/**`          |
+| qa-auditor              | 08-09  | `08_reviews/**`, `09_qa/**` |
 
 ---
 
