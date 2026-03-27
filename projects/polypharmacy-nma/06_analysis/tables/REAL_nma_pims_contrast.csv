@@ -1,0 +1,7 @@
+study,treat1,treat2,TE,seTE,setting,region,pmid
+Hellemans2026,Pharmacist,UC,-0.85,0.15,Institutionalized,European,41619153
+McCarthy2022,Deprescribing,UC,-0.941608539858445,0.516423919514492,Community,European,34986166
+Cateau2021,Pharmacist,UC,-0.27049724769768,0.12746232733874122,Institutionalized,European,34798826
+Kua2020,MDT,UC,-0.3285040669720361,0.11933883639854594,Institutionalized,Asian,32423694
+Niquille2021,MDT,UC,-0.12783337150988489,0.08681780763704157,Institutionalized,European,33933030
+Streit2023,CDSS,UC,0.04879016416943205,0.29427836044613964,Community,European,37225248

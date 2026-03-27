@@ -1,0 +1,11 @@
+Treatment,Pscore,Label,Rank,Region
+UC,0.9824,Usual Care,1,European
+Deprescribing,0.5918,Deprescribing,2,European
+Pharmacist,0.4769,Pharmacist-led,3,European
+CDSS,0.2769,CDSS,4,European
+MDT,0.1719,MDT,5,European
+UC,0.9634,Usual Care,1,Asian
+Deprescribing,0.5263,Deprescribing,2,Asian
+Pharmacist,0.4047,Pharmacist-led,3,Asian
+MDT,0.3068,MDT,4,Asian
+CDSS,0.2989,CDSS,5,Asian

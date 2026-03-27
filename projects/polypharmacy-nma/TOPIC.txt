@@ -1,0 +1,73 @@
+# Meta-Analysis Topic
+# Generated: 2026-03-27
+# Type: Network Meta-Analysis (NMA)
+
+## Research Question
+Which polypharmacy management intervention most effectively reduces falls and
+unplanned hospitalizations in older adults? A network meta-analysis comparing
+pharmacist-led reviews, clinical decision support systems (CDSS), multidisciplinary
+team (MDT) programs, physician-led deprescribing, and usual care.
+
+## PICO Elements
+
+**Population**: Older adults (≥65 years) receiving ≥5 medications (polypharmacy)
+  - Subgroup: Institutionalized (nursing home / long-term care) vs. Community-dwelling
+**Intervention (Nodes)**:
+  1. Pharmacist-led medication review (Pharmacist)
+  2. Computerized / electronic clinical decision support system (CDSS)
+  3. Multidisciplinary team (MDT) — includes pharmacist + physician + nurse
+  4. Physician-led deprescribing (Deprescribing)
+  5. Usual care (UC) — network reference node
+**Comparator**: Usual care (UC) and all pairwise comparisons
+**Outcomes**:
+  - PRIMARY  (NMA-1): Falls rate / incidence — RR or IRR
+  - PRIMARY  (NMA-1): Hospitalization rate — RR or IRR
+  - SECONDARY (NMA-2): PIMs reduction — RR or MD (count or proportion)
+    - Subgroup: European studies vs. Asian studies
+
+## Study Design
+- Randomized controlled trials (RCTs) and cluster-RCTs
+- Minimum 3 months follow-up
+- Exclude: single-drug interventions, non-elderly populations, no control arm
+
+## Network Nodes (5 Treatments)
+| Label        | Full Name                                     |
+|--------------|-----------------------------------------------|
+| Pharmacist   | Pharmacist-led medication review / CMR        |
+| CDSS         | Computerized decision support system          |
+| MDT          | Multidisciplinary team program                |
+| Deprescribing| Physician-led systematic deprescribing        |
+| UC           | Usual care (reference)                        |
+
+## Expected Network Geometry
+- Moderately connected (not star-shaped)
+- Most trials compare single intervention vs. UC
+- Some trials may compare MDT vs. Pharmacist or CDSS
+- Estimated studies: 20–40 RCTs
+
+## Analysis Plan
+
+### NMA-1: Falls & Hospitalization
+- Effect measure: RR (binary outcomes) or IRR (rate outcomes)
+- Model: Bayesian (gemtc primary) + Frequentist (netmeta sensitivity)
+- Heterogeneity threshold: I² > 50% → automatic subgroup analysis
+  - Subgroup A: Institutionalized elderly (nursing home, LTCF)
+  - Subgroup B: Community-dwelling elderly
+- Output: Network plot, SUCRA table, rankogram, league table, forest plots
+
+### NMA-2: PIMs Reduction
+- Effect measure: RR (proportion of patients with ≥1 PIM reduced)
+- Stratified analysis: European studies vs. Asian studies
+- Same Bayesian framework as NMA-1
+- PIM criteria: Beers (North America), STOPP/START (Europe), Screening Tool of
+  Older Persons' potentially inappropriate Prescriptions (STOPP) for Asia where
+  applicable
+
+## Heterogeneity Management
+- I² < 25%: Fixed-effects or consistency model
+- I² 25–50%: Random-effects, flag moderate heterogeneity
+- I² > 50%: Trigger subgroup analysis (setting for NMA-1; region for NMA-2)
+- Node-splitting for inconsistency assessment
+
+## Status: Ready for literature search
+## Created: 2026-03-27

@@ -1,0 +1,72 @@
+project: polypharmacy-nma
+created: "2026-03-27"
+analysis_type: nma
+
+pico:
+  population:
+    description: "Older adults aged ≥65 years with polypharmacy (≥5 medications)"
+    subgroups:
+      - label: Institutionalized
+        definition: "Nursing home, long-term care facility, residential care"
+      - label: Community
+        definition: "Community-dwelling, outpatient, primary care"
+  interventions:
+    - id: Pharmacist
+      label: "Pharmacist-led medication review"
+      aliases: ["CMR", "comprehensive medication review", "pharmacist intervention",
+                "clinical pharmacist", "pharmacist-led", "medication reconciliation"]
+    - id: CDSS
+      label: "Computerized decision support system"
+      aliases: ["CDSS", "electronic alert", "clinical decision support",
+                "computer-generated alert", "IT-based intervention", "e-prescribing alert"]
+    - id: MDT
+      label: "Multidisciplinary team program"
+      aliases: ["MDT", "interprofessional", "multidisciplinary", "team-based",
+                "collaborative care", "geriatric assessment team"]
+    - id: Deprescribing
+      label: "Physician-led deprescribing"
+      aliases: ["deprescribing", "physician review", "GP medication review",
+                "physician-led", "medication discontinuation", "STOPP-guided"]
+    - id: UC
+      label: "Usual care"
+      aliases: ["usual care", "standard care", "control", "no intervention"]
+  comparator: "Usual care (UC) — primary reference node"
+  outcomes:
+    primary:
+      - id: falls
+        label: "Falls rate / incidence"
+        measure: "RR or IRR"
+        direction: "lower is better"
+      - id: hospitalization
+        label: "Unplanned hospitalization"
+        measure: "RR or IRR"
+        direction: "lower is better"
+    secondary:
+      - id: PIMs
+        label: "Potentially Inappropriate Medications (PIMs) reduction"
+        measure: "RR or MD"
+        direction: "lower is better"
+        subgroup_analysis:
+          - variable: region
+            levels: [European, Asian]
+  study_design:
+    include: ["RCT", "cluster-RCT"]
+    exclude: ["observational", "before-after", "single-arm", "quasi-experimental"]
+    min_followup_months: 3
+
+network:
+  reference_node: UC
+  expected_nodes: 5
+  expected_studies: 20-40
+  geometry: "Moderately connected; mostly star-shaped with some direct comparisons"
+
+analysis:
+  primary_framework: Bayesian
+  package_primary: gemtc
+  package_sensitivity: netmeta
+  heterogeneity_threshold_subgroup: 0.50  # I² > 50% triggers subgroup analysis
+  mcmc:
+    n_adapt: 5000
+    n_iter: 50000
+    thin: 10
+    n_chains: 4

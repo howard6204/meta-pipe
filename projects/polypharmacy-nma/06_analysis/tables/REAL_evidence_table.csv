@@ -1,0 +1,9 @@
+Study,PMID,Node,Region,Setting,Falls,Hosp,PIMs
+Lapane 2011,21649623,Pharmacist,NorthAmerican,Institutionalized,HR 0.89 (0.72–1.09),~HR 0.92 (est),Not reported
+Che 2024,39078632,MDT,Asian,Institutionalized,HR 0.86 (0.56–1.32),HR 0.96 (0.70–1.32),OR 0.56 (0.33–0.94)
+McCarthy 2022,34986166,Deprescribing,European,Community,IRR 0.95 (0.90–1.00),Not primary,OR 0.39 (0.14–1.06)
+Niquille 2021 QC-DeMo,33933030,MDT,European,Institutionalized,No sig diff,No sig diff,Trend reduction
+Kua 2020,32423694,MDT,Asian,Institutionalized,Not primary,HR 0.16 (0.10–0.26),Reduced (Beers/STOPP)
+Hellemans 2026 ASPIRE,41619153,Pharmacist,European,Institutionalized,Not reported,Not primary,β=-0.85 (p<0.0001)
+Cateau 2021 IDeI,34798826,Pharmacist,European,Institutionalized,Not reported,Not reported,IRR 0.763 (0.594–0.979)
+Streit 2023 OPTICA,37225248,CDSS,European,Community,Not reported,Not reported,No sig diff

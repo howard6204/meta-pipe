@@ -1,0 +1,6 @@
+Treatment,Pscore,Label,Rank
+Deprescribing,0.8702,Physician Deprescribing,1
+Pharmacist,0.758,Pharmacist-led,2
+MDT,0.4626,MDT,3
+CDSS,0.2237,CDSS,4
+UC,0.1855,Usual Care,5
