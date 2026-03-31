@@ -1,0 +1,122 @@
+# Meta-Analysis Topic
+# Generated: 2026-03-28
+# Feasibility: Quick-check PASSED (14+ RCTs, clear gap, no competing NMA found)
+
+## Research Question
+What is the comparative efficacy and safety of all currently available and
+investigational HIV pre-exposure prophylaxis (PrEP) interventions — including
+oral agents, long-acting injectables, and the dapivirine vaginal ring — versus
+placebo or active comparator among HIV-uninfected adults at risk of HIV
+acquisition, as assessed by network meta-analysis?
+
+## PICO Elements
+
+**Population**: HIV-uninfected adults (aged >=18) at risk of HIV-1 acquisition,
+including cisgender men who have sex with men (MSM), transgender women (TGW),
+transgender men, non-binary individuals, cisgender women, and heterosexual
+serodiscordant couples; any geographic setting.
+
+**Interventions** (all active arms to be included as NMA nodes):
+1. TDF/FTC - tenofovir disoproxil fumarate/emtricitabine (daily oral) [approved]
+2. TAF/FTC - tenofovir alafenamide/emtricitabine (daily oral) [approved]
+3. TDF monotherapy (daily oral) [approved, comparator arm in Partners PrEP]
+4. TDF/FTC on-demand (2-1-1 event-driven oral) [approved in some jurisdictions]
+5. CAB-LA - long-acting injectable cabotegravir (bimonthly/every 2 months) [approved]
+6. Lenacapavir injectable (twice-yearly subcutaneous) [FDA-approved June 2025]
+7. Dapivirine vaginal ring (monthly intravaginal ring) [EMA-approved; not FDA-approved]
+8. Placebo / no active PrEP (standard of care + risk counseling)
+
+**Comparator**: Placebo (blinded), active comparator (open-label or blinded), or
+standard HIV prevention services only; network will link arms via common comparators.
+
+**Outcomes**:
+- Primary: HIV-1 incidence (confirmed new infections per 100 person-years at risk)
+- Secondary:
+  * Grade 3/4 adverse events (any)
+  * Serious adverse events (SAEs)
+  * Discontinuation due to adverse events
+  * Adherence/drug exposure (drug levels where measured)
+  * Drug resistance among incident infections
+
+## Study Design
+Randomized controlled trials (RCTs) only.
+- Phase 2b, Phase 3, and Phase 3b/4 trials eligible
+- Open-label and blinded designs eligible
+- Minimum follow-up: 24 weeks
+- No language restriction
+
+## Network Structure (Expected Edges)
+- Placebo ↔ TDF/FTC: iPrEx, TDF2, FEM-PrEP, VOICE, Partners PrEP
+- Placebo ↔ TDF: Partners PrEP, VOICE
+- Placebo ↔ Dapivirine ring: ASPIRE (MTN-020), Ring Study (IPM 027)
+- TDF/FTC ↔ TAF/FTC: DISCOVER
+- TDF/FTC ↔ CAB-LA: HPTN 083, HPTN 084
+- TDF/FTC ↔ Lenacapavir: PURPOSE 2; TAF/FTC ↔ Lenacapavir: PURPOSE 1
+- TDF/FTC (on-demand) ↔ Placebo: IPERGAY
+- Open-label TDF/FTC ↔ Deferred: PROUD
+
+## Feasibility Notes (from brainstorming 2026-03-28)
+- Estimated RCTs: ~14 eligible trials (likely 12-16 after full screening)
+- Existing NMAs: None found comparing ALL modalities for efficacy
+  (existing NMAs focus on adherence interventions only)
+- Heterogeneity risk: MODERATE
+  * Populations: MSM, women, heterosexual couples (plan subgroup analysis)
+  * Comparators: Placebo and active comparator (address via NMA design)
+  * Adherence confounding: FEM-PrEP/VOICE showed no efficacy due to non-adherence
+    (include sensitivity analysis excluding adherence-confounded trials)
+- Outcome reporting: EXCELLENT (all trials report HIV incidence as primary)
+- Data extractability: EXCELLENT (binary outcome, events/person-time available)
+
+## Analysis Type
+**NMA (Network Meta-Analysis)**
+Justification: >=3 distinct intervention nodes with connected comparisons.
+Approach: Bayesian random-effects NMA (gemtc/BUGSnet or frequentist netmeta)
+Geometry: Star + loop network via TDF/FTC as central node
+
+## Planned Subgroup / Sensitivity Analyses
+1. By population (MSM/TGW vs. women vs. heterosexual)
+2. By adherence (exclude trials with confirmed non-adherence: FEM-PrEP, VOICE)
+3. By risk of bias (low vs. high)
+4. By blinding (double-blind vs. open-label)
+5. Node-splitting for inconsistency assessment
+
+## Potential Challenges
+1. Populations differ substantially across trials (MSM vs women)
+   → Mitigation: Subgroup NMA by sex/risk group; transitivity assumption testing
+2. Adherence confounding (FEM-PrEP, VOICE) may distort placebo-arm rates
+   → Mitigation: Primary analysis per-protocol or sensitivity excluding these
+3. PROUD uses deferred (not placebo) as control - indirect comparison only
+   → Mitigation: Include as observational note; exclude from primary NMA
+4. On-demand vs daily TDF/FTC differ pharmacologically
+   → Mitigation: Treat as separate node
+5. Lenacapavir PURPOSE 1 had NO events in active arm — RR = 0
+   → Mitigation: Use incidence rate ratio (Poisson) or use continuity correction
+
+## Search Strategy Notes
+- Databases: PubMed/MEDLINE, Embase, Cochrane CENTRAL, ClinicalTrials.gov,
+  WHO ICTRP, conference abstracts (IAS/CROI/AIDS)
+- Date range: 2000-2026 (modern PrEP era)
+- Language: All languages
+- Key MeSH terms: "Pre-Exposure Prophylaxis", "HIV Infections/prevention",
+  "Tenofovir", "Emtricitabine", "Cabotegravir", "Lenacapavir", "Dapivirine"
+
+## Key References (Anchor Studies)
+- iPrEx: Grant et al. NEJM 2010; 363:2587-99 [TDF/FTC vs placebo, MSM]
+- Partners PrEP: Baeten et al. NEJM 2012; 367:399-410 [TDF/TDF-FTC, heterosexual]
+- TDF2: Thigpen et al. NEJM 2012; 367:423-34 [TDF/FTC, Botswana]
+- FEM-PrEP: Van Damme et al. NEJM 2012; 367:411-22 [TDF/FTC, women — futile]
+- VOICE: Marrazzo et al. NEJM 2015; 372:509-18 [TDF/TDF-FTC, women — futile]
+- IPERGAY: Molina et al. NEJM 2015; 373:2237-46 [on-demand TDF/FTC]
+- PROUD: McCormack et al. Lancet 2016; 387:53-60 [open-label TDF/FTC]
+- ASPIRE: Baeten et al. NEJM 2016; 375:2121-32 [dapivirine ring]
+- Ring Study: Nel et al. NEJM 2016; 375:2133-43 [dapivirine ring]
+- DISCOVER: Mayer et al. Lancet 2020; 396:215-26 [TAF/FTC]
+- HPTN 083: Landovitz et al. Lancet 2021; 397:1493-505 [CAB-LA, MSM/TGW]
+- HPTN 084: Delany-Moretlwe et al. Lancet 2022; 399:1779-89 [CAB-LA, women]
+- PURPOSE 1: Bekker et al. NEJM 2024 [lenacapavir, women]
+- PURPOSE 2: Ogbuagu et al. NEJM 2024 [lenacapavir, MSM/TGW/NB]
+
+---
+**Status**: Ready for Stage 02 (search) and Stage 05 (data extraction)
+**Analysis type confirmed**: NMA
+**Created**: 2026-03-28

@@ -132,5 +132,7 @@ projects/*
 !projects/.gitkeep
 !projects/ici-breast-cancer/
 !projects/dlbcl-frontline-nma/
+!projects/hiv-prep-nma/
+!projects/polypharmacy-nma/
 !projects/legacy/README.md
 worktrees/

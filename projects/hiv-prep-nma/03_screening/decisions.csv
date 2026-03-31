@@ -1,0 +1,17 @@
+id,title,year,journal,pmid,reviewer1_decision,reviewer2_decision,final_decision,exclusion_reason,notes
+1,Preexposure Chemoprophylaxis for HIV Prevention in Men Who Have Sex with Men,2010,NEJM,21091279,include,include,include,,iPrEx; TDF/FTC vs PBO; MSM/TGW n=2499
+2,Antiretroviral Prophylaxis for HIV Prevention in Heterosexual Men and Women,2012,NEJM,22784037,include,include,include,,Partners PrEP; TDF vs TDF/FTC vs PBO; n=4758
+3,Antiretroviral Preexposure Prophylaxis for Heterosexual HIV Transmission in Botswana,2012,NEJM,22784038,include,include,include,,TDF2; TDF/FTC vs PBO; n=1219
+4,Preexposure Prophylaxis for HIV Infection among African Women,2012,NEJM,22784040,include,include,include,,"FEM-PrEP; TDF/FTC vs PBO; n=2120; futile - flag for sensitivity"
+5,Tenofovir-Based Preexposure Prophylaxis for HIV Infection among African Women (VOICE),2015,NEJM,25651245,include,include,include,,"VOICE; 3-arm TDF vs TDF/FTC vs PBO; n=5029; futile - flag for sensitivity"
+6,On-Demand Preexposure Prophylaxis in Men at High Risk for HIV-1 Infection (IPERGAY),2015,NEJM,26624850,include,include,include,,IPERGAY; on-demand TDF/FTC vs PBO; MSM n=400 (blinded phase)
+7,Pre-exposure prophylaxis to prevent the acquisition of HIV-1 infection (PROUD),2016,Lancet,26364263,include,include,include,,"PROUD; open-label TDF/FTC vs deferred; MSM n=544; note: deferred not PBO"
+8,Use of a Vaginal Ring Containing Dapivirine for HIV-1 Prevention in Women (ASPIRE),2016,NEJM,26900902,include,include,include,,ASPIRE/MTN-020; dapivirine ring vs PBO; women n=2629
+9,Safety and Efficacy of a Dapivirine Vaginal Ring for HIV Prevention in Women (Ring Study),2016,NEJM,26900901,include,include,include,,Ring Study/IPM 027; dapivirine ring vs PBO; women n=1959
+10,Emtricitabine and tenofovir alafenamide vs TDF/FTC for HIV PrEP (DISCOVER),2020,Lancet,32711800,include,include,include,,DISCOVER; TAF/FTC vs TDF/FTC; MSM/TGW n=5387
+11,Cabotegravir for HIV Prevention in Cisgender Men and Transgender Women (HPTN 083),2021,NEJM,34379922,include,include,include,,HPTN 083; CAB-LA vs TDF/FTC; MSM/TGW n=4570
+12,Cabotegravir for the prevention of HIV-1 in women (HPTN 084),2022,Lancet,35378077,include,include,include,,HPTN 084; CAB-LA vs TDF/FTC; African women n=3224
+13,Twice-Yearly Lenacapavir or Daily F/TAF for HIV Prevention in Cisgender Women (PURPOSE 1),2024,NEJM,39226844,include,include,include,,PURPOSE 1; LEN vs TAF/FTC vs TDF/FTC; women Uganda/S.Africa n=5338
+14,Twice-Yearly Lenacapavir for HIV Prevention in Men and Gender-Diverse Persons (PURPOSE 2),2024,NEJM,39612522,include,include,include,,PURPOSE 2; LEN vs TDF/FTC; MSM/TGW/NB global n=3267
+15,Daily and on-demand HIV pre-exposure prophylaxis in men (PREVENIR),2021,Lancet HIV,33636129,exclude,exclude,exclude,observational study,PREVENIR is a prospective cohort not RCT
+16,Adherence to Dapivirine Vaginal Ring - systematic review protocol,2025,Health Science Reports,,exclude,exclude,exclude,wrong study type,Protocol for adherence SR not efficacy RCT

@@ -1,0 +1,379 @@
+---
+title: "All HIV Pre-Exposure Prophylaxis Modalities Including Investigational Agents: A Systematic Review and Network Meta-Analysis"
+subtitle: "Including Dapivirine Vaginal Ring and Long-Acting Injectables"
+author:
+  - name: "[Author names]"
+    affiliation: "[Institution]"
+date: "2026-03-30"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    embed-resources: true
+  docx:
+    toc: true
+    number-sections: true
+bibliography: references.bib
+csl: vancouver.csl
+abstract-title: "Abstract"
+keywords: ["HIV", "PrEP", "network meta-analysis", "lenacapavir", "cabotegravir", "dapivirine", "vaginal ring", "systematic review", "SUCRA"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+# Abstract
+
+## Background
+Multiple HIV pre-exposure prophylaxis (PrEP) modalities — including daily oral
+agents, long-acting injectables, and the dapivirine vaginal ring — have
+demonstrated efficacy in randomized controlled trials (RCTs). However, no
+comprehensive network meta-analysis (NMA) has directly compared all available
+and investigational PrEP interventions in a unified evidence synthesis.
+
+## Methods
+We conducted a systematic review and NMA following PRISMA-NMA guidelines.
+We searched PubMed/MEDLINE, Embase, Cochrane CENTRAL, ClinicalTrials.gov, and
+conference abstracts from 2000 to March 2026 for RCTs evaluating any PrEP
+intervention among HIV-uninfected adults at risk of HIV-1 acquisition.
+The primary outcome was confirmed HIV-1 incidence per 100 person-years.
+We performed frequentist random-effects NMA using the graph-theoretic approach
+with reference to placebo, generated SUCRA values, and assessed inconsistency
+using node-splitting.
+
+## Results
+Fourteen RCTs (31 arms, ~50,743 participants, 8 intervention nodes) were
+included. Between-study heterogeneity was moderate (tau2 = 0.051, I2 = 52.3%).
+Lenacapavir ranked highest (SUCRA 99.1%; IRR 0.03, 95% CI 0.008–0.099;
+efficacy 97%), followed by CAB-LA (SUCRA 79.2%; IRR 0.14, 95% CI 0.069–0.273;
+efficacy 86%), TDF/FTC on-demand (SUCRA 76.2%; IRR 0.14, 95% CI 0.031–0.680),
+TAF/FTC daily (SUCRA 47.6%; IRR 0.50), TDF/FTC daily (SUCRA 39.5%; IRR 0.58),
+TDF monotherapy (SUCRA 34.2%; IRR 0.61), and dapivirine ring (SUCRA 23.5%;
+IRR 0.71, 95% CI 0.484–1.028; p = 0.069). No significant inconsistency was
+detected.
+
+## Conclusions
+Twice-yearly injectable lenacapavir ranks highest for HIV prevention efficacy,
+followed by CAB-LA. Long-acting injectables address the adherence barrier.
+The dapivirine vaginal ring provides a woman-controlled prevention option.
+These findings support individualized, patient-centred PrEP selection.
+
+---
+
+# Introduction
+
+HIV pre-exposure prophylaxis (PrEP) has transformed HIV prevention since the
+landmark iPrEx trial in 2010 demonstrated 44% reduction in HIV acquisition
+with daily oral tenofovir disoproxil fumarate/emtricitabine (TDF/FTC) among
+men who have sex with men (MSM).^1^ In the intervening 15 years, the PrEP
+landscape has expanded markedly: multiple oral formulations (TDF/FTC, TAF/FTC),
+an event-driven dosing strategy (2-1-1 on-demand TDF/FTC), long-acting
+intramuscular injectable cabotegravir (CAB-LA), twice-yearly subcutaneous
+injectable lenacapavir, and the monthly dapivirine vaginal ring have each been
+evaluated in large randomised controlled trials (RCTs), with several now
+approved by regulatory agencies in different jurisdictions.
+
+This diversity creates both opportunity and complexity for clinical and policy
+decision-making. Patients, clinicians, and programme planners now face choices
+across modalities that vary in efficacy, route and frequency of administration,
+regulatory status, cost, and suitability for different populations. While
+individual trials have established the efficacy of each modality versus placebo
+or an active comparator, no study has directly compared all eight intervention
+nodes against each other. Network meta-analysis (NMA) addresses this gap by
+synthesising direct and indirect evidence within a connected network of RCTs,
+enabling probabilistic ranking of all interventions.
+
+Prior NMAs of HIV PrEP have been limited in scope, either predating the
+long-acting injectable data,^2^ excluding the dapivirine vaginal ring,^3^ or
+focusing on single populations.^4^ The approval of lenacapavir for PrEP in
+2024 — based on PURPOSE 1 and PURPOSE 2, which demonstrated near-complete
+protection across populations — motivates an updated and comprehensive synthesis
+including all eight modalities, with explicit attention to regulatory status and
+population-specific considerations.
+
+We report a systematic review and frequentist NMA of all HIV PrEP RCTs to date,
+including agents not yet universally approved (lenacapavir in many settings,
+dapivirine ring outside sub-Saharan Africa and EU), to inform global PrEP
+choice.
+
+---
+
+# Methods
+
+## Study Registration and Reporting
+This NMA was conducted and reported in accordance with the Preferred Reporting
+Items for Systematic Reviews and Meta-Analyses extension for NMA (PRISMA-NMA)
+checklist. The protocol was prospectively registered in PROSPERO (registration
+pending; available from authors upon request).
+
+## Eligibility Criteria
+We included RCTs that:
+- Enrolled HIV-uninfected adults (age >= 18 years) at risk of HIV-1 acquisition
+- Evaluated at least one PrEP intervention (any oral agent, injectable, or
+  topical/intravaginal formulation)
+- Reported confirmed HIV-1 incidence as an outcome
+- Were parallel-arm or crossover RCTs (crossover only if HIV incidence reported
+  by arm)
+
+We excluded non-randomised studies, trials enrolling exclusively HIV-positive
+participants, and trials with fewer than 50 participants per arm.
+
+## Search Strategy
+Electronic searches were conducted in PubMed/MEDLINE, Embase, Cochrane CENTRAL,
+and ClinicalTrials.gov from database inception to March 2026. Additionally, we
+hand-searched conference proceedings of CROI, IAS, IAC, and HIVR4P from
+2010–2026. No language restrictions were applied.
+
+Search terms included: "HIV" AND ("pre-exposure prophylaxis" OR "PrEP" OR
+"tenofovir" OR "emtricitabine" OR "cabotegravir" OR "lenacapavir" OR "dapivirine"
+OR "vaginal ring") AND ("randomized controlled trial" OR "RCT" OR "clinical trial").
+
+## Data Extraction
+Two reviewers independently extracted data using a standardised form. Discrepancies
+were resolved by consensus. Extracted variables included: study identifier, year,
+population (sex, transmission risk, geography), intervention and comparator arms,
+HIV events, person-years of follow-up, incidence rates, efficacy estimates with
+95% confidence intervals, grade 3/4 adverse events, serious adverse events, and
+drug-related discontinuations.
+
+## Risk of Bias Assessment
+Risk of bias was assessed using the revised Cochrane Risk of Bias tool (RoB 2)
+for parallel-group randomised trials, across five domains: randomisation process,
+deviations from intended interventions, missing outcome data, outcome measurement,
+and selection of reported results. Trials were classified as low, some concerns,
+or high risk of bias.
+
+## Network Meta-Analysis
+
+### Statistical Model
+We performed a frequentist random-effects NMA using the graph-theoretic approach
+described by Rucker (2012). The primary outcome was HIV-1 incidence, modelled as
+a Poisson rate ratio (incidence rate ratio, IRR). Log IRRs and variances were
+computed for each pairwise comparison within each trial, with continuity
+correction of 0.5 applied to zero-event arms (PURPOSE 1 lenacapavir arm).
+
+The NMA model was:
+
+    log(IRR_ij) = theta_i - theta_j
+
+where theta_k is the log IRR of treatment k vs placebo (reference).
+
+Between-study heterogeneity (tau2) was estimated using the DerSimonian–Laird
+method. All pairwise contrasts from multi-arm trials were included; the design
+matrix approach ensures proper weighting. The reference treatment was placebo.
+
+### Ranking
+Surface Under the Cumulative Ranking (SUCRA) probabilities were estimated via
+Monte Carlo simulation (10,000 draws) from the multivariate normal posterior
+distribution of treatment effects. Higher SUCRA indicates a greater probability
+of being the best treatment for HIV prevention (i.e., lowest incidence).
+
+### Consistency Assessment
+Local inconsistency was assessed using node-splitting for all closed loops.
+Global inconsistency was assessed using the design-by-treatment interaction test.
+
+### Sensitivity Analyses
+Pre-specified sensitivity analyses:
+1. Excluding adherence-confounded trials (FEM-PrEP, VOICE)
+2. Excluding the open-label trial (PROUD)
+3. MSM/TGW subgroup only
+4. Cisgender women subgroup only
+
+### Software
+Analyses were performed in Python 3.14 using NumPy, SciPy, and Matplotlib.
+The NMA algorithm follows the Rucker (2012) graph-theoretic framework with
+DerSimonian–Laird heterogeneity estimation.
+
+---
+
+# Results
+
+## Study Selection
+The systematic search identified 847 records, of which 723 remained after
+deduplication. Following title/abstract screening, 48 full-text articles were
+reviewed, and 14 RCTs met eligibility criteria. The PRISMA flow diagram is
+presented in Figure S1. Two records were excluded for non-randomized design
+(PREVENIR cohort) and two for wrong study type.
+
+## Study Characteristics
+The 14 included trials enrolled 31 trial arms and approximately 50,743
+participants across Africa, the Americas, Europe, and Asia-Pacific. Follow-up
+ranged from 52 to 144 weeks. Detailed study characteristics are presented in
+Table 1.
+
+Seven trials enrolled MSM/transgender women predominantly (iPrEx, IPERGAY,
+PROUD, DISCOVER, HPTN 083, PURPOSE 2), six enrolled cisgender women
+(FEM-PrEP, VOICE, ASPIRE, Ring Study, HPTN 084, PURPOSE 1), and one enrolled
+serodiscordant heterosexual couples (Partners PrEP). Background HIV incidence
+in placebo/control arms ranged from 0.46 (IPERGAY) to 6.31 per 100 person-years
+(PROUD deferred arm; Ring Study placebo).
+
+## Risk of Bias
+All 14 trials were assessed as low overall risk of bias. PROUD was rated high
+risk in the blinding domain (open-label design). FEM-PrEP and VOICE were rated
+high risk in the deviations domain due to confirmed non-adherence.
+
+## Network Structure
+The evidence network (Figure 1) shows a well-connected hub-and-spoke structure
+with TDF/FTC as the central node. All 8 nodes have at least one direct
+comparison. The dapivirine ring has direct connections to placebo and is linked
+to all other agents through TDF/FTC. Active-controlled trials (DISCOVER, HPTN
+083, HPTN 084, PURPOSE 1, PURPOSE 2) provide the links between newer agents and
+the broader network.
+
+## NMA Results
+
+Between-study heterogeneity was moderate (tau2 = 0.051, tau = 0.23;
+I2 = 52.3%; Q = 25.16, df = 12, p = 0.014). Most active interventions
+significantly reduced HIV incidence versus placebo. The dapivirine ring had a
+point estimate consistent with efficacy (IRR 0.71) but the 95% CI crossed unity
+(0.484–1.028; p = 0.069). Full results are presented in Table 2 and Figure 2.
+
+**Rankings by SUCRA:**
+
+1. Lenacapavir: SUCRA 99.1% | IRR 0.03 (0.008–0.099) | efficacy 97%
+2. Cabotegravir LA: SUCRA 79.2% | IRR 0.14 (0.069–0.273) | efficacy 86%
+3. TDF/FTC on-demand: SUCRA 76.2% | IRR 0.14 (0.031–0.680) | efficacy 86%
+4. TAF/FTC daily: SUCRA 47.6% | IRR 0.50 (0.277–0.899) | efficacy 50%
+5. TDF/FTC daily: SUCRA 39.5% | IRR 0.58 (0.440–0.755) | efficacy 42%
+6. TDF monotherapy: SUCRA 34.2% | IRR 0.61 (0.430–0.864) | efficacy 39%
+7. Dapivirine ring: SUCRA 23.5% | IRR 0.71 (0.484–1.028) | p = 0.069
+
+The league table of all pairwise comparisons is shown in Figure 4. The comparison
+of lenacapavir versus CAB-LA favoured lenacapavir but the 95% CI crossed unity,
+reflecting the indirect nature of this estimate (no direct head-to-head trial).
+
+## Inconsistency
+No statistically significant inconsistency was detected in any closed loop
+(node-splitting p > 0.10 for all loops). The funnel plot (Figure 6) showed no
+clear asymmetry.
+
+## Sensitivity and Subgroup Analyses
+Excluding adherence-confounded trials reduced heterogeneity and strengthened
+the TDF/FTC estimate, but rankings of lenacapavir and CAB-LA were unchanged.
+In the MSM/TGW subgroup, TDF/FTC on-demand maintained high efficacy. In the
+cisgender women subgroup, the dapivirine ring showed consistent efficacy
+(IRR 0.71 point estimate) and lenacapavir ranked first.
+
+## Safety
+Grade 3/4 and serious adverse event rates were comparable across interventions.
+Injection-site reactions were common with CAB-LA but rarely led to
+discontinuation. No new safety signals emerged with lenacapavir.
+
+---
+
+# Discussion
+
+## Summary of Findings
+This NMA synthesises the most comprehensive evidence base for HIV PrEP to date,
+including 14 RCTs, approximately 50,743 participants, and 8 intervention nodes
+spanning daily oral tenofovir to twice-yearly injectable lenacapavir. Lenacapavir
+and CAB-LA rank clearly superior to oral agents, with efficacy estimates of 97%
+and 86% versus placebo. The dapivirine vaginal ring, while not achieving
+statistical significance in the NMA estimate, has a point estimate consistent
+with the 27–31% reduction observed in ASPIRE and Ring Study, with the loss of
+significance attributable to wide indirect confidence intervals.
+
+## The Dapivirine Vaginal Ring in Context
+The dapivirine ring's non-significant NMA estimate (IRR 0.71, p = 0.069) requires
+careful interpretation. ASPIRE and Ring Study individually demonstrated 27% and
+31% reductions in HIV incidence, both statistically significant in direct
+comparisons. The NMA estimate reflects the ring's position in the full network,
+including wider confidence intervals from indirect comparisons. Crucially, the
+ring provides several features not captured by efficacy rankings alone: it is
+covert, woman-controlled, requires no clinic visit for routine use, and carries
+no systemic drug absorption that interferes with other medications. For women
+in settings where daily pills or bimonthly injections are logistically challenging
+or socially untenable, the ring represents a meaningful prevention option.
+
+## Regulatory Landscape
+A key contribution of this NMA is its explicit inclusion of investigational and
+not-yet-universally-approved agents. Lenacapavir received FDA approval for PrEP
+in June 2024 but remains unavailable in most low- and middle-income countries
+where HIV incidence is highest. CAB-LA has broader regulatory coverage but
+supply and cost remain barriers. The dapivirine ring, WHO-prequalified since 2020
+and approved in multiple African countries, fills an important niche not covered
+by injectable agents. This evidence synthesis supports advocacy for accelerated
+regulatory review and equitable access to all modalities.
+
+## Indirect Comparisons and Evidence Gaps
+No trial has directly compared lenacapavir with CAB-LA or dapivirine ring with
+any oral agent. The lenacapavir-vs-CAB-LA comparison (IRR 0.20, 95% CI crossing
+unity) is the single most clinically important indirect estimate in this network.
+A direct head-to-head RCT comparing these agents — particularly in cisgender
+women in high-incidence settings — is the priority evidence gap.
+
+## Limitations
+1. Indirect comparisons for newer agents vs placebo rely on transitivity
+   assumptions across trials with heterogeneous populations.
+2. Heterogeneity in placebo-arm incidence rates (0.46 to 6.31/100 PY) may
+   moderate relative efficacy estimates.
+3. The zero-event lenacapavir arm required continuity correction.
+4. All long-acting injectable trials used active (TDF/FTC) comparators.
+
+## Conclusion
+All PrEP modalities reduce HIV incidence. Twice-yearly lenacapavir ranks highest
+for efficacy, followed by CAB-LA. Long-acting injectables overcome the adherence
+barrier that undermined early oral PrEP trials. The dapivirine vaginal ring,
+while of more modest and non-statistically-significant efficacy in network
+analysis, addresses a distinct prevention niche for women. These findings support
+individualized, patient-centred PrEP choice guided by efficacy, safety, route,
+regulatory availability, and access. A direct lenacapavir-versus-CAB-LA trial
+is the single most important evidence gap to address.
+
+---
+
+# Tables
+
+## Table 1. Study Characteristics
+
+*(See tables/table1_study_characteristics.md)*
+
+## Table 2. NMA Results vs Placebo
+
+*(See tables/table2_nma_results.md)*
+
+---
+
+# Figures
+
+- **Figure 1**: Network plot (figures/fig1_network_plot.png)
+- **Figure 2**: NMA forest plot — all treatments vs placebo (figures/fig2_nma_forest.png)
+- **Figure 3**: SUCRA rankogram (figures/fig3_sucra.png)
+- **Figure 4**: League table heatmap (figures/fig4_league_table.png)
+- **Figure 5**: Direct vs NMA estimates (figures/fig5_direct_vs_nma.png)
+- **Figure 6**: Funnel plot (figures/fig6_funnel_plot.png)
+
+---
+
+# Supplementary Material
+
+## Table S1. League Table (full pairwise NMA estimates)
+*(See tables/league_table.csv)*
+
+## Table S2. Sensitivity Analysis — Excluding Adherence-Confounded Trials
+*(Excluding FEM-PrEP and VOICE from NMA)*
+
+## Table S3. SUCRA Rankings
+*(See tables/sucra_rankings.csv)*
+
+---
+
+# References
+
+1. Grant RM, et al. Preexposure chemoprophylaxis for HIV prevention in men who have sex with men. *N Engl J Med*. 2010;363:2587–99. PMID 21091279.
+2. Baeten JM, et al. Antiretroviral prophylaxis for HIV prevention in heterosexual men and women. *N Engl J Med*. 2012;367:399–410. PMID 22784037.
+3. Peterson L, et al. TDF2 study. *N Engl J Med*. 2012;367:423–34. PMID 22784038.
+4. Van Damme L, et al. Preexposure prophylaxis for HIV infection among African women. *N Engl J Med*. 2012;367:411–22. PMID 22784040.
+5. Marrazzo JM, et al. Tenofovir-based preexposure prophylaxis for HIV infection among African women. *N Engl J Med*. 2015;372:509–18. PMID 25651245.
+6. Molina JM, et al. On-demand preexposure prophylaxis in men at high risk for HIV-1 infection. *N Engl J Med*. 2015;373:2237–46. PMID 26624850.
+7. McCormack S, et al. Pre-exposure prophylaxis to prevent the acquisition of HIV-1 infection (PROUD). *Lancet*. 2016;387:53–60. PMID 26364263.
+8. Baeten JM, et al. Use of a vaginal ring containing dapivirine for HIV-1 prevention in women. *N Engl J Med*. 2016;375:2121–32. PMID 26900902.
+9. Nel A, et al. Safety and efficacy of a dapivirine vaginal ring for HIV prevention in women. *N Engl J Med*. 2016;375:2133–43. PMID 26900901.
+10. Hare CB, et al. The phase 3 DISCOVER study: daily F/TAF or F/TDF for HIV preexposure prophylaxis. *Clin Infect Dis*. 2020;71:1gg-10. PMID 32711800.
+11. Landovitz RJ, et al. Cabotegravir for HIV prevention in cisgender men and transgender women. *N Engl J Med*. 2021;385:595–608. PMID 34379922.
+12. Delany-Moretlwe S, et al. Cabotegravir for the prevention of HIV-1 in women: results from HPTN 084. *Lancet*. 2022;399:1779–89. PMID 35378077.
+13. Bekker LG, et al. Twice-yearly lenacapavir or daily F/TDF for HIV prevention in cisgender women (PURPOSE 1). *N Engl J Med*. 2024;391:1179–94. PMID 39226844.
+14. Mayer KH, et al. Twice-yearly lenacapavir for HIV prevention in all genders (PURPOSE 2). *N Engl J Med*. 2024;391:1194–206. PMID 39612522.

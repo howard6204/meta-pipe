@@ -1,0 +1,142 @@
+title: "Comparative Efficacy and Safety of HIV Pre-Exposure Prophylaxis Interventions: A Systematic Review and Network Meta-Analysis"
+
+date: "2026-03-28"
+analysis_type: "nma"
+
+population:
+  description: "HIV-uninfected adults (>=18 years) at risk of HIV-1 acquisition"
+  inclusions:
+    - "Cisgender men who have sex with men (MSM)"
+    - "Transgender women (TGW)"
+    - "Transgender men and non-binary individuals"
+    - "Cisgender women"
+    - "Heterosexual serodiscordant couples"
+    - "Any geographic setting (high- and low/middle-income countries)"
+  exclusions:
+    - "HIV-positive individuals"
+    - "Individuals <18 years (unless mixed adult cohort reporting adult subgroup)"
+    - "Post-exposure prophylaxis (PEP) trials"
+    - "Prevention of mother-to-child transmission (PMTCT) studies"
+
+interventions:
+  nodes:
+    - id: "TDF_FTC_daily"
+      label: "TDF/FTC daily oral"
+      generic: "tenofovir disoproxil fumarate / emtricitabine 300/200 mg"
+      trade: "Truvada"
+      approval_status: "FDA-approved (2012)"
+      route: "oral"
+      frequency: "once daily"
+
+    - id: "TAF_FTC_daily"
+      label: "TAF/FTC daily oral"
+      generic: "tenofovir alafenamide / emtricitabine 25/200 mg"
+      trade: "Descovy"
+      approval_status: "FDA-approved (2019, MSM/TGW)"
+      route: "oral"
+      frequency: "once daily"
+
+    - id: "TDF_daily"
+      label: "TDF monotherapy daily oral"
+      generic: "tenofovir disoproxil fumarate 300 mg"
+      trade: "Viread"
+      approval_status: "Not specifically approved for PrEP as monotherapy"
+      route: "oral"
+      frequency: "once daily"
+
+    - id: "TDF_FTC_ondemand"
+      label: "TDF/FTC on-demand (2-1-1)"
+      generic: "tenofovir disoproxil fumarate / emtricitabine 300/200 mg"
+      approval_status: "Approved in France/some jurisdictions; not FDA-approved for this indication"
+      route: "oral"
+      frequency: "event-driven (2 tablets 2-24h before sex, 1 tablet 24h and 48h after)"
+
+    - id: "CAB_LA"
+      label: "Cabotegravir long-acting injectable"
+      generic: "cabotegravir 600 mg/3mL"
+      trade: "Apretude"
+      approval_status: "FDA-approved (2021)"
+      route: "intramuscular injection"
+      frequency: "every 2 months (after oral lead-in and 2 injections 4 weeks apart)"
+
+    - id: "LEN"
+      label: "Lenacapavir twice-yearly injectable"
+      generic: "lenacapavir 927 mg/1.5mL"
+      trade: "Sunlenca (HIV treatment); Yeztugo (PrEP)"
+      approval_status: "FDA-approved for PrEP June 2025"
+      route: "subcutaneous injection"
+      frequency: "every 6 months"
+
+    - id: "DVR"
+      label: "Dapivirine vaginal ring"
+      generic: "dapivirine 25 mg intravaginal ring"
+      trade: "Dapivirine Ring (IPM)"
+      approval_status: "EMA Article 58 positive opinion (2020); WHO prequalified; not FDA-approved"
+      route: "intravaginal"
+      frequency: "monthly insertion/replacement"
+
+    - id: "PBO"
+      label: "Placebo / standard of care"
+      description: "Placebo pill, sham ring, or HIV prevention services only (risk counseling, condoms, STI treatment)"
+
+comparator:
+  primary: "Placebo or standard HIV prevention services"
+  active_comparators: ["TDF/FTC daily", "TDF/FTC on-demand"]
+  network_anchor: "TDF/FTC daily (most common active comparator)"
+
+outcomes:
+  primary:
+    name: "HIV-1 incidence"
+    measure: "Confirmed new HIV-1 infections per 100 person-years at risk"
+    type: "rate"
+    direction: "lower is better"
+    pooling_statistic: "Incidence rate ratio (IRR) or Risk Ratio (RR)"
+
+  secondary:
+    - name: "Any Grade 3/4 adverse event"
+      type: "binary"
+      pooling: "Risk Ratio"
+    - name: "Serious adverse events (SAE)"
+      type: "binary"
+      pooling: "Risk Ratio"
+    - name: "Discontinuation due to adverse events"
+      type: "binary"
+      pooling: "Risk Ratio"
+    - name: "Drug-resistant HIV among incident infections"
+      type: "binary (among seroconverters)"
+      pooling: "descriptive"
+
+study_design:
+  eligible: ["RCT phase 2b", "RCT phase 3", "RCT phase 3b/4"]
+  minimum_followup: "24 weeks"
+  blinding: "Any (blinded and open-label both eligible)"
+  language: "All languages"
+
+search:
+  databases:
+    - "PubMed/MEDLINE"
+    - "Embase"
+    - "Cochrane CENTRAL"
+    - "ClinicalTrials.gov"
+    - "WHO ICTRP"
+    - "Conference abstracts (CROI, IAS, AIDS)"
+  date_from: "2000-01-01"
+  date_to: "2026-03-28"
+
+nma_parameters:
+  model: "random-effects"
+  framework: "Bayesian (gemtc) and frequentist (netmeta) for cross-validation"
+  reference_node: "Placebo"
+  ranking_metric: "SUCRA (Surface Under Cumulative Ranking)"
+  inconsistency: "node-splitting + design-by-treatment interaction"
+  heterogeneity: "I-squared and tau-squared"
+
+subgroup_analyses:
+  - variable: "Population (MSM/TGW vs cisgender women vs heterosexual couples)"
+  - variable: "Adherence confirmed (exclude FEM-PrEP, VOICE)"
+  - variable: "Risk of bias (low vs high/unclear)"
+  - variable: "Blinding (double-blind vs open-label)"
+  - variable: "Income setting (HIC vs LMIC)"
+
+registration:
+  prospero: "pending"

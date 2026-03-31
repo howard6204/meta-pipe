@@ -1,0 +1,32 @@
+study_id,trial_name,year,pmid,country,population,arm,intervention,n_randomized,n_analyzed,hiv_events,person_years,incidence_rate_per100py,efficacy_pct,efficacy_95ci_lo,efficacy_95ci_hi,grade34_ae_pct,sae_pct,disc_ae_pct,rob_randomization,rob_allocation,rob_blinding,rob_outcome,rob_selective,rob_overall,sensitivity_flag,notes
+1a,iPrEx,2010,21091279,"Peru/Ecuador/Brazil/Thailand/South Africa/USA",MSM/TGW,Active,TDF/FTC daily,1251,1224,36,2107,1.71,44,15,63,NA,NA,NA,low,low,low,low,low,low,,iPrEx active arm
+1b,iPrEx,2010,21091279,"Peru/Ecuador/Brazil/Thailand/South Africa/USA",MSM/TGW,Placebo,Placebo,1248,1217,64,2108,3.04,,,NA,NA,NA,low,low,low,low,low,low,,iPrEx placebo arm
+2a,Partners PrEP,2012,22784037,"Kenya/Uganda",Serodiscordant heterosexual couples,Active1,TDF/FTC daily,1584,1579,17,1963,0.87,75,55,87,NA,NA,NA,low,low,low,low,low,low,,Partners PrEP TDF/FTC arm
+2b,Partners PrEP,2012,22784037,"Kenya/Uganda",Serodiscordant heterosexual couples,Active2,TDF daily,1579,1572,18,1962,0.92,67,44,81,NA,NA,NA,low,low,low,low,low,low,,Partners PrEP TDF arm
+2c,Partners PrEP,2012,22784037,"Kenya/Uganda",Serodiscordant heterosexual couples,Placebo,Placebo,1584,1570,52,1959,2.65,,,NA,NA,NA,low,low,low,low,low,low,,Partners PrEP placebo arm
+3a,TDF2,2012,22784038,Botswana,Heterosexual adults,Active,TDF/FTC daily,611,600,9,1563,0.58,62,21,83,NA,NA,NA,low,low,low,low,low,low,,TDF2 active arm
+3b,TDF2,2012,22784038,Botswana,Heterosexual adults,Placebo,Placebo,608,591,24,1539,1.56,,,NA,NA,NA,low,low,low,low,low,low,,TDF2 placebo arm
+4a,FEM-PrEP,2012,22784040,"Kenya/South Africa/Tanzania/Zambia",Cisgender women,Active,TDF/FTC daily,1062,1021,33,1509,2.19,6,-52,41,NA,NA,NA,low,low,low,low,low,low,adherence_confounded,FEM-PrEP active; drug detected in <40% plasma samples
+4b,FEM-PrEP,2012,22784040,"Kenya/South Africa/Tanzania/Zambia",Cisgender women,Placebo,Placebo,1058,1013,35,1540,2.27,,,NA,NA,NA,low,low,low,low,low,low,adherence_confounded,FEM-PrEP placebo
+5a,VOICE,2015,25651245,"Uganda/Zimbabwe/South Africa",African cisgender women,Active1,TDF/FTC daily,1715,1693,45,3218,1.40,4,-41,35,NA,NA,NA,low,low,low,low,low,low,adherence_confounded,VOICE TDF/FTC arm; <30% adherence confirmed
+5b,VOICE,2015,25651245,"Uganda/Zimbabwe/South Africa",African cisgender women,Active2,TDF daily,1717,1700,51,3220,1.58,-4,-49,28,NA,NA,NA,low,low,low,low,low,low,adherence_confounded,VOICE TDF arm
+5c,VOICE,2015,25651245,"Uganda/Zimbabwe/South Africa",African cisgender women,Placebo,Placebo,1731,1718,61,3259,1.87,,,NA,NA,NA,low,low,low,low,low,low,,VOICE placebo arm
+6a,IPERGAY,2015,26624850,"France/Canada",MSM/TGW,Active,TDF/FTC on-demand,199,199,2,431,0.46,86,40,99,NA,NA,NA,low,low,low,low,low,low,,IPERGAY active (blinded phase)
+6b,IPERGAY,2015,26624850,"France/Canada",MSM/TGW,Placebo,Placebo,201,201,14,437,3.20,,,NA,NA,NA,low,low,low,low,low,low,,IPERGAY placebo
+7a,PROUD,2016,26364263,UK,MSM,Active,TDF/FTC daily (immediate),276,276,3,317,0.95,86,64,96,NA,NA,NA,low,unclear,high,low,low,high,,PROUD immediate arm; open-label; deferred control
+7b,PROUD,2016,26364263,UK,MSM,Deferred,Deferred TDF/FTC (standard care),269,269,20,317,6.31,,,NA,NA,NA,low,unclear,high,low,low,high,,PROUD deferred arm - NOTE: not placebo
+8a,ASPIRE,2016,26900902,"Malawi/South Africa/Uganda/Zimbabwe/Zambia",Cisgender women,Active,Dapivirine vaginal ring,1313,1300,71,2247,3.16,27,1,46,NA,NA,NA,low,low,low,low,low,low,,ASPIRE active
+8b,ASPIRE,2016,26900902,"Malawi/South Africa/Uganda/Zimbabwe/Zambia",Cisgender women,Placebo,Placebo ring,1316,1300,97,2238,4.33,,,NA,NA,NA,low,low,low,low,low,low,,ASPIRE placebo
+9a,Ring Study,2016,26900901,"South Africa/Tanzania/Uganda/Zimbabwe",Cisgender women,Active,Dapivirine vaginal ring,984,980,77,1787,4.31,31,2,52,NA,NA,NA,low,low,low,low,low,low,,Ring Study active
+9b,Ring Study,2016,26900901,"South Africa/Tanzania/Uganda/Zimbabwe",Cisgender women,Placebo,Placebo ring,985,978,113,1791,6.31,,,NA,NA,NA,low,low,low,low,low,low,,Ring Study placebo
+10a,DISCOVER,2020,32711800,"Europe/North America/Thailand",MSM/TGW,Active,TAF/FTC daily,2694,2694,22,4847,0.45,,,low,0.4,low,low,low,low,,DISCOVER TAF/FTC arm (non-inferiority vs TDF/FTC)
+10b,DISCOVER,2020,32711800,"Europe/North America/Thailand",MSM/TGW,Comparator,TDF/FTC daily,2693,2693,25,4818,0.52,,,low,0.4,low,low,low,low,,DISCOVER TDF/FTC arm
+11a,HPTN 083,2021,34379922,"Americas/Asia/Africa",MSM/TGW,Active,CAB-LA injectable,2285,2282,13,4285,0.30,66,37,80,8,7,3,low,low,low,low,low,low,,HPTN 083 CAB-LA arm
+11b,HPTN 083,2021,34379922,"Americas/Asia/Africa",MSM/TGW,Comparator,TDF/FTC daily,2285,2224,39,4360,0.89,,,7,7,2,low,low,low,low,low,low,,HPTN 083 TDF/FTC arm
+12a,HPTN 084,2022,35378077,"Eastern/Southern Africa",Cisgender women,Active,CAB-LA injectable,1614,1614,4,2938,0.14,90,75,96,8,6,2,low,low,low,low,low,low,,HPTN 084 CAB-LA arm
+12b,HPTN 084,2022,35378077,"Eastern/Southern Africa",Cisgender women,Comparator,TDF/FTC daily,1610,1610,36,2944,1.22,,,7,6,2,low,low,low,low,low,low,,HPTN 084 TDF/FTC arm
+13a,PURPOSE 1,2024,39226844,"Uganda/South Africa",Cisgender women,Active,Lenacapavir twice-yearly,2134,2134,0,3817,0.00,100,NA,NA,11,8,3,low,low,low,low,low,low,,PURPOSE 1 LEN arm; zero events - use continuity correction
+13b,PURPOSE 1,2024,39226844,"Uganda/South Africa",Cisgender women,Comparator1,TAF/FTC daily,1068,1068,16,1837,0.87,21,-17,47,10,7,3,low,low,low,low,low,low,,PURPOSE 1 TAF/FTC arm
+13c,PURPOSE 1,2024,39226844,"Uganda/South Africa",Cisgender women,Comparator2,TDF/FTC daily,1136,1136,23,2059,1.12,,,10,7,3,low,low,low,low,low,low,,PURPOSE 1 TDF/FTC arm
+14a,PURPOSE 2,2024,39612522,"Americas/Europe/Africa/Asia",MSM/TGW/NB/transgender men,Active,Lenacapavir twice-yearly,2180,2180,2,3913,0.05,96,88,99,10,8,2,low,low,low,low,low,low,,PURPOSE 2 LEN arm
+14b,PURPOSE 2,2024,39612522,"Americas/Europe/Africa/Asia",MSM/TGW/NB/transgender men,Comparator,TDF/FTC daily,1087,1087,9,1967,0.46,,,9,7,2,low,low,low,low,low,low,,PURPOSE 2 TDF/FTC arm
